@@ -1,0 +1,26 @@
+{
+  "parties": {
+    "organisation": {
+      "id": "50",
+      "createdOn": "2011-09-14T15:22:01Z",
+      "name": "Google Inc",
+      "updatedOn": "2011-12-14T10:45:46Z"
+    },
+    "person": [
+      {
+        "id": "100",
+        "lastName": "Schmidt",
+        "createdOn": "2011-09-14T15:22:01Z",
+        "firstName": "Eric",
+        "updatedOn": "2011-12-14T10:45:46Z"
+      },
+      {
+        "id": "101",
+        "lastName": "Page",
+        "createdOn": "2011-09-14T15:22:01Z",
+        "firstName": "Larry ",
+        "updatedOn": "2011-11-15T10:50:48Z"
+      }
+    ]
+  }
+}
