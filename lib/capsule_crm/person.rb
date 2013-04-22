@@ -240,7 +240,7 @@ class CapsuleCRM::Person
   #
   # Returns a Hash
   def to_capsule_json
-    attributes.merge(contacts: contacts.to_capsule_json)
+    attributes.merge(contacts: contacts.to_capsule_json).stringify_keys
   end
 
   private

@@ -1,6 +1,7 @@
 require 'active_model'
 require 'faraday'
 require 'virtus'
+require 'capsule_crm/address'
 require 'capsule_crm/connection'
 require 'capsule_crm/hash_helper'
 require 'capsule_crm/results_proxy'

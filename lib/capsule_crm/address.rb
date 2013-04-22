@@ -2,8 +2,6 @@ module CapsuleCRM
   class Address
     include Virtus
 
-    include CapsuleCRM::Associations::BelongsTo
-
     extend ActiveModel::Naming
 
     attribute :type
@@ -13,6 +11,8 @@ module CapsuleCRM
     attribute :zip
     attribute :country
 
-    belongs_to :person
+    def to_capsule_json
+      attributes.stringify_keys
+    end
   end
 end

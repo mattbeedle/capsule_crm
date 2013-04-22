@@ -283,4 +283,44 @@ describe CapsuleCRM::Person do
       it { should be_false }
     end
   end
+
+  describe '#to_capsule_json' do
+    let(:address) do
+      CapsuleCRM::Address.new(
+        street: 'Oranienburgerstraße', city: 'Berlin', state: 'Berlin',
+        zip: '10117', country: 'de'
+      )
+    end
+
+    let(:contacts) do
+      CapsuleCRM::Contacts.new(addresses: [address])
+    end
+
+    let(:person) do
+      CapsuleCRM::Person.new(
+        first_name: 'Matt', last_name: 'Beedle',
+        organisation_name: "Matt's Company", contacts: contacts
+      )
+    end
+
+    subject { person.to_capsule_json }
+
+    it { should have_key('first_name') }
+
+    it { should have_key('last_name') }
+
+    it { should have_key('organisation_name') }
+
+    it { should have_key('contacts') }
+
+    it { subject['contacts']['address'].first.should have_key('street') }
+
+    it { subject['contacts']['address'].first.should have_key('city') }
+
+    it { subject['contacts']['address'].first.should have_key('state') }
+
+    it { subject['contacts']['address'].first.should have_key('zip') }
+
+    it { subject['contacts']['address'].first.should have_key('country') }
+  end
 end

@@ -1,6 +1,10 @@
 module CapsuleCRM
   class Contacts
 
+    def initialize(attributes = {})
+      self.addresses = attributes[:addresses]
+    end
+
     # Public: Sets the addresses for this contacts container
     #
     # addresses - The Array of CapsuleCRM::Address objects
@@ -36,7 +40,7 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
-      { addresses: addresses.to_json }
+      { address: addresses.map(&:to_capsule_json) }.stringify_keys
     end
   end
 end
