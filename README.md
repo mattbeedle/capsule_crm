@@ -1,6 +1,6 @@
-# CapsuleCrm
+# CapsuleCRM
 
-TODO: Write a gem description
+CapsuleCRM provides an ActiveModel compliant interface to the capsulecrm API
 
 ## Installation
 
@@ -18,7 +18,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+person = CapsuleCRM::Person.new(first_name: 'Matt', last_name: 'Beedle', organisation_name: "Matt's Company")
+person.save
+
+person.first_name = 'John'
+person.save #=> true
+
+person.valid? #=> true
+
+person.first_name = nil
+person.last_name = nil
+person.valid? #=> false
+
+person.save #=> false
+person.save! #=> CapsuleCRM::Errors::InvalidRecord
+
+person.destroy #=> true
+
+person = CapsuleCRM::Person.create(first_name: 'Matt', last_name: 'Beedle')
+```
 
 ## Contributing
 
