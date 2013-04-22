@@ -9,12 +9,14 @@ class CapsuleCRM::Person
   include ActiveModel::Validations
   include ActiveModel::Validations::Callbacks
 
+  attribute :id
   attribute :title
   attribute :first_name
   attribute :last_name
+  attribute :job_title
   attribute :about
-  attribute :organization_name
-  attribute :organization_id
+  attribute :organisation_name
+  attribute :organisation_id
 
   validates :first_name, presence: { if: :first_name_required? }
   validates :last_name, presence: { if: :last_name_required? }
@@ -24,22 +26,28 @@ class CapsuleCRM::Person
   has_many :phones
   has_many :websites
 
-  # Public: Instantiate a new CapsuleCRM::Person
+  # Public: Set the attributes of a person
   #
   # attributes  - The Hash of attributes (default: {}):
   #               :first_name         - The String person first name
   #               :last_name          - The String person last name
+  #               :job_title          - The String job title
   #               :about              - The String information about the person
-  #               :organization_name  - The String name of the organization.
+  #               :organisation_name  - The String name of the organisation. If
+  #               this organisation does not exist in capsule then a new one
+  #               will be created on save
+  #               :organisation_id    - The Integer ID of the organisation in
+  #               capsulecrm.
   #
   # Examples
   #
   # CapsuleCRM::Person.new
   #
   # Returns a CapsuleCRM::Person
-  def initialize(attributes = {})
+  def attributes=(attributes)
     CapsuleCRM::HashHelper.underscore_keys!(attributes)
     super(attributes)
+    self
   end
 
   # Public: Get all people from Capsule. The list can be restricted
@@ -62,9 +70,11 @@ class CapsuleCRM::Person
   #
   # CapsuleCRM::Person.all(q: "a search query", start: 10, limit: 20)
   #
-  # Returns a ResultsProxy of organizations
+  # Returns a ResultsProxy of organisations
   def self.all(options = {})
-    init_collection CapsuleCRM::Connection.get('/api/party', options)['parties']['person']
+    init_collection(
+      CapsuleCRM::Connection.get('/api/party', options)['parties']['person']
+    )
   end
 
   # Public: Get a person by ID
@@ -85,11 +95,12 @@ class CapsuleCRM::Person
   # attributes  - The Hash of person attributes (default: {}):
   #               :first_name         - The String first name
   #               :last_name          - The String last name
+  #               :job_title          - The String job title
   #               :about              - The String information about the person
-  #               :organization_name  - The String organization name. If now
-  #               :organization_id is supplied, then a new one will be created
+  #               :organisation_name  - The String organisation name. If now
+  #               :organisation_id is supplied, then a new one will be created
   #               with this name
-  #               :organization_id    - The Integer ID of the organization this
+  #               :organisation_id    - The Integer ID of the organisation this
   #               person belongs to
   #
   # Examples
@@ -97,8 +108,8 @@ class CapsuleCRM::Person
   # CapsuleCRM::Person.create(first_name: 'Matt', last_name: 'Beedle')
   #
   # Returns a CapsuleCRM::Person
-  def create(attributes = {})
-    connection.post('/api/person', attributes)
+  def self.create(attributes = {})
+    new CapsuleCRM::Connection.post('/api/person', attributes)['person']
   end
 
   # Public: If the person already exists in capsule then update them,
@@ -116,7 +127,7 @@ class CapsuleCRM::Person
   # Returns a CapsuleCRM::Person
   def save
     if new_record?
-      create(attributes)
+      self.attributes = CapsuleCRM::Person.create(attributes).attributes
     else
       update_attributes attributes
     end
@@ -127,9 +138,10 @@ class CapsuleCRM::Person
   # attributes  - The Hash of person attributes (default: {}):
   #               :first_name         - The String first name
   #               :last_name          - The String last name
+  #               :job_title          - The String job title
   #               :about              - The String information about the person
-  #               :organization_name  - The String organization name
-  #               :organization_id    - The String organization id
+  #               :organisation_name  - The String organisation name
+  #               :organisation_id    - The String organisation id
   #
   # Examples
   #
@@ -138,19 +150,40 @@ class CapsuleCRM::Person
   #
   # Returns a CapsuleCRM::Person
   def update_attributes(attributes = {})
-    connection.post("/api/person/#{id}", attributes)
+    self.attributes =
+      CapsuleCRM::Connection.put("/api/person/#{id}", attributes)['person']
+  end
+
+  # Public: Determine whether this CapsuleCRM::Person is a new record or not
+  #
+  # Returns a Boolean
+  def new_record?
+    !id
   end
 
   private
 
+  # Private: Build a ResultsProxy from a Array of CapsuleCRM::Person attributes
+  #
+  # collection  - The Array of CapsuleCRM::Person attributes hashes
+  #
+  # Returns a CapsuleCRM::ResultsProxy
   def self.init_collection(collection)
     CapsuleCRM::ResultsProxy.new(collection.map { |item| new item })
   end
 
+  # Private: Determines whether the person first name is required. Either the
+  # first or the last name is always required
+  #
+  # Returns a Boolean
   def first_name_required?
     last_name.blank?
   end
 
+  # Private: Determines whether the person last name is required. Either the
+  # first or the last name is always required
+  #
+  # Return a Boolean
   def last_name_required?
     first_name.blank?
   end
