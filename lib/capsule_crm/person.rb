@@ -231,11 +231,23 @@ class CapsuleCRM::Person
     !new_record?
   end
 
+  # Public: Build a hash of attributes and merge in the attributes for the
+  # contact information
+  #
+  # Examples
+  #
+  # person.to_capsule_json
+  #
+  # Returns a Hash
+  def to_capsule_json
+    attributes.merge(contacts: contacts.to_capsule_json)
+  end
+
   private
 
   def create_record
     self.attributes = CapsuleCRM::Connection.post(
-      '/api/person', attributes.merge(contacts: contacts.to_json)
+      '/api/person', to_capsule_json
     )
   end
 
