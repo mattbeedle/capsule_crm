@@ -234,7 +234,9 @@ class CapsuleCRM::Person
   private
 
   def create_record
-    self.attributes = CapsuleCRM::Connection.post('/api/person', attributes)
+    self.attributes = CapsuleCRM::Connection.post(
+      '/api/person', attributes.merge(contacts: contacts.to_json)
+    )
   end
 
   def update_record

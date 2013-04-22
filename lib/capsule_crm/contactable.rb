@@ -7,7 +7,7 @@ module CapsuleCRM
     end
 
     def contacts
-      @contacts
+      @contacts ||= CapsuleCRM::Contacts.new
     end
   end
 end
