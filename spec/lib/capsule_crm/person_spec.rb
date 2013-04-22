@@ -49,33 +49,52 @@ describe CapsuleCRM::Person do
   end
 
   describe '.create' do
-    context 'when the person saves successfully' do
+    context 'when the person is valid' do
       before do
-        stub_request(:post, /.*/).
-          to_return(body: File.read('spec/support/create-person.json'))
+        stub_request(:post, /.*/).to_return(headers: {
+          'Location' => 'https://sample.capsulecrm.com/api/party/100'
+        })
       end
 
+      subject { CapsuleCRM::Person.create(first_name: 'Eric') }
+
+      it { should be_a(CapsuleCRM::Person) }
+    end
+
+    context 'when the person is not valid' do
       subject { CapsuleCRM::Person.create }
+
+      it { subject.errors.should_not be_blank }
+    end
+  end
+
+  describe '.create!' do
+    context 'when the person is valid' do
+      before do
+        stub_request(:post, /.*/).to_return(headers: {
+          'Location' => 'https://sample.capsulecrm.com/api/party/100'
+        })
+      end
+
+      subject { CapsuleCRM::Person.create(first_name: 'Eric') }
 
       it { should be_a(CapsuleCRM::Person) }
 
-      it { subject.about.should eql('A comment here') }
+      it { should be_persisted }
+    end
 
-      it { subject.first_name.should eql('Eric') }
-
-      it { subject.last_name.should eql('Schmidt') }
-
-      it { subject.organisation_name.should eql('Google Inc') }
-
-      it { subject.job_title.should eql('Chairman') }
+    context 'when the person is not valid' do
+      it do
+        expect { CapsuleCRM::Person.create! }.
+          to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
     end
   end
 
   describe '#update_attributes' do
-    context 'when the person saves successfully' do
+    context 'when the person is valid' do
       before do
-        stub_request(:put, /.*/).
-          to_return(body: File.read('spec/support/update-person.json'))
+        stub_request(:put, /.*/).to_return(status: 200)
       end
 
       let(:person) { CapsuleCRM::Person.new(id: 1) }
@@ -86,43 +105,96 @@ describe CapsuleCRM::Person do
 
       it { person.id.should eql(1) }
     end
+
+    context 'when the person is not valid' do
+      let(:person) { CapsuleCRM::Person.new(id: 1) }
+
+      before { person.update_attributes }
+
+      it { person.should_not be_valid }
+
+      it { person.errors.should_not be_blank }
+    end
+  end
+
+  describe '#update_attributes!' do
+
+    let(:person) { CapsuleCRM::Person.new(id: 1) }
+
+    context 'when the person is valid' do
+      before do
+        stub_request(:put, /.*/).to_return(status: 200)
+      end
+
+      before { person.update_attributes first_name: 'James' }
+
+      it { person.first_name.should eql('James') }
+
+      it { person.id.should eql(1) }
+    end
+
+    context 'when the person is not valid' do
+      it do
+        expect { person.update_attributes! }.
+          to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
+    end
   end
 
   describe '#save' do
     context 'when the person is a new record' do
       before do
-        stub_request(:post, /.*/).
-          to_return(body: File.read('spec/support/create-person.json'))
+        stub_request(:post, /.*/).to_return(headers: {
+          'Location' => 'https://sample.capsulecrm.com/api/party/100'
+        }, status: 200)
       end
 
-      let(:person) { CapsuleCRM::Person.new }
+      let(:person) { CapsuleCRM::Person.new(first_name: 'Eric') }
 
       before { person.save }
-
-      it { person.about.should eql('A comment here') }
 
       it { person.first_name.should eql('Eric') }
 
-      it { person.last_name.should eql('Schmidt') }
+      it { person.should be_persisted }
+    end
+  end
 
-      it { person.organisation_name.should eql('Google Inc') }
+  describe '#save!' do
+    context 'when the person is a new record' do
+      context 'when the person is valid' do
+        before do
+          stub_request(:post, /.*/).to_return(headers: {
+            'Location' => 'https://sample.capsulecrm.com/api/party/100',
+          }, status: 200)
+        end
 
-      it { person.job_title.should eql('Chairman') }
+        let(:person) { CapsuleCRM::Person.new(first_name: 'Eric') }
+
+        before { person.save }
+
+        it { person.should be_persisted }
+      end
+
+      context 'when the person is not valid' do
+        let(:person) { CapsuleCRM::Person.new }
+
+        it do
+          expect { person.save! }.
+            to raise_error(CapsuleCRM::Errors::RecordInvalid)
+        end
+      end
     end
 
     context 'when the person is not a new record' do
-      before do
-        stub_request(:put, /.*/).
-          to_return(body: File.read('spec/support/update-person.json'))
+      context 'when the person is not valid' do
+
+        let(:person) { CapsuleCRM::Person.new(id: 1) }
+
+        it do
+          expect { person.save! }.
+            to raise_exception(CapsuleCRM::Errors::RecordInvalid)
+        end
       end
-
-      let(:person) { CapsuleCRM::Person.new(id: 1) }
-
-      before { person.save }
-
-      it { person.first_name.should eql('James') }
-
-      it { person.id.should eql(1) }
     end
   end
 
@@ -139,6 +211,24 @@ describe CapsuleCRM::Person do
       let(:person) { CapsuleCRM::Person.new(id: 1) }
 
       subject { person.new_record? }
+
+      it { should be_false }
+    end
+  end
+
+  describe '#persisted?' do
+    context 'when the person is persisted' do
+      let(:person) { CapsuleCRM::Person.new(id: 1) }
+
+      subject { person.persisted? }
+
+      it { should be_true }
+    end
+
+    context 'when the person is not persisted' do
+      let(:person) { CapsuleCRM::Person.new }
+
+      subject { person.persisted? }
 
       it { should be_false }
     end

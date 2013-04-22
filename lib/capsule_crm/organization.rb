@@ -3,8 +3,6 @@ require 'active_support/core_ext'
 class CapsuleCRM::Organization
   include ::Virtus
 
-  include CapsuleCRM::Associations
-
   extend ActiveModel::Naming
   extend ActiveModel::Callbacks
   extend ActiveModel::Conversion
@@ -13,8 +11,6 @@ class CapsuleCRM::Organization
 
   attribute :name
   attribute :about
-
-  # has_many :people
 
   validates :name, presence: true
 

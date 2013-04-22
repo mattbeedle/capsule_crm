@@ -15,11 +15,13 @@ module CapsuleCRM
     end
 
     def self.post(path, params)
-      JSON.parse faraday.post(path, params).body
+      response = faraday.post(path, params)
+      id = response.headers['Location'].match(/\/(?<id>\d+)$/)[:id]
+      { id: id }
     end
 
     def self.put(path, params)
-      JSON.parse faraday.put(path, params).body
+      faraday.put(path, params)
     end
 
     def self.delete(path, params)

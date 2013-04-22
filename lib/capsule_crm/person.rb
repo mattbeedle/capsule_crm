@@ -1,7 +1,7 @@
 class CapsuleCRM::Person
   include Virtus
 
-  include CapsuleCRM::Associations::HasMany
+  include CapsuleCRM::Contactable
 
   extend ActiveModel::Naming
   extend ActiveModel::Callbacks
@@ -20,11 +20,6 @@ class CapsuleCRM::Person
 
   validates :first_name, presence: { if: :first_name_required? }
   validates :last_name, presence: { if: :last_name_required? }
-
-  has_many :addresses
-  has_many :emails
-  has_many :phones
-  has_many :websites
 
   # Public: Set the attributes of a person
   #
@@ -109,7 +104,30 @@ class CapsuleCRM::Person
   #
   # Returns a CapsuleCRM::Person
   def self.create(attributes = {})
-    new CapsuleCRM::Connection.post('/api/person', attributes)['person']
+    new(attributes).tap(&:save)
+  end
+
+  # Public: Create a new person in capsulecrm and raise a
+  # CapsuleCRM::Errors::InvalidRecord error if not possible
+  #
+  # attributes  - The Hash of person attributes (default: {}):
+  #               :first_name         - The String first name
+  #               :last_name          - The String last name
+  #               :job_title          - The String job title
+  #               :about              - The String information about the person
+  #               :organisation_name  - The String organisation name. If now
+  #               :organisation_id is supplied, then a new one will be created
+  #               with this name
+  #               :organisation_id    - The Integer ID of the organisation this
+  #               person belongs to
+  #
+  # Examples
+  #
+  # CapsuleCRM::Person.create!(first_name: 'Matt', last_name: 'Beedle')
+  #
+  # Returns a CapsuleCRM
+  def self.create!(attributes = {})
+    new(attributes).tap(&:save!)
   end
 
   # Public: If the person already exists in capsule then update them,
@@ -126,10 +144,32 @@ class CapsuleCRM::Person
   #
   # Returns a CapsuleCRM::Person
   def save
-    if new_record?
-      self.attributes = CapsuleCRM::Person.create(attributes).attributes
+    if valid?
+      new_record? ? create_record : update_record
     else
-      update_attributes attributes
+      false
+    end
+  end
+
+  # Public: If the person already exists in capsule then update them,
+  # otherwise create a new person. If the person is not valid then a
+  # CapsuleCRM::Errors::RecordInvalid exception is raised
+  #
+  # Examples
+  #
+  # person = CapsuleCRM::Person.new(first_name: 'Matt')
+  # person.save
+  #
+  # person = CapsuleCRM::Person.find(1)
+  # person.first_name = 'Matt'
+  # person.save
+  #
+  # Returns a CapsuleCRM::Person
+  def save!
+    if valid?
+      new_record ? create_record : update_record
+    else
+      raise CapsuleCRM::Errors::RecordInvalid.new(self)
     end
   end
 
@@ -150,8 +190,30 @@ class CapsuleCRM::Person
   #
   # Returns a CapsuleCRM::Person
   def update_attributes(attributes = {})
-    self.attributes =
-      CapsuleCRM::Connection.put("/api/person/#{id}", attributes)['person']
+    self.attributes = attributes
+    save
+  end
+
+  # Public: Update the person in capsule. If the person is not valid then a
+  # CapsuleCRM::Errors::RecordInvalid exception will be raised
+  #
+  # attributes  - The Hash of person attributes (default: {}):
+  #               :first_name         - The String first name
+  #               :last_name          - The String last name
+  #               :job_title          - The String job title
+  #               :about              - The String information about the person
+  #               :organisation_name  - The String organisation name
+  #               :organisation_id    - The String organisation id
+  #
+  # Examples
+  #
+  # person = CapsuleCRM::Person.find(1)
+  # person.update_attributes first_name: 'Matt', last_name: 'Beedle'
+  #
+  # Returns a CapsuleCRM::Person
+  def update_attributes!(attributes = {})
+    self.attributes = attributes
+    save!
   end
 
   # Public: Determine whether this CapsuleCRM::Person is a new record or not
@@ -161,7 +223,23 @@ class CapsuleCRM::Person
     !id
   end
 
+  # Public: Determine whether or not this CapsuleCRM::Person has already been
+  # persisted to capsulecrm
+  #
+  # Returns a Boolean
+  def persisted?
+    !new_record?
+  end
+
   private
+
+  def create_record
+    self.attributes = CapsuleCRM::Connection.post('/api/person', attributes)
+  end
+
+  def update_record
+    CapsuleCRM::Connection.put("/api/person/#{id}", attributes)
+  end
 
   # Private: Build a ResultsProxy from a Array of CapsuleCRM::Person attributes
   #
