@@ -17,6 +17,8 @@ module CapsuleCRM
     def initialize(attributes = {})
       self.addresses  = attributes[:addresses]
       self.emails     = attributes[:emails]
+      self.phones     = attributes[:phones]
+      self.websites   = attributes[:websites]
     end
 
     # Public: Sets the addresses for this contacts container
@@ -55,7 +57,7 @@ module CapsuleCRM
     # email = CapsuleCRM::Email.new(type: 'HOME', email_address:
     # 'matt@gmail.com')
     # contacts = CapsuleCRM::Contacts.new
-    # contacts.emails = [emails]
+    # contacts.emails = [email]
     #
     # Returns an Array of CapsuleCRM::Email objects
     def emails=(emails)
@@ -71,6 +73,60 @@ module CapsuleCRM
     # Returns an Array of CapsuleCRM::Email objects
     def emails
       @emails || []
+    end
+
+    # Public: Sets the phones for this contacts controller
+    #
+    # phones  - The Array of CapsuleCRM::Phone objects
+    #
+    # Examples
+    #
+    # phone = CapsuleCRM::Phone.new(type: 'Mobile', phone_number: '1234')
+    # contacts = CapsuleCRM::Contacts.new
+    # contacts.phones = [phone]
+    #
+    # Returns an Array of CapsuleCRM::Phone objects
+    def phones=(phones)
+      @phones = phones
+    end
+
+    # Public: Gets the phones for this contacts container
+    #
+    # Examples
+    #
+    # contacts.phones
+    #
+    # Returns a Hash
+    def phones
+      @phones || []
+    end
+
+    # Public: Sets the websites for this contacts container
+    #
+    # websites  - The Array of CapsuleCRM::Website objects
+    #
+    # Examples
+    #
+    # website = CapsuleCRM::Website.new(
+    #   type: 'Work', web_service: 'URL', web_address: 'http://github.com'
+    # )
+    # contacts = CapsuleCRM::Contacts.new
+    # contacts.websites = [website]
+    #
+    # Returns an Array of CapsuleCRM::Website objects
+    def websites=(websites)
+      @websites = websites
+    end
+
+    # Public: Gets the websites for this contacts container
+    #
+    # Examples
+    #
+    # contacts.websites
+    #
+    # Returns a Hash
+    def websites
+      @websites || []
     end
 
     # Public: Builds a hash of all contact information
