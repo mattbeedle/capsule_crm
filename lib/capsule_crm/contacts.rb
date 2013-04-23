@@ -81,7 +81,23 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
-      { address: addresses.map(&:to_capsule_json) }.stringify_keys
+      {
+        address: address_json, email: email_json
+      }.stringify_keys
+    end
+
+    private
+
+    def address_json
+      addresses.map do |address|
+        HashHelper.camelize_keys address.as_json(root: false)
+      end
+    end
+
+    def email_json
+      emails.map do |email|
+        HashHelper.camelize_keys email.as_json(root: false)
+      end
     end
   end
 end
