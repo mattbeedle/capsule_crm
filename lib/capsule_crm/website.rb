@@ -6,6 +6,8 @@ module CapsuleCRM
     include ActiveModel::Validations
     include ActiveModel::Serializers::JSON
 
+    include CapsuleCRM::CapsuleJsonable
+
     attribute :type
     attribute :web_service
     attribute :web_address

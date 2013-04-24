@@ -1,6 +1,8 @@
 require 'active_model'
 require 'faraday'
+require 'faraday_middleware'
 require 'virtus'
+require 'capsule_crm/capsule_jsonable'
 require 'capsule_crm/address'
 require 'capsule_crm/connection'
 require 'capsule_crm/email'

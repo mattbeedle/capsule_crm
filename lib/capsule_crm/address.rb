@@ -5,6 +5,8 @@ module CapsuleCRM
     extend  ActiveModel::Naming
     include ActiveModel::Serializers::JSON
 
+    include CapsuleCRM::CapsuleJsonable
+
     attribute :type
     attribute :street
     attribute :city

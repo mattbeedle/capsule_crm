@@ -9,7 +9,7 @@ class CapsuleCRM::Person
   include ActiveModel::Validations
   include ActiveModel::Validations::Callbacks
 
-  attribute :id
+  attribute :id, Integer
   attribute :title
   attribute :first_name
   attribute :last_name
@@ -216,6 +216,11 @@ class CapsuleCRM::Person
     save!
   end
 
+  def destroy
+    self.id = nil if CapsuleCRM::Connection.delete("/api/party/#{id}")
+    self
+  end
+
   # Public: Determine whether this CapsuleCRM::Person is a new record or not
   #
   # Returns a Boolean
@@ -240,7 +245,12 @@ class CapsuleCRM::Person
   #
   # Returns a Hash
   def to_capsule_json
-    attributes.merge(contacts: contacts.to_capsule_json).stringify_keys
+    {
+      person: CapsuleCRM::HashHelper.camelize_keys(
+        attributes.dup.delete_if { |key, value| value.blank? }.
+        merge(contacts: contacts.to_capsule_json)
+      )
+    }.stringify_keys
   end
 
   private
@@ -249,10 +259,12 @@ class CapsuleCRM::Person
     self.attributes = CapsuleCRM::Connection.post(
       '/api/person', to_capsule_json
     )
+    self
   end
 
   def update_record
     CapsuleCRM::Connection.put("/api/person/#{id}", attributes)
+    self
   end
 
   # Private: Build a ResultsProxy from a Array of CapsuleCRM::Person attributes

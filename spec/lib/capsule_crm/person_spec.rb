@@ -61,6 +61,8 @@ describe CapsuleCRM::Person do
       subject { CapsuleCRM::Person.create(first_name: 'Eric') }
 
       it { should be_a(CapsuleCRM::Person) }
+
+      it { subject.id.should eql(100) }
     end
 
     context 'when the person is not valid' do
@@ -74,7 +76,7 @@ describe CapsuleCRM::Person do
     context 'when the person is valid' do
       before do
         stub_request(:post, /.*/).to_return(headers: {
-          'Location' => 'https://sample.capsulecrm.com/api/party/100'
+          'Location' => 'https://sample.capsulecrm.com/api/party/101'
         })
       end
 
@@ -83,6 +85,8 @@ describe CapsuleCRM::Person do
       it { should be_a(CapsuleCRM::Person) }
 
       it { should be_persisted }
+
+      it { subject.id.should eql(101) }
     end
 
     context 'when the person is not valid' do
@@ -313,13 +317,13 @@ describe CapsuleCRM::Person do
 
     let(:address_json) { subject['contacts']['address'].first }
 
-    subject { person.to_capsule_json }
+    subject { person.to_capsule_json['person'] }
 
-    it { should have_key('first_name') }
+    it { should have_key('firstName') }
 
-    it { should have_key('last_name') }
+    it { should have_key('lastName') }
 
-    it { should have_key('organisation_name') }
+    it { should have_key('organisationName') }
 
     it { should have_key('contacts') }
 
