@@ -167,7 +167,7 @@ class CapsuleCRM::Person
   # Returns a CapsuleCRM::Person
   def save!
     if valid?
-      new_record ? create_record : update_record
+      new_record? ? create_record : update_record
     else
       raise CapsuleCRM::Errors::RecordInvalid.new(self)
     end

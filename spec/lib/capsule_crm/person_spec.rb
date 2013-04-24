@@ -176,7 +176,7 @@ describe CapsuleCRM::Person do
 
         let(:person) { CapsuleCRM::Person.new(first_name: 'Eric') }
 
-        before { person.save }
+        before { person.save! }
 
         it { person.should be_persisted }
       end
