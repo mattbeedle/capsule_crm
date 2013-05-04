@@ -28,5 +28,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('guard-rspec')
   gem.add_development_dependency('rb-fsevent')
   gem.add_development_dependency('rspec')
+  gem.add_development_dependency('shoulda-matchers')
   gem.add_development_dependency('webmock')
 end
