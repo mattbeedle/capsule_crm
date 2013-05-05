@@ -90,4 +90,228 @@ describe CapsuleCRM::Opportunity do
 
     it { opportunity.milestone_id.should eql(3) }
   end
+
+  describe '.create' do
+    context 'when the opportunity is valid' do
+      before do
+        stub_request(:post, /.*/).to_return(headers: {
+          'Location' => 'https://sample.capsulecrm.com/api/opportunity/59'
+        })
+      end
+
+      subject do
+        CapsuleCRM::Opportunity.create(
+          name: 'Test Opportunity', milestone_id: 1
+        )
+      end
+
+      it { should be_a(CapsuleCRM::Opportunity) }
+
+      it { should be_persisted }
+
+      it { subject.id.should eql(59) }
+    end
+
+    context 'when the opportunity is not valid' do
+      subject { CapsuleCRM::Opportunity.create }
+
+      it { subject.errors.should_not be_blank }
+    end
+  end
+
+  describe '.create!' do
+    context 'when the opportunity is valid' do
+      before do
+        stub_request(:post, /.*/).to_return(headers: {
+          'Location' => 'https://sample.capsulecrm.com/api/opportunity/71'
+        })
+      end
+
+      subject do
+        CapsuleCRM::Opportunity.create(
+          name: 'Test Opportunity', milestone_id: 1
+        )
+      end
+
+      it { should be_a(CapsuleCRM::Opportunity) }
+
+      it { should be_persisted }
+
+      it { subject.id.should eql(71) }
+    end
+
+    context 'when the opportunity is not valid' do
+      it do
+        expect { CapsuleCRM::Opportunity.create! }.
+          to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
+    end
+  end
+
+  describe '#update_attributes' do
+    context 'when the opportunity is valid' do
+      before do
+        stub_request(:put, /.*/).to_return(status: 200)
+      end
+
+      let(:opportunity) { CapsuleCRM::Opportunity.new(id: 1) }
+
+      before { opportunity.update_attributes name: 'renamed' }
+
+      it { opportunity.name.should eql('renamed') }
+
+      it { opportunity.id.should eql(1) }
+    end
+
+    context 'when the opportunity is not valid' do
+      let(:opportunity) { CapsuleCRM::Opportunity.new(id: 1) }
+
+      before { opportunity.update_attributes }
+
+      it { opportunity.should_not be_valid }
+
+      it { opportunity.errors.should_not be_blank }
+    end
+  end
+
+  describe '#update_attributes!' do
+
+    let(:opportunity) { CapsuleCRM::Opportunity.new(id: 1) }
+
+    context 'when the opportunity is valid' do
+      before do
+        stub_request(:put, /.*/).to_return(status: 200)
+      end
+
+      before { opportunity.update_attributes name: 'A New Name' }
+
+      it { opportunity.name.should eql('A New Name') }
+
+      it { opportunity.id.should eql(1) }
+    end
+
+    context 'when the opportunity is not valid' do
+      it do
+        expect { opportunity.update_attributes! }.
+          to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
+    end
+  end
+
+  describe '#save' do
+    context 'when the opportunity is a new record' do
+      before do
+        stub_request(:post, /.*/).to_return(headers: {
+          'Location' => 'https://sample.capsulecrm.com/api/party/100'
+        }, status: 200)
+      end
+
+      let(:opportunity) do
+        CapsuleCRM::Opportunity.new(name: 'Test', milestone_id: 1)
+      end
+
+      before { opportunity.save }
+
+      it { opportunity.name.should eql('Test') }
+
+      it { opportunity.milestone_id.should eql(1) }
+
+      it { opportunity.should be_persisted }
+    end
+  end
+
+  describe '#save!' do
+    context 'when the opportunity is a new record' do
+      context 'when the opportunity is valid' do
+        before do
+          stub_request(:post, /.*/).to_return(headers: {
+            'Location' => 'https://sample.capsulecrm.com/api/party/100',
+          }, status: 200)
+        end
+
+        let(:opportunity) do
+          CapsuleCRM::Opportunity.new(name: 'Test', milestone_id: 1)
+        end
+
+        before { opportunity.save! }
+
+        it { opportunity.should be_persisted }
+      end
+
+      context 'when the opportunity is not valid' do
+        let(:opportunity) { CapsuleCRM::Opportunity.new }
+
+        it do
+          expect { opportunity.save! }.
+            to raise_error(CapsuleCRM::Errors::RecordInvalid)
+        end
+      end
+    end
+
+    context 'when the opportunity is not a new record' do
+      context 'when the opportunity is not valid' do
+
+        let(:opportunity) { CapsuleCRM::Opportunity.new(id: 1) }
+
+        it do
+          expect { opportunity.save! }.
+            to raise_exception(CapsuleCRM::Errors::RecordInvalid)
+        end
+      end
+    end
+  end
+
+  describe '#new_record?' do
+    context 'when the opportunity is a new record' do
+      let(:opportunity) { CapsuleCRM::Opportunity.new }
+
+      subject { opportunity.new_record? }
+
+      it { should be_true }
+    end
+
+    context 'when the opportunity is not a new record' do
+      let(:opportunity) { CapsuleCRM::Opportunity.new(id: 1) }
+
+      subject { opportunity.new_record? }
+
+      it { should be_false }
+    end
+  end
+
+  describe '#persisted?' do
+    context 'when the opportunity is persisted' do
+      let(:opportunity) { CapsuleCRM::Opportunity.new(id: 1) }
+
+      subject { opportunity.persisted? }
+
+      it { should be_true }
+    end
+
+    context 'when the opportunity is not persisted' do
+      let(:opportunity) { CapsuleCRM::Opportunity.new }
+
+      subject { opportunity.persisted? }
+
+      it { should be_false }
+    end
+  end
+
+  describe '.init_collection' do
+    subject do
+      CapsuleCRM::Opportunity.init_collection(
+        JSON.parse(
+          File.read('spec/support/all_opportunities.json')
+        )['opportunities']['opportunity']
+      )
+    end
+
+    it { should be_a(Array) }
+
+    it { subject.length.should eql(1) }
+
+    it do
+      subject.all? { |item| item.is_a?(CapsuleCRM::Opportunity) }.should be_true
+    end
+  end
 end
