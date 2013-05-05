@@ -329,4 +329,17 @@ describe CapsuleCRM::Opportunity do
 
     it { opportunity.should_not be_persisted }
   end
+
+  describe '.deleted' do
+    before do
+      stub_request(:get, /.*/).
+        to_return(body: File.read('spec/support/deleted_opportunities.json'))
+    end
+
+    subject { CapsuleCRM::Opportunity.deleted(1.week.ago) }
+
+    it { should be_a(Array) }
+
+    it { subject.length.should eql(2) }
+  end
 end

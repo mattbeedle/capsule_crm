@@ -1,0 +1,14 @@
+{
+  "deletedOpportunities": {
+    "deletedOpportunity": [
+      {
+        "id": "1",
+        "deletedDate": "2011-11-16T16:35:31Z"
+      },
+      {
+        "id": "6",
+        "deletedDate": "2011-12-31T11:16:19Z"
+      }
+    ]
+  }
+}

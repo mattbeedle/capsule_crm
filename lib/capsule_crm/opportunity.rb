@@ -74,11 +74,29 @@ module CapsuleCRM
     #
     # CapsuleCRM::Opportunity.all(start: 10, limit: 20)
     #
-    # Returns a ResultsProxy of organisations
+    # Returns a ResultsProxy of opportunities
     def self.all(options = {})
       init_collection(
-        CapsuleCRM::Connection.
-        get('/api/opportunity', options)['opportunities']['opportunity']
+        CapsuleCRM::Connection.get(
+          '/api/opportunity', options
+        )['opportunities']['opportunity']
+      )
+    end
+
+    # Public: Get all deleted opportunities since the specified date
+    #
+    # since - The Date to start checking for deleted opportunities
+    #
+    # Examples
+    #
+    # CapsuleCRM::Opportunity.deleted(1.week.ago)
+    #
+    # Returns a ResultsProxy of opportunities
+    def self.deleted(since)
+      init_collection(
+        CapsuleCRM::Connection.get(
+          '/api/opportunity/deleted', since: since
+        )['deletedOpportunities']['deletedOpportunity']
       )
     end
 
