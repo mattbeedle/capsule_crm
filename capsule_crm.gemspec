@@ -23,6 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency('faraday_middleware')
   gem.add_runtime_dependency('virtus')
 
+  gem.add_development_dependency('coveralls')
   gem.add_development_dependency('cucumber')
   gem.add_development_dependency('guard')
   gem.add_development_dependency('guard-rspec')
