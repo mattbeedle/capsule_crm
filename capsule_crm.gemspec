@@ -23,10 +23,12 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency('faraday_middleware')
   gem.add_runtime_dependency('virtus')
 
+  gem.add_development_dependency('coveralls')
   gem.add_development_dependency('cucumber')
   gem.add_development_dependency('guard')
   gem.add_development_dependency('guard-rspec')
   gem.add_development_dependency('rb-fsevent')
   gem.add_development_dependency('rspec')
+  gem.add_development_dependency('shoulda-matchers')
   gem.add_development_dependency('webmock')
 end
