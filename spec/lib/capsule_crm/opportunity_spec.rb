@@ -314,4 +314,19 @@ describe CapsuleCRM::Opportunity do
       subject.all? { |item| item.is_a?(CapsuleCRM::Opportunity) }.should be_true
     end
   end
+
+  describe '#destroy' do
+    let(:opportunity) do
+      CapsuleCRM::Opportunity.new(id: 1)
+    end
+
+    before do
+      stub_request(:delete, /.*/).to_return(status: 200)
+      opportunity.destroy
+    end
+
+    it { opportunity.id.should be_blank }
+
+    it { opportunity.should_not be_persisted }
+  end
 end

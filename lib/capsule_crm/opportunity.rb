@@ -289,6 +289,18 @@ module CapsuleCRM
       }.stringify_keys
     end
 
+    # Public: Delete the opportunity in capsule
+    #
+    # Examples
+    #
+    # opportunity.destroy
+    #
+    # Return the CapsuleCRM::Opportunity
+    def destroy
+      self.id = nil if CapsuleCRM::Connection.delete("/api/opportunity/#{id}")
+      self
+    end
+
     private
 
     def create_record
