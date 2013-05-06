@@ -22,6 +22,7 @@ module CapsuleCRM
     attr_accessor :milestone, :owner
 
     validates :name, presence: true
+    validates :party_id, presence: true
     validates :milestone_id, presence: { unless: :milestone }
     validates :milestone, presence: { unless: :milestone_id }
 
@@ -323,7 +324,7 @@ module CapsuleCRM
 
     def create_record
       self.attributes = CapsuleCRM::Connection.post(
-        '/api/opportunity', to_capsule_json
+        "/api/party/#{party_id}/opportunity", to_capsule_json
       )
       self
     end

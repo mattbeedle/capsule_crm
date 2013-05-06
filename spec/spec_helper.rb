@@ -1,10 +1,12 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'webmock/rspec'
-require 'support/helpers'
+
 require 'capsule_crm'
-require 'shoulda-matchers'
 require 'coveralls'
+require 'fabrication'
+require 'shoulda-matchers'
+require 'support/helpers'
+require 'webmock/rspec'
 
 Coveralls.wear!
 

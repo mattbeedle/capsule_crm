@@ -94,15 +94,23 @@ describe CapsuleCRM::Opportunity do
   describe '.create' do
     context 'when the opportunity is valid' do
       before do
-        stub_request(:post, /.*/).to_return(headers: {
+        stub_request(:post, request_path).to_return(headers: {
           'Location' => 'https://sample.capsulecrm.com/api/opportunity/59'
         })
       end
 
+      let(:request_path) do
+        [
+          'https://1234:@company.capsulecrm.com/api/party/',
+          opportunity_attributes[:party_id],
+          '/opportunity'
+        ].join
+      end
+
+      let(:opportunity_attributes) { Fabricate.attributes_for(:opportunity) }
+
       subject do
-        CapsuleCRM::Opportunity.create(
-          name: 'Test Opportunity', milestone_id: 1
-        )
+        CapsuleCRM::Opportunity.create opportunity_attributes
       end
 
       it { should be_a(CapsuleCRM::Opportunity) }
@@ -128,9 +136,7 @@ describe CapsuleCRM::Opportunity do
       end
 
       subject do
-        CapsuleCRM::Opportunity.create(
-          name: 'Test Opportunity', milestone_id: 1
-        )
+        CapsuleCRM::Opportunity.create Fabricate.attributes_for(:opportunity)
       end
 
       it { should be_a(CapsuleCRM::Opportunity) }
@@ -207,7 +213,7 @@ describe CapsuleCRM::Opportunity do
       end
 
       let(:opportunity) do
-        CapsuleCRM::Opportunity.new(name: 'Test', milestone_id: 1)
+        Fabricate.build(:opportunity)
       end
 
       before { opportunity.save }
@@ -230,7 +236,7 @@ describe CapsuleCRM::Opportunity do
         end
 
         let(:opportunity) do
-          CapsuleCRM::Opportunity.new(name: 'Test', milestone_id: 1)
+          Fabricate.build(:opportunity)
         end
 
         before { opportunity.save! }
