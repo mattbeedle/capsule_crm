@@ -7,6 +7,9 @@ Version](https://badge.fury.io/rb/capsule_crm.png)](http://badge.fury.io/rb/caps
 [![Coverage
 Status](https://coveralls.io/repos/mattbeedle/capsule_crm/badge.png?branch=master)](https://coveralls.io/r/mattbeedle/capsule_crm)
 
+[![Dependency
+Status](https://gemnasium.com/mattbeedle/capsule_crm.png)](https://gemnasium.com/mattbeedle/capsule_crm)
+
 # CapsuleCRM
 
 CapsuleCRM provides an ActiveModel compliant interface to the capsulecrm API
