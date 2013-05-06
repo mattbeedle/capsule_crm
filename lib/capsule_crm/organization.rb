@@ -2,7 +2,7 @@ require 'active_support/core_ext'
 
 module CapsuleCRM
   class Organization < CapsuleCRM::Party
-    include ::Virtus
+    include Virtus
 
     extend ActiveModel::Naming
     extend ActiveModel::Callbacks
