@@ -10,10 +10,15 @@ module CapsuleCRM
     include ActiveModel::Validations
     include ActiveModel::Validations::Callbacks
 
-    attribute :name
-    attribute :about
+    include CapsuleCRM::Associations::HasMany
+
+    attribute :id,    Integer
+    attribute :name,  String
+    attribute :about, String
 
     validates :name, presence: true
+
+    has_many :people, class_name: 'CapsuleCRM::Person'
 
     # Public: Set the attributes of an organization
     #

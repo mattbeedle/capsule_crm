@@ -22,6 +22,14 @@ module CapsuleCRM
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
 
+    def self.for_organization(organization_id)
+      init_collection(
+        CapsuleCRM::Connection.get(
+          "/api/party/#{organization_id}/people"
+        )['parties']['person']
+      )
+    end
+
     # Public: Set the attributes of a person
     #
     # attributes  - The Hash of attributes (default: {}):

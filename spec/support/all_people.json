@@ -1,0 +1,16 @@
+{
+  "parties": {
+    "person": [
+      {
+        "id": "100",
+        "lastName": "Schmidt",
+        "firstName": "Eric"
+      },
+      {
+        "id": "101",
+        "lastName": "Page",
+        "firstName": "Larry "
+      }
+    ]
+  }
+}
