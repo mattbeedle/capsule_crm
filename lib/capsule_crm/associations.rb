@@ -1,3 +1,5 @@
+require 'capsule_crm/associations/belongs_to'
+
 module CapsuleCRM
   module Associations
     extend ActiveSupport::Concern

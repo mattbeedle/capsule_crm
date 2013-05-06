@@ -21,6 +21,76 @@ describe CapsuleCRM::Opportunity do
     it { should_not validate_presence_of(:milestone_id) }
   end
 
+  describe '#party=' do
+    let(:opportunity) { Fabricate.build(:opportunity, party: nil) }
+
+    let(:person) { CapsuleCRM::Person.new(id: 2) }
+
+    before { opportunity.party= person }
+
+    it 'should set the party_id' do
+      opportunity.party_id.should eql(2)
+    end
+
+    it 'should set the party' do
+      opportunity.party.should eql(person)
+    end
+  end
+
+  describe '#party' do
+    let(:person) { CapsuleCRM::Person.new(id: 1) }
+
+    let(:organization) { CapsuleCRM::Organization.new(id: 2) }
+
+    let(:opportunity) { Fabricate.build(:opportunity, party: nil) }
+
+    context 'when the party is set' do
+      context 'when the party is a person' do
+        before { opportunity.party = person }
+
+        it { opportunity.party.should eql(person) }
+      end
+
+      context 'when the party is an organization' do
+        before { opportunity.party = organization }
+
+        it { opportunity.party.should eql(organization) }
+      end
+    end
+
+    context 'when the party_id is set' do
+      context 'when the party is a person' do
+        before do
+          stub_request(:get, /.*/).
+            to_return(body: File.read('spec/support/person.json'))
+          opportunity.party_id = person.id
+        end
+
+        it 'should return the party' do
+          opportunity.party.should be_a(CapsuleCRM::Person)
+        end
+
+        it { opportunity.party.id.should eql(opportunity.party_id) }
+      end
+
+      context 'when the party is an opportunity' do
+        before do
+          stub_request(:get, /.*/).
+            to_return(body: File.read('spec/support/organisation.json'))
+          opportunity.party_id = organization.id
+        end
+
+        it { opportunity.party.should be_a(CapsuleCRM::Organization) }
+
+        it { opportunity.party.id.should eql(opportunity.party_id) }
+      end
+    end
+
+    context 'when the party_id is nil' do
+      it { opportunity.party.should be_nil }
+    end
+  end
+
   describe '.all' do
     before do
       stub_request(:get, /\/api\/opportunity$/).

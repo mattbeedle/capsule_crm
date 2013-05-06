@@ -6,14 +6,15 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
+    include CapsuleCRM::Associations::BelongsTo
+
     attribute :id, Integer
-    attribute :name
-    attribute :description
+    attribute :name, String
+    attribute :description, String
     attribute :currency
     attribute :value, Float
     attribute :duration_basis
     attribute :duration, Integer
-    attribute :party_id, Integer
     attribute :milestone_id, Integer
     attribute :expected_close_date, DateTime
     attribute :actual_close_date, DateTime
@@ -25,6 +26,8 @@ module CapsuleCRM
     validates :party_id, presence: true
     validates :milestone_id, presence: { unless: :milestone }
     validates :milestone, presence: { unless: :milestone_id }
+
+    belongs_to :party, class_name: 'CapsuleCRM::Party'
 
     # Public: Set the attributes of a opportunity
     #
