@@ -32,18 +32,24 @@ module CapsuleCRM
         # => [person]
         def has_many(association_name, options = {})
           define_method association_name do
-            instance_variable_get("@#{association_name}") ||
+            instance_variable_get(:"@#{association_name}") ||
               CapsuleCRM::Associations::HasManyProxy.new(
+                self, # parent
+                options[:class_name].constantize, # target class
                 options[:class_name].constantize.
-                send("for_#{self.class.to_s.demodulize.downcase}", id)
+                  send("_for_#{self.class.to_s.demodulize.downcase}", self.id),
+                options[:source] # source
               ).tap do |proxy|
-                instance_variable_set "@#{association_name}", proxy
+                instance_variable_set :"@#{association_name}", proxy
               end
+            instance_variable_get :"@#{association_name}"
           end
 
           define_method "#{association_name}=" do |associated_objects|
             instance_variable_set :"@#{association_name}",
-              CapsuleCRM::Associations::HasManyProxy.new(associated_objects)
+              CapsuleCRM::Associations::HasManyProxy.new(
+                parent, associated_objects
+            )
           end
         end
       end

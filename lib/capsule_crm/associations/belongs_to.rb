@@ -30,7 +30,14 @@ module CapsuleCRM
         # => organisation
         def belongs_to(association_name, options = {})
           class_eval do
-            attribute :"#{association_name}_id", Integer
+            attribute options[:foreign_key] ||
+              :"#{association_name}_id", Integer
+          end
+
+          (class << self; self; end).instance_eval do
+            define_method "_for_#{association_name}" do |id|
+              raise NotImplementedError
+            end
           end
 
           define_method association_name do

@@ -3,12 +3,11 @@ module CapsuleCRM
     include Virtus
 
     include CapsuleCRM::Contactable
+    include CapsuleCRM::Associations::BelongsTo
 
     extend ActiveModel::Naming
-    extend ActiveModel::Callbacks
     include ActiveModel::Conversion
     include ActiveModel::Validations
-    include ActiveModel::Validations::Callbacks
 
     attribute :id, Integer
     attribute :title
@@ -17,12 +16,14 @@ module CapsuleCRM
     attribute :job_title
     attribute :about
     attribute :organisation_name
-    attribute :organisation_id
+
+    belongs_to :organization, class_name: 'CapsuleCRM::Organization',
+      foreign_key: :organisation_id
 
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
 
-    def self.for_organization(organization_id)
+    def self._for_organization(organization_id)
       init_collection(
         CapsuleCRM::Connection.get(
           "/api/party/#{organization_id}/people"
