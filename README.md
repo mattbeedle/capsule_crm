@@ -31,13 +31,34 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-person = CapsuleCRM::Person.new(first_name: 'Matt', last_name: 'Beedle', organisation_name: "Matt's Company")
+contacts = CapsuleCRM::Contacts.new(
+  addresses:  [CapsuleCRM::Address.new(street: 'Oranieburgerstr', city: 'Berlin')],
+  emails:     [CapsuleCRM::Email.new(email_address: 'mattbeedle@gmail.com')],
+  phones:     [CapsuleCRM::Phone.new(phone_number: '123456789')],
+  webstes:    [CapsuleCRM::Website.new(web_service: 'URL', web_address: 'http://github.com]
+)
+
+person = CapsuleCRM::Person.new(
+  first_name: 'Matt', last_name: 'Beedle', organisation_name: "Matt's Company",
+  contacts: contacts
+)
 person.save
 
 person.first_name = 'John'
 person.save #=> true
 
 person.valid? #=> true
+
+person.organization #=> CapsuleCRM::Organization
+
+person.organization.tap do |org|
+  org.update_attributes! contacts: CapsuleCRM::Contacts.new(
+    addresses: CapsuleCRM::Address.new(street: 'Thurneysserstr')
+  )
+
+  org.contacts.phones << CapsuleCRM::Phone.new(phone_number: '234243')
+  org.save
+end
 
 person.first_name = nil
 person.last_name = nil
@@ -49,6 +70,9 @@ person.save! #=> CapsuleCRM::Errors::InvalidRecord
 person.destroy #=> true
 
 person = CapsuleCRM::Person.create(first_name: 'Matt', last_name: 'Beedle')
+
+case = CapsuleCRM::Case.create! name: 'My First Case', party: person
+case.update_attributes name: 'A New Case Name'
 ```
 
 ## Contributing
