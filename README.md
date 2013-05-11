@@ -35,7 +35,7 @@ contacts = CapsuleCRM::Contacts.new(
   addresses:  [CapsuleCRM::Address.new(street: 'Oranieburgerstr', city: 'Berlin')],
   emails:     [CapsuleCRM::Email.new(email_address: 'mattbeedle@gmail.com')],
   phones:     [CapsuleCRM::Phone.new(phone_number: '123456789')],
-  webstes:    [CapsuleCRM::Website.new(web_service: 'URL', web_address: 'http://github.com]
+  webstes:    [CapsuleCRM::Website.new(web_service: 'URL', web_address: 'http://github.com']
 )
 
 person = CapsuleCRM::Person.new(
