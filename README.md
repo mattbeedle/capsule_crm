@@ -71,8 +71,8 @@ person.destroy #=> true
 
 person = CapsuleCRM::Person.create(first_name: 'Matt', last_name: 'Beedle')
 
-case = CapsuleCRM::Case.create! name: 'My First Case', party: person
-case.update_attributes name: 'A New Case Name'
+kase = CapsuleCRM::Case.create! name: 'My First Case', party: person
+kase.update_attributes name: 'A New Case Name'
 ```
 
 ## Contributing
