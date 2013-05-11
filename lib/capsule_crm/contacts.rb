@@ -15,10 +15,10 @@ module CapsuleCRM
     #
     # Returns a CapsuleCRM::Contact
     def initialize(attributes = {})
-      self.addresses  = attributes[:addresses]
-      self.emails     = attributes[:emails]
-      self.phones     = attributes[:phones]
-      self.websites   = attributes[:websites]
+      self.addresses  = Array(attributes[:addresses])
+      self.emails     = Array(attributes[:emails])
+      self.phones     = Array(attributes[:phones])
+      self.websites   = Array(attributes[:websites])
     end
 
     # Public: Sets the addresses for this contacts container
