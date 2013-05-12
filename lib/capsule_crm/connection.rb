@@ -14,13 +14,16 @@ module CapsuleCRM
       JSON.parse response.body
     end
 
-    def self.post(path, params)
+    def self.post(path, params = {})
       response = faraday.post(path, params.to_json) do |request|
         request.headers.update default_request_headers
       end
       if response.success?
-        id = response.headers['Location'].match(/\/(?<id>\d+)$/)[:id]
-        { id: id }
+        if match = response.headers['Location'].match(/\/(?<id>\d+)$/)
+          { id: match[:id] }
+        else
+          true
+        end
       else
         false
       end

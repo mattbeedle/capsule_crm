@@ -1,4 +1,5 @@
 class CapsuleCRM::Party
+  include CapsuleCRM::Taggable
 
   def self.all(options = {})
     attributes = CapsuleCRM::Connection.get('/api/party', options)
