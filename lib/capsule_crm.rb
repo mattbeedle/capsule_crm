@@ -8,6 +8,8 @@ require 'capsule_crm/associations'
 require 'capsule_crm/address'
 require 'capsule_crm/case'
 require 'capsule_crm/connection'
+
+require 'capsule_crm/currency'
 require 'capsule_crm/email'
 require 'capsule_crm/party'
 require 'capsule_crm/phone'
