@@ -1,0 +1,18 @@
+{
+  "historyItem": {
+    "id": "100",
+    "creatorName": "A User",
+    "type": "Note",
+    "note": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla mollis ullamcorper vehicula.",
+    "subject": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla mollis ullam...",
+    "creator": "a.user",
+    "entryDate": "2009-09-11T16:07:49Z",
+    "attachments": {
+      "attachment": {
+        "id": "20",
+        "contentType": "application/msword",
+        "filename": "latin.doc"
+      }
+    }
+  }
+}
