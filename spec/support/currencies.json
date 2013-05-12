@@ -1,0 +1,9 @@
+{
+  "currencies": {
+    "currency": [
+      "AUD",
+      "CAD",
+      "EUR"
+    ]
+  }
+}
