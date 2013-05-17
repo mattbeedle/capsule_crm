@@ -16,11 +16,11 @@ module CapsuleCRM
     attribute :subject, String
     attribute :note, String
 
-    has_many :attachments, class_name: 'CapsuleCRM::Attachment'
+    has_many :attachments,  class_name: 'CapsuleCRM::Attachment'
     has_many :participants, class_name: 'CapsuleCRM::Participant'
 
-    belongs_to :party, class_name: 'CapsuleCRM::Party'
-    belongs_to :case, class_name: 'CapsuleCRM::Case'
+    belongs_to :party,       class_name: 'CapsuleCRM::Party'
+    belongs_to :case,        class_name: 'CapsuleCRM::Case'
     belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
 
     def self.create(attributes = {})
@@ -30,24 +30,43 @@ module CapsuleCRM
     end
 
     def update_attributes(attributes = {})
+      self.attributes = attributes
+      save
     end
 
     def update_attributes!(attributes = {})
+      self.attributes = attributes
+      save!
     end
 
     def save
+      if valid?
+        new_record? ? create_record : update_record
+      else
+        false
+      end
     end
 
     def save!
+      if valid?
+        new_record? ? create_record : update_record
+      else
+        raise CapsuleCRM::Errors::RecordInvalid.new(self)
+      end
     end
 
     def destroy
     end
 
     def new_record?
+      !id
     end
 
     def persisted?
+      !new_record?
+    end
+
+    def to_capsule_json
     end
 
     private
@@ -56,6 +75,7 @@ module CapsuleCRM
     end
 
     def update_record
+      CapsuleCRM::Connection.put("/api/history/#{id}", to_capsule_json)
     end
   end
 end
