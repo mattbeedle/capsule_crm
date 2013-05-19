@@ -28,6 +28,7 @@ module CapsuleCRM
       presence: { if: :belongs_to_required? }
 
     def self.create(attributes = {})
+      new(attributes).tap(&:save)
     end
 
     def self.create!(attributes = {})
@@ -71,6 +72,7 @@ module CapsuleCRM
     end
 
     def to_capsule_json
+      {}
     end
 
     private
@@ -80,6 +82,25 @@ module CapsuleCRM
     end
 
     def create_record
+      self.attributes = CapsuleCRM::Connection.post(
+        "/api/#{belongs_to_api_name}/#{belongs_to_id}/history", to_capsule_json
+      )
+      self
+    end
+
+    def belongs_to_api_name
+      {
+        person: 'party', company: 'party', case: 'kase',
+        opportunity: 'opportunity'
+      }.stringify_keys[belongs_to_name]
+    end
+
+    def belongs_to_name
+      (party || kase || opportunity).class.to_s.demodulize.downcase
+    end
+
+    def belongs_to_id
+      (party || kase || opportunity).id
     end
 
     def update_record

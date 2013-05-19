@@ -29,4 +29,6 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.include Helpers
+
+  config.fail_fast = true
 end
