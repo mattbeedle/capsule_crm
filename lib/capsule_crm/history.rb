@@ -20,10 +20,12 @@ module CapsuleCRM
     has_many :participants, class_name: 'CapsuleCRM::Participant'
 
     belongs_to :party,       class_name: 'CapsuleCRM::Party'
-    belongs_to :case,        class_name: 'CapsuleCRM::Case'
+    belongs_to :kase,        class_name: 'CapsuleCRM::Case'
     belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
 
     validates :note, presence: true
+    validates :party, :kase, :opportunity,
+      presence: { if: :belongs_to_required? }
 
     def self.create(attributes = {})
     end
@@ -72,6 +74,10 @@ module CapsuleCRM
     end
 
     private
+
+    def belongs_to_required?
+      party.blank? && kase.blank? && opportunity.blank?
+    end
 
     def create_record
     end

@@ -15,9 +15,7 @@ describe CapsuleCRM::History do
 
   describe '#update_attributes' do
     context 'when the history is valid' do
-      subject do
-        CapsuleCRM::History.new(note: Faker::Lorem.paragraph, id: 2)
-      end
+      subject { Fabricate(:history, id: 2) }
 
       before do
         stub_request(:put, /api\/history\/2$/).to_return(status: 200)
@@ -42,9 +40,7 @@ describe CapsuleCRM::History do
 
   describe '#update_attributes!' do
     context 'when it is valid' do
-      subject do
-        CapsuleCRM::History.new(note: Faker::Lorem.paragraph, id: 3)
-      end
+      subject { Fabricate(:history, id: 3) }
 
       before do
         stub_request(:put, /api\/history\/3$/).to_return(status: 200)
