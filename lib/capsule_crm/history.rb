@@ -23,6 +23,8 @@ module CapsuleCRM
     belongs_to :case,        class_name: 'CapsuleCRM::Case'
     belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
 
+    validates :note, presence: true
+
     def self.create(attributes = {})
     end
 
