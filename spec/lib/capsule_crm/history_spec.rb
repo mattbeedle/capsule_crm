@@ -6,74 +6,148 @@ describe CapsuleCRM::History do
   it { should validate_presence_of(:note) }
 
   describe '.create' do
-    context 'when it is a new record' do
-      context 'when it belongs to a party' do
-        let(:person) { Fabricate.build(:person, id: 1) }
+    context 'when it belongs to a party' do
+      let(:person) { Fabricate.build(:person, id: 1) }
 
-        subject do
-          CapsuleCRM::History.create(
-            note: Faker::Lorem.paragraph, party: person
-          )
-        end
-
-        before do
-          stub_request(:post, /\/api\/party\/#{person.id}\/history$/).
-            to_return(headers: { 'Location' => "https://sample.capsulecrm.com/api/party/#{person.id}/history/101" })
-        end
-
-        it { subject.id.should eql(101) }
+      subject do
+        CapsuleCRM::History.create(
+          note: Faker::Lorem.paragraph, party: person
+        )
       end
 
-      context 'when it belongs to a kase' do
-        let(:kase) { Fabricate.build(:case, id: 2) }
-
-        subject do
-          CapsuleCRM::History.create(note: Faker::Lorem.paragraph, kase: kase)
-        end
-
-        before do
-          stub_request(:post, /\/api\/kase\/#{kase.id}\/history$/).
-            to_return(headers: { 'Location' => "https://sample.capsulecrm.com/api/kase/#{kase.id}/history/10" })
-        end
-
-        it { subject.id.should eql(10) }
+      let(:location) do
+        "https://sample.capsulecrm.com/api/party/#{person.id}/history/101"
       end
 
-      context 'when it belongs to an opportunity' do
-        let(:opportunity) { Fabricate.build(:opportunity, id: 1) }
-
-        subject do
-          CapsuleCRM::History.create(
-            note: Faker::Lorem.paragraph, opportunity: opportunity
-          )
-        end
-
-        before do
-          location = [
-            'https://sample.capsulecrm.com/api/opportunity/',
-            opportunity.id, '/history/9'
-          ].join
-          stub_request(:post, /\/api\/opportunity\/#{opportunity.id}\/history$/).
-            to_return(headers: { 'Location' => location })
-        end
-
-        it { subject.id.should eql(9) }
+      before do
+        stub_request(:post, /\/api\/party\/#{person.id}\/history$/).
+          to_return(headers: { 'Location' => location})
       end
 
-      context 'when it is invalid' do
-        subject { CapsuleCRM::History.create }
-
-        it { should_not be_valid }
-      end
+      it { subject.id.should eql(101) }
     end
 
-    context 'when it is an existing record' do
-      pending
+    context 'when it belongs to a kase' do
+      let(:kase) { Fabricate.build(:case, id: 2) }
+
+      let(:location) do
+        "https://sample.capsulecrm.com/api/kase/#{kase.id}/history/10"
+      end
+
+      subject do
+        CapsuleCRM::History.create(note: Faker::Lorem.paragraph, kase: kase)
+      end
+
+      before do
+        stub_request(:post, /\/api\/kase\/#{kase.id}\/history$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      it { subject.id.should eql(10) }
+    end
+
+    context 'when it belongs to an opportunity' do
+      let(:opportunity) { Fabricate.build(:opportunity, id: 1) }
+
+      subject do
+        CapsuleCRM::History.create(
+          note: Faker::Lorem.paragraph, opportunity: opportunity
+        )
+      end
+
+      let(:location) do
+        [
+          'https://sample.capsulecrm.com/api/opportunity/',
+          opportunity.id, '/history/9'
+        ].join
+      end
+
+      before do
+        stub_request(:post, /\/api\/opportunity\/#{opportunity.id}\/history$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      it { subject.id.should eql(9) }
+    end
+
+    context 'when it is invalid' do
+      subject { CapsuleCRM::History.create }
+
+      it { should_not be_valid }
     end
   end
 
   describe '.create!' do
-    pending
+    context 'when it belongs to a party' do
+      let(:person) { Fabricate.build(:person, id: 1) }
+
+      subject do
+        CapsuleCRM::History.create!(
+          note: Faker::Lorem.paragraph, party: person
+        )
+      end
+
+      let(:location) do
+        "https://sample.capsulecrm.com/api/party/#{person.id}/history/101"
+      end
+
+      before do
+        stub_request(:post, /\/api\/party\/#{person.id}\/history$/).
+          to_return(headers: { 'Location' => location})
+      end
+
+      it { subject.id.should eql(101) }
+    end
+
+    context 'when it belongs to a kase' do
+      let(:kase) { Fabricate.build(:case, id: 2) }
+
+      let(:location) do
+        "https://sample.capsulecrm.com/api/kase/#{kase.id}/history/10"
+      end
+
+      subject do
+        CapsuleCRM::History.create!(note: Faker::Lorem.paragraph, kase: kase)
+      end
+
+      before do
+        stub_request(:post, /\/api\/kase\/#{kase.id}\/history$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      it { subject.id.should eql(10) }
+    end
+
+    context 'when it belongs to an opportunity' do
+      let(:opportunity) { Fabricate.build(:opportunity, id: 1) }
+
+      subject do
+        CapsuleCRM::History.create!(
+          note: Faker::Lorem.paragraph, opportunity: opportunity
+        )
+      end
+
+      let(:location) do
+        [
+          'https://sample.capsulecrm.com/api/opportunity/',
+          opportunity.id, '/history/9'
+        ].join
+      end
+
+      before do
+        stub_request(:post, /\/api\/opportunity\/#{opportunity.id}\/history$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      it { subject.id.should eql(9) }
+    end
+
+    context 'when it is invalid' do
+      it do
+        expect { CapsuleCRM::History.create! }.
+          to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
+    end
   end
 
   describe '#update_attributes' do

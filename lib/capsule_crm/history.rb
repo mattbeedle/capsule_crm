@@ -32,6 +32,7 @@ module CapsuleCRM
     end
 
     def self.create!(attributes = {})
+      new(attributes).tap(&:save!)
     end
 
     def update_attributes(attributes = {})
