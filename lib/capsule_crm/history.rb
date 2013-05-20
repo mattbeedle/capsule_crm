@@ -91,7 +91,7 @@ module CapsuleCRM
 
     def belongs_to_api_name
       {
-        person: 'party', company: 'party', case: 'kase',
+        person: 'party', organization: 'party', case: 'kase',
         opportunity: 'opportunity'
       }.stringify_keys[belongs_to_name]
     end

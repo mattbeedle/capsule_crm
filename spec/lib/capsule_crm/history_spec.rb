@@ -152,7 +152,7 @@ describe CapsuleCRM::History do
 
   describe '#update_attributes' do
     context 'when the history is valid' do
-      subject { Fabricate(:history, id: 2) }
+      subject { Fabricate(:history, id: 2, party: Fabricate.build(:person)) }
 
       before do
         stub_request(:put, /api\/history\/2$/).to_return(status: 200)
@@ -177,7 +177,7 @@ describe CapsuleCRM::History do
 
   describe '#update_attributes!' do
     context 'when it is valid' do
-      subject { Fabricate(:history, id: 3) }
+      subject { Fabricate(:history, id: 3, party: Fabricate.build(:case)) }
 
       before do
         stub_request(:put, /api\/history\/3$/).to_return(status: 200)
@@ -200,10 +200,188 @@ describe CapsuleCRM::History do
   end
 
   describe '#save' do
-    pending
+    context 'when it is a new record' do
+      let(:history) { Fabricate.build(:history) }
+
+      context 'when it belongs to a party' do
+        let(:party) { Fabricate.build(:organization, id: 2) }
+
+        let(:location) do
+          "https://sample.capsulecrm.com/api/party/#{party.id}/history/101"
+        end
+
+        before do
+          history.party = party
+          stub_request(:post, /\/api\/party\/#{party.id}\/history$/).
+            to_return(headers: { 'Location' => location })
+          history.save
+        end
+
+        it { history.id.should eql(101) }
+
+        it { history.should be_persisted }
+      end
+
+      context 'when it belongs to a kase' do
+        let(:kase) { Fabricate.build(:case, id: 5) }
+
+        let(:location) do
+          "https://sample.capsulecrm.com/api/kase/#{kase.id}/history/10005"
+        end
+
+        before do
+          history.kase = kase
+          stub_request(:post, /\/api\/kase\/#{kase.id}\/history$/).
+            to_return(headers: { 'Location' => location })
+          history.save
+        end
+
+        it { history.id.should eql(10005) }
+
+        it { history.should be_persisted }
+      end
+
+      context 'when it belongs to an opportunity' do
+        let(:opportunity) { Fabricate.build(:opportunity, id: 3) }
+
+        let(:location) do
+          [
+            'https://sample.capsulecrm.com/api/opportunity/',
+            opportunity.id, '/history/101'
+          ].join
+        end
+
+        before do
+          history.opportunity = opportunity
+          stub_request(
+            :post, /\/api\/opportunity\/#{opportunity.id}\/history$/
+          ).to_return(headers: { 'Location' => location })
+          history.save
+        end
+
+        it { history.id.should eql(101) }
+
+        it { history.should be_persisted }
+      end
+    end
+
+    context 'when it is an existing record' do
+      let(:history) do
+        Fabricate.build(:history, party: Fabricate.build(:person), id: 10)
+      end
+
+      before do
+        stub_request(:put, /\/api\/history\/#{history.id}$/).
+          to_return(status: 200)
+        history.save
+      end
+
+      it { history.should be_persisted }
+    end
   end
 
   describe '#save!' do
+    context 'when it is a new record' do
+      context 'when it is invalid' do
+        let(:history) { CapsuleCRM::History.new(id: 5) }
+
+        it 'should raise an error' do
+          expect { history.save! }.
+            to raise_error(CapsuleCRM::Errors::RecordInvalid)
+        end
+      end
+
+      let(:history) { Fabricate.build(:history) }
+
+      context 'when it belongs to a party' do
+        let(:party) { Fabricate.build(:organization, id: 2) }
+
+        let(:location) do
+          "https://sample.capsulecrm.com/api/party/#{party.id}/history/101"
+        end
+
+        before do
+          history.party = party
+          stub_request(:post, /\/api\/party\/#{party.id}\/history$/).
+            to_return(headers: { 'Location' => location })
+          history.save!
+        end
+
+        it { history.id.should eql(101) }
+
+        it { history.should be_persisted }
+      end
+
+      context 'when it belongs to a kase' do
+        let(:kase) { Fabricate.build(:case, id: 5) }
+
+        let(:location) do
+          "https://sample.capsulecrm.com/api/kase/#{kase.id}/history/10005"
+        end
+
+        before do
+          history.kase = kase
+          stub_request(:post, /\/api\/kase\/#{kase.id}\/history$/).
+            to_return(headers: { 'Location' => location })
+          history.save!
+        end
+
+        it { history.id.should eql(10005) }
+
+        it { history.should be_persisted }
+      end
+
+      context 'when it belongs to an opportunity' do
+        let(:opportunity) { Fabricate.build(:opportunity, id: 3) }
+
+        let(:location) do
+          [
+            'https://sample.capsulecrm.com/api/opportunity/',
+            opportunity.id, '/history/101'
+          ].join
+        end
+
+        before do
+          history.opportunity = opportunity
+          stub_request(
+            :post, /\/api\/opportunity\/#{opportunity.id}\/history$/
+          ).to_return(headers: { 'Location' => location })
+          history.save!
+        end
+
+        it { history.id.should eql(101) }
+
+        it { history.should be_persisted }
+      end
+    end
+
+    context 'when it is an existing record' do
+      context 'when it is valid' do
+        let(:history) do
+          Fabricate.build(:history, party: Fabricate.build(:person), id: 10)
+        end
+
+        before do
+          stub_request(:put, /\/api\/history\/#{history.id}$/).
+            to_return(status: 200)
+          history.save!
+        end
+
+        it { history.should be_persisted }
+      end
+
+      context 'when it is not valid' do
+        let(:history) { CapsuleCRM::History.new(id: 1) }
+
+        it 'should raise an error' do
+          expect { history.save! }.
+            to raise_error(CapsuleCRM::Errors::RecordInvalid)
+        end
+      end
+    end
+  end
+
+  describe '#destroy' do
     pending
   end
 
