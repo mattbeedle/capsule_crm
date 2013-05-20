@@ -382,7 +382,17 @@ describe CapsuleCRM::History do
   end
 
   describe '#destroy' do
-    pending
+    let(:history) { Fabricate.build(:history, id: 19) }
+
+    before do
+      stub_request(:delete, /\/api\/history\/#{history.id}$/).
+        to_return(status: 200)
+      history.destroy
+    end
+
+    subject { history }
+
+    it { should_not be_persisted }
   end
 
   describe '#new_record?' do
