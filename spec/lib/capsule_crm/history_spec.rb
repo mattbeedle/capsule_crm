@@ -208,11 +208,39 @@ describe CapsuleCRM::History do
   end
 
   describe '#new_record?' do
-    pending
+    context 'when the history item is a new record' do
+      let(:history) { CapsuleCRM::History.new }
+
+      subject { history.new_record? }
+
+      it { should be_true }
+    end
+
+    context 'when the history item is not a new record' do
+      let(:history) { CapsuleCRM::History.new(id: 1) }
+
+      subject { history.new_record? }
+
+      it { should be_false }
+    end
   end
 
   describe '#persisted?' do
-    pending
+    context 'when the history item is persisted' do
+      let(:history) { CapsuleCRM::History.new(id: 1) }
+
+      subject { history.persisted? }
+
+      it { should be_true }
+    end
+
+    context 'when the hitory item is not persisted' do
+      let(:history) { CapsuleCRM::History.new }
+
+      subject { history.persisted? }
+
+      it { should be_false }
+    end
   end
 
   describe '#to_capsule_json' do
