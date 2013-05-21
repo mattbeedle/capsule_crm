@@ -1,6 +1,9 @@
 [![Build
 Status](https://travis-ci.org/mattbeedle/capsule_crm.png)](https://travis-ci.org/mattbeedle/capsule_crm)
 
+[![Code
+Climate](https://codeclimate.com/github/mattbeedle/capsule_crm.png)](https://codeclimate.com/github/mattbeedle/capsule_crm)
+
 [![Gem
 Version](https://badge.fury.io/rb/capsule_crm.png)](http://badge.fury.io/rb/capsule_crm)
 
