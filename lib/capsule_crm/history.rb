@@ -11,21 +11,39 @@ module CapsuleCRM
     attribute :id, Integer
     attribute :type, String
     attribute :entry_date, Date
-    attribute :creator, String
-    attribute :creator_name, String
     attribute :subject, String
     attribute :note, String
 
     has_many :attachments,  class_name: 'CapsuleCRM::Attachment'
     has_many :participants, class_name: 'CapsuleCRM::Participant'
 
-    belongs_to :party,       class_name: 'CapsuleCRM::Party'
-    belongs_to :kase,        class_name: 'CapsuleCRM::Case'
-    belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
+    belongs_to :creator,      class_name: 'CapsuleCRM::Person'
+    belongs_to :party,        class_name: 'CapsuleCRM::Party'
+    belongs_to :kase,         class_name: 'CapsuleCRM::Case',
+      foreign_key: :case_id
+    belongs_to :opportunity,  class_name: 'CapsuleCRM::Opportunity'
 
     validates :note, presence: true
     validates :party, :kase, :opportunity,
       presence: { if: :belongs_to_required? }
+
+    def attributes=(attributes)
+      CapsuleCRM::HashHelper.underscore_keys!(attributes)
+      super(attributes)
+      self
+    end
+
+    def self.find(id)
+      new CapsuleCRM::Connection.get("/api/history/#{id}")['historyItem']
+    end
+
+    def creator=(user)
+      if user.is_a?(String)
+        user = CapsuleCRM::User.find_by_username(user)
+      end
+      @creator = user
+      self
+    end
 
     def self.create(attributes = {})
       new(attributes).tap(&:save)
@@ -75,7 +93,13 @@ module CapsuleCRM
     end
 
     def to_capsule_json
-      {}
+      {
+        historyItem: CapsuleCRM::HashHelper.camelize_keys(
+          {
+            note: note, entry_date: entry_date, creator: creator.try(:name)
+          }.delete_if { |key, value| value.blank? }
+        )
+      }
     end
 
     private

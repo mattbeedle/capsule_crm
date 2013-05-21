@@ -5,6 +5,103 @@ describe CapsuleCRM::History do
 
   it { should validate_presence_of(:note) }
 
+  describe 'find' do
+    before do
+      stub_request(:get, /\/api\/history\/100$/).
+        to_return(body: File.read('spec/support/history.json'))
+      stub_request(:get, /\/api\/users$/).
+        to_return(body: File.read('spec/support/all_users.json'))
+    end
+
+    subject { CapsuleCRM::History.find(100) }
+
+    it { subject.type.should eql('Note') }
+
+    it { subject.creator.should be_a(CapsuleCRM::User) }
+
+    it { subject.entry_date.should_not be_blank }
+
+    it { subject.subject.should_not be_blank }
+
+    it { subject.note.should_not be_blank }
+
+    it { subject.attachments.should be_a(Array) }
+
+    it { subject.attachments.first.should be_a(CapsuleCRM::Attachment) }
+
+    it { subject.attachments.first.filename.should eql('latin.doc') }
+
+    it { subject.participants.should be_a(Array) }
+
+    it { subject.participants.first.should be_a(CapsuleCRM::Participant) }
+
+    it { subject.participants.first.name.should eql('Matt Beedle') }
+
+    context 'when it belongs to a party' do
+      before do
+        stub_request(:get, /\/api\/party\/1$/).
+          to_return(body: File.read('spec/support/person.json'))
+      end
+
+      it { subject.party_id.should_not be_blank }
+
+      it { subject.party.should_not be_blank }
+    end
+
+    context 'when it belongs to a case' do
+      before do
+        stub_request(:get, /\/api\/kase\/5$/).
+          to_return(body: File.read('spec/support/case.json'))
+      end
+
+      it { subject.case_id.should_not be_blank }
+
+      it { subject.kase.should_not be_blank }
+    end
+
+    context 'when it belongs to an opportunity' do
+      before do
+        stub_request(:get, /\/api\/opportunity\/2$/).
+          to_return(body: File.read('spec/support/opportunity.json'))
+      end
+
+      it { subject.opportunity_id.should_not be_blank }
+
+      it { subject.opportunity.should_not be_blank }
+    end
+  end
+
+  describe '#creator=' do
+    let(:history) { CapsuleCRM::History.new }
+
+    context 'when a String is supplied' do
+      before do
+        stub_request(:get, /\/api\/users$/).
+          to_return(body: File.read('spec/support/all_users.json'))
+      end
+
+      context 'when the user exists' do
+        before { history.creator = 'a.user' }
+
+        it { history.creator.should be_a(CapsuleCRM::User) }
+      end
+
+      context 'when the user does not exist' do
+        before { history.creator = 'asdfadsfdsaf' }
+
+        it { history.creator.should be_blank }
+      end
+    end
+
+    context 'when a CapsuleCRM::Person is supplied' do
+      let(:user) { CapsuleCRM::User.new }
+
+      before { history.creator = user }
+
+      it { history.creator.should eql(user) }
+    end
+  end
+
   describe '.create' do
     context 'when it belongs to a party' do
       let(:person) { Fabricate.build(:person, id: 1) }
@@ -432,6 +529,40 @@ describe CapsuleCRM::History do
   end
 
   describe '#to_capsule_json' do
-    pending
+    let(:creator) do
+      Fabricate.build(
+        :person, first_name: Faker::Name.first_name,
+        last_name: Faker::Name.last_name
+      )
+    end
+
+    let(:history) do
+      CapsuleCRM::History.new(
+        type: 'Note', entry_date: Time.now, creator: creator,
+        subject: Faker::Lorem.sentence, note: Faker::Lorem.paragraph,
+        participants: [participant]
+      )
+    end
+
+    let(:participant) do
+      CapsuleCRM::Participant.new(
+        name: Faker::Name.name, email_address: Faker::Internet.email,
+        role: 'TO'
+      )
+    end
+
+    subject { history.to_capsule_json }
+
+    let(:participants_json) { subject[:historyItem]['participants'] }
+
+    it { subject.keys.first.should eql(:historyItem) }
+
+    it { subject[:historyItem]['entryDate'].should eql(history.entry_date) }
+
+    it { subject[:historyItem]['creator'].should eql(creator.username) }
+
+    it { subject[:historyItem]['note'].should eql(history.note) }
+
+    it { subject[:historyItem].should have_key('note') }
   end
 end

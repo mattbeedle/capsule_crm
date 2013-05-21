@@ -1,3 +1,8 @@
+// This is not a real response from capsulecrm. It's modified to include party,
+// case and opportunity information for testing, because I was too lazy to
+// create three separate examples. In reality there will be only one of party,
+// case or opportunity in there.
+
 {
   "historyItem": {
     "id": "100",
@@ -13,6 +18,21 @@
         "contentType": "application/msword",
         "filename": "latin.doc"
       }
-    }
+    },
+    "participants": {
+      "participant": {
+        "id": "1",
+        "name": "Matt Beedle",
+        "emailAddress": "matt@gmail.com",
+        "role": "CC"
+      }
+    },
+    "partyId": "1",
+    "partyName": "An Organization",
+    "partyPictureURL": "http://somewhere.com/someimage.gif",
+    "caseId": "5",
+    "caseName": "the case name",
+    "opportunityId": "2",
+    "opportunityName": "the opportunity name"
   }
 }
