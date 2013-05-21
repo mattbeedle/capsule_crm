@@ -11,15 +11,18 @@ module CapsuleCRM
         #
         # association_name  - The String name of the associated collection
         # options:          - The Hash of options (default: {}):
-        #                   class_name: The String name of the class used in the
-        #                   association
+        #                     :class_name - The String name of the class used in the
+        #                     association
+        #                     :source - the String method name used by the
+        #                     object on the belongs_to side of the association
+        #                     to set this object
         #
         # Examples
         #
         # class CapsuleCRM::Organizatio
         #   include CapsuleCRM::Associations::HasMany
         #
-        #   has_many :people, class_name: 'CapsuleCRM::Person'
+        #   has_many :people, class_name: 'CapsuleCRM::Person', source: :person
         # end
         #
         # organization = CapsuleCRM::Organization.find(1)
@@ -46,10 +49,14 @@ module CapsuleCRM
           end
 
           define_method "#{association_name}=" do |associated_objects|
+            if associated_objects.is_a?(Hash)
+              associated_objects = Array(options[:class_name].constantize.new(associated_objects[options[:class_name].demodulize.downcase]))
+            end
             instance_variable_set :"@#{association_name}",
               CapsuleCRM::Associations::HasManyProxy.new(
-                parent, associated_objects
-            )
+                self, options[:class_name].constantize,
+                associated_objects, options[:source]
+              )
           end
         end
       end

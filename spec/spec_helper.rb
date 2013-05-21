@@ -4,6 +4,7 @@ require 'bundler/setup'
 require 'capsule_crm'
 require 'coveralls'
 require 'fabrication'
+require 'faker'
 require 'shoulda-matchers'
 require 'support/helpers'
 require 'webmock/rspec'
@@ -28,4 +29,6 @@ RSpec.configure do |config|
   config.order = 'random'
 
   config.include Helpers
+
+  config.fail_fast = true
 end

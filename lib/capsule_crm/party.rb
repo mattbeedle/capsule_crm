@@ -1,6 +1,10 @@
 class CapsuleCRM::Party
   include CapsuleCRM::Taggable
 
+  include CapsuleCRM::Associations::HasMany
+
+  has_many :histories, class_name: 'CapsuleCRM::History'
+
   def self.all(options = {})
     attributes = CapsuleCRM::Connection.get('/api/party', options)
     init_collection(

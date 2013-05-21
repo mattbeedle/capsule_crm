@@ -29,9 +29,10 @@ module CapsuleCRM
         # person.organisation
         # => organisation
         def belongs_to(association_name, options = {})
+          foreign_key = options[:foreign_key] || :"#{association_name}_id"
+
           class_eval do
-            attribute options[:foreign_key] ||
-              :"#{association_name}_id", Integer
+            attribute foreign_key, Integer
           end
 
           (class << self; self; end).instance_eval do
@@ -42,9 +43,9 @@ module CapsuleCRM
 
           define_method association_name do
             instance_variable_get(:"@#{association_name}") ||
-              if self.send("#{association_name}_id")
+              if self.send(foreign_key)
                 options[:class_name].constantize.
-                find(self.send("#{association_name}_id")).tap do |object|
+                find(self.send(foreign_key)).tap do |object|
                   self.send("#{association_name}=", object)
                 end
               else
@@ -55,7 +56,7 @@ module CapsuleCRM
           define_method "#{association_name}=" do |associated_object|
             instance_variable_set(:"@#{association_name}", associated_object)
             id = associated_object ? associated_object.id : nil
-            self.send "#{association_name}_id=", id
+            self.send "#{foreign_key}=", id
           end
         end
       end
