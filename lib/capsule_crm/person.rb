@@ -31,15 +31,6 @@ module CapsuleCRM
       )
     end
 
-    def username
-      [first_name, last_name].compact.map(&:downcase).join('.')
-    end
-    alias :name :username
-
-    def display_name
-      [first_name, last_name].compact.join(' ')
-    end
-
     # Public: Set the attributes of a person
     #
     # attributes  - The Hash of attributes (default: {}):

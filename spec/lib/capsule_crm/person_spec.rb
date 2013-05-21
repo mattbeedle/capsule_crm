@@ -6,28 +6,6 @@ describe CapsuleCRM::Person do
 
   before { configure }
 
-  describe '#username' do
-    context 'when first name and last name are present' do
-      let(:person) do
-        CapsuleCRM::Person.new(first_name: 'Matt', last_name: 'Beedle')
-      end
-
-      it { person.username.should eql('matt.beedle') }
-    end
-
-    context 'when only first name is present' do
-      let(:person) { CapsuleCRM::Person.new(first_name: 'Matt') }
-
-      it { person.username.should eql('matt') }
-    end
-
-    context 'when only the last name is present' do
-      let(:person) { CapsuleCRM::Person.new(last_name: 'Beedle') }
-
-      it { person.username.should eql('beedle') }
-    end
-  end
-
   describe '.all' do
     before do
       stub_request(:get, /\/api\/party$/).

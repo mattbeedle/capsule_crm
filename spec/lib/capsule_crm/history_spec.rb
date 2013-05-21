@@ -529,12 +529,7 @@ describe CapsuleCRM::History do
   end
 
   describe '#to_capsule_json' do
-    let(:creator) do
-      Fabricate.build(
-        :person, first_name: Faker::Name.first_name,
-        last_name: Faker::Name.last_name
-      )
-    end
+    let(:creator) { CapsuleCRM::User.new(username: Faker::Name.name) }
 
     let(:history) do
       CapsuleCRM::History.new(
