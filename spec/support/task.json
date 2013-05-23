@@ -1,0 +1,12 @@
+{
+  "task": {
+    "id": "100",
+    "dueDate": "2012-02-24T00:00:00Z",
+    "category": "Meeting",
+    "partyName": "Eric Jones",
+    "description": "Meet with customer",
+    "owner": "a.user",
+    "detail": "Meeting at Coffee shop",
+    "partyId": "1"
+  }
+}
