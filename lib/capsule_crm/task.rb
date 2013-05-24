@@ -8,6 +8,7 @@ module CapsuleCRM
 
     include CapsuleCRM::Associations::BelongsTo
 
+    attribute :id, Integer
     attribute :due_date, DateTime
     attribute :category, String
     attribute :description, String
@@ -17,6 +18,8 @@ module CapsuleCRM
     belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
     belongs_to :case, class_name: 'CapsuleCRM::Case'
     belongs_to :owner, class_name: 'CapsuleCRM::User'
+
+    validates :description, presence: true
 
     def attributes=(attributes)
       CapsuleCRM::HashHelper.underscore_keys!(attributes)
@@ -29,7 +32,10 @@ module CapsuleCRM
       self
     end
 
-    def self.all
+    def self.all(options = {})
+      init_collection(
+        CapsuleCRM::Connection.get('/api/tasks', options)['tasks']['task']
+      )
     end
 
     def self.find(id)
@@ -37,6 +43,7 @@ module CapsuleCRM
     end
 
     def self.create(attributes = {})
+      new(attributes).tap(&:save)
     end
 
     def self.create!(attributes = {})
@@ -49,6 +56,11 @@ module CapsuleCRM
     end
 
     def save
+      if valid?
+        new_record? ? create_record : update_record
+      else
+        false
+      end
     end
 
     def save!
@@ -67,14 +79,28 @@ module CapsuleCRM
     end
 
     def new_record?
+      !id
     end
 
     def persisted?
+      !new_record?
+    end
+
+    def to_capsule_json
+      {}
     end
 
     private
 
+    def self.init_collection(collection)
+      CapsuleCRM::ResultsProxy.new(collection.map { |item| new item })
+    end
+
     def create_record
+      self.attributes = CapsuleCRM::Connection.post(
+        '/api/task', to_capsule_json
+      )
+      self
     end
 
     def update_record
