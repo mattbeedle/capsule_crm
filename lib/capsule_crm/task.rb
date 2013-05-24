@@ -47,6 +47,7 @@ module CapsuleCRM
     end
 
     def self.create!(attributes = {})
+      new(attributes).tap(&:save!)
     end
 
     def update_attributes(attributes = {})
@@ -64,6 +65,11 @@ module CapsuleCRM
     end
 
     def save!
+      if valid?
+        save
+      else
+        raise CapsuleCRM::Errors::RecordInvalid.new(self)
+      end
     end
 
     def destroy
@@ -104,6 +110,8 @@ module CapsuleCRM
     end
 
     def update_record
+      CapsuleCRM::Connection.put("/api/task/#{id}", to_capsule_json)
+      self
     end
   end
 end

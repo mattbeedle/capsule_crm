@@ -76,6 +76,123 @@ describe CapsuleCRM::Task do
   end
 
   describe '.create!' do
+    context 'when it is valid' do
+      before do
+        location = 'https://sample.capsulecrm.com/api/task/59'
+        stub_request(:post, /\/api\/task$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      subject { CapsuleCRM::Task.create! Fabricate.attributes_for(:task) }
+
+      it { should be_a(CapsuleCRM::Task) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it is not valid' do
+      subject { CapsuleCRM::Task.create! }
+
+      it do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
+    end
+  end
+
+  describe '#save' do
+    let(:task) { Fabricate.build(:task) }
+
+    context 'when it is a new record' do
+      before do
+        location = 'https://sample.capsulecrm.com/api/task/59'
+        stub_request(:post, /\/api\/task$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      subject { task.save }
+
+      it { subject.id.should eql(59) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it is an existing record' do
+      before do
+        task.id = 12
+        stub_request(:put, /\/api\/task\/12$/).to_return(status: 200)
+      end
+
+      subject { task.save }
+
+      it { should be_persisted }
+    end
+
+    context 'when it is invalid' do
+      it { subject.save.should be_false }
+    end
+  end
+
+  describe '#save!' do
+    let(:task) { Fabricate.build(:task) }
+
+    context 'when it is a new record' do
+      before do
+        location = 'https://sample.capsulecrm.com/api/task/59'
+        stub_request(:post, /\/api\/task$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      subject { task.save! }
+
+      it { subject.id.should eql(59) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it is an existing record' do
+      before do
+        task.id = 12
+        stub_request(:put, /\/api\/task\/12$/).to_return(status: 200)
+      end
+
+      subject { task.save! }
+
+      it { should be_persisted }
+    end
+
+    context 'when it is invalid' do
+      it do
+        expect { subject.save! }.
+          to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
+    end
+  end
+
+  describe '#update_attributes' do
+    pending
+  end
+
+  describe '#update_attributes!' do
+    pending
+  end
+
+  describe '#destroy' do
+    pending
+  end
+
+  describe '#complete' do
+    pending
+  end
+
+  describe '#re_open' do
+    pending
+  end
+
+  describe '.categories' do
+    pending
+  end
+
+  describe '#to_capsule_json' do
     pending
   end
 end
