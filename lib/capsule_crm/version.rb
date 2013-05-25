@@ -1,3 +1,3 @@
 module CapsuleCrm
-  VERSION = '0.4.6'
+  VERSION = '0.5.6'
 end

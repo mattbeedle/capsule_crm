@@ -233,7 +233,7 @@ module CapsuleCRM
     end
 
     def update_record
-      CapsuleCRM::Connection.put("/api/person/#{id}", attributes)
+      CapsuleCRM::Connection.put("/api/person/#{id}", to_capsule_json)
       self
     end
 

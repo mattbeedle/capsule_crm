@@ -18,15 +18,7 @@ module CapsuleCRM
       response = faraday.post(path, params.to_json) do |request|
         request.headers.update default_request_headers
       end
-      if response.success?
-        if match = response.headers['Location'].match(/\/(?<id>\d+)$/)
-          { id: match[:id] }
-        else
-          true
-        end
-      else
-        false
-      end
+      process_post_response(response)
     end
 
     def self.put(path, params)
@@ -42,6 +34,20 @@ module CapsuleCRM
     end
 
     private
+
+    # TODO clean this shit up
+    def self.process_post_response(response)
+      if response.success?
+        if response.headers['Location'] &&
+          match = response.headers['Location'].match(/\/(?<id>\d+)$/)
+          { id: match[:id] }
+        else
+          true
+        end
+      else
+        false
+      end
+    end
 
     def self.default_request_headers
       { accept: 'application/json', content_type: 'application/json' }
