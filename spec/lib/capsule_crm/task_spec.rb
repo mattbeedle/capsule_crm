@@ -169,11 +169,45 @@ describe CapsuleCRM::Task do
   end
 
   describe '#update_attributes' do
-    pending
+    context 'when it is valid' do
+      let(:task) { Fabricate.build(:task, id: 1) }
+
+      subject { task.update_attributes description: Faker::Lorem.sentence }
+
+      before { stub_request(:put, /\/api\/task\/1$/).to_return(status: 200) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it is not valid' do
+      let(:task) { CapsuleCRM::Task.new(id: 1) }
+
+      subject { task.update_attributes }
+
+      it { should be_false }
+    end
   end
 
   describe '#update_attributes!' do
-    pending
+    context 'when it is valid' do
+      let(:task) { Fabricate.build(:task, id: 1) }
+
+      subject { task.update_attributes! description: Faker::Lorem.sentence }
+
+      before { stub_request(:put, /\/api\/task\/1$/).to_return(status: 200) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it is not valid' do
+      let(:task) { CapsuleCRM::Task.new(id: 1) }
+
+      subject { task.update_attributes! }
+
+      it do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::RecordInvalid)
+      end
+    end
   end
 
   describe '#destroy' do
