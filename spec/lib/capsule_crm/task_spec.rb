@@ -11,9 +11,13 @@ describe CapsuleCRM::Task do
 
   it { should validate_presence_of(:description) }
 
+  it { should validate_presence_of(:due_date) }
+
+  it { should validate_presence_of(:due_date_time) }
+
   describe '.find' do
     before do
-      stub_request(:get, /\/api\/tasks\/2$/).
+      stub_request(:get, /\/api\/task\/2$/).
         to_return(body: File.read('spec/support/task.json'))
     end
 
@@ -221,19 +225,65 @@ describe CapsuleCRM::Task do
     it { should_not be_persisted }
   end
 
+  # Not really sure what to test here. CapsuleCRM API doesn't actually tell you
+  # anything about a tasks state
   describe '#complete' do
-    pending
+    let(:task) { Fabricate.build(:task, id: 2) }
+
+    subject { task.complete }
+
+    before do
+      stub_request(:post, /\/api\/task\/#{task.id}\/complete$/).
+        to_return(status: 200)
+      task.complete
+    end
+
+    it { should be_persisted }
   end
 
-  describe '#re_open' do
-    pending
+  describe '#reopen' do
+    let(:task) { Fabricate.build(:task, id: 3) }
+
+    subject { task.reopen }
+
+    before do
+      stub_request(:post, /\/api\/task\/#{task.id}\/reopen$/).
+        to_return(status: 200)
+    end
+
+    it { should be_persisted }
   end
 
   describe '.categories' do
-    pending
+    subject { CapsuleCRM::Task.categories }
+
+    before do
+      stub_request(:get, /\/api\/task\/categories$/).
+        to_return(body: File.read('spec/support/task_categories.json'))
+    end
+
+    it do
+      expect(subject).to eql(%w(Call Email Follow-up Meeting Milestone Send))
+    end
   end
 
   describe '#to_capsule_json' do
-    pending
+    let(:task) { Fabricate.build(:task) }
+
+    subject { task.to_capsule_json }
+
+    it { expect(subject.keys).to include('task') }
+
+    it { expect(subject['task']['description']).to eql(task.description) }
+
+    it { expect(subject['task']['dueDate']).to eql(task.due_date.to_s) }
+
+    context 'when it has an owner' do
+      let(:owner) { CapsuleCRM::User.new(username: 'matt.beedle') }
+
+      before { task.owner = owner }
+
+      it { expect(subject['task']['owner']).to eql(task.owner.username) }
+    end
   end
 end

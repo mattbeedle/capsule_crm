@@ -1,0 +1,12 @@
+{
+  "taskCategories": {
+    "taskCategory": [
+      "Call",
+      "Email",
+      "Follow-up",
+      "Meeting",
+      "Milestone",
+      "Send"
+    ]
+  }
+}

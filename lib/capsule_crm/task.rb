@@ -9,7 +9,8 @@ module CapsuleCRM
     include CapsuleCRM::Associations::BelongsTo
 
     attribute :id, Integer
-    attribute :due_date, DateTime
+    attribute :due_date, Date
+    attribute :due_date_time, DateTime
     attribute :category, String
     attribute :description, String
     attribute :detail, String
@@ -20,6 +21,8 @@ module CapsuleCRM
     belongs_to :owner, class_name: 'CapsuleCRM::User'
 
     validates :description, presence: true
+    validates :due_date, presence: { unless: :due_date_time }
+    validates :due_date_time, presence: { unless: :due_date }
 
     def attributes=(attributes)
       CapsuleCRM::HashHelper.underscore_keys!(attributes)
@@ -39,7 +42,7 @@ module CapsuleCRM
     end
 
     def self.find(id)
-      new CapsuleCRM::Connection.get("/api/tasks/#{id}")['task']
+      new CapsuleCRM::Connection.get("/api/task/#{id}")['task']
     end
 
     def self.create(attributes = {})
@@ -82,12 +85,18 @@ module CapsuleCRM
     end
 
     def complete
+      CapsuleCRM::Connection.post("/api/task/#{id}/complete")
+      self
     end
 
-    def re_open
+    def reopen
+      CapsuleCRM::Connection.post("/api/task/#{id}/reopen")
+      self
     end
 
     def self.categories
+      CapsuleCRM::Connection.
+        get('/api/task/categories')['taskCategories']['taskCategory']
     end
 
     def new_record?
@@ -99,10 +108,20 @@ module CapsuleCRM
     end
 
     def to_capsule_json
-      {}
+      {
+        task: CapsuleCRM::HashHelper.camelize_keys(capsule_attributes)
+      }.stringify_keys
     end
 
     private
+
+    def capsule_attributes
+      { description: description, category: category }.tap do |attrs|
+        attrs.merge!(owner: owner.username) if owner
+        attrs.merge!(due_date: due_date.to_s(:db)) if due_date
+        attrs.merge!(due_date_time: due_date_time.to_s(:db)) if due_date_time
+      end
+    end
 
     def self.init_collection(collection)
       CapsuleCRM::ResultsProxy.new(collection.map { |item| new item })
