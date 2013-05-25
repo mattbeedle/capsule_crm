@@ -211,7 +211,14 @@ describe CapsuleCRM::Task do
   end
 
   describe '#destroy' do
-    pending
+    subject { Fabricate.build(:task, id: 1) }
+
+    before do
+      stub_request(:delete, /\/api\/task\/1$/).to_return(status: 200)
+      subject.destroy
+    end
+
+    it { should_not be_persisted }
   end
 
   describe '#complete' do

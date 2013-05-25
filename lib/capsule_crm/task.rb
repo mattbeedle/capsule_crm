@@ -77,6 +77,8 @@ module CapsuleCRM
     end
 
     def destroy
+      self.id = nil if CapsuleCRM::Connection.delete("/api/task/#{id}")
+      self
     end
 
     def complete
