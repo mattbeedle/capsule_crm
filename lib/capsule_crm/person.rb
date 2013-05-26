@@ -31,6 +31,34 @@ module CapsuleCRM
       )
     end
 
+    # Public: Get all people from Capsule. The list can be restricted
+    # and/or paginated with various query parameters sent through the options
+    # hash.
+    #
+    # options - The Hash of allowed query parameters for Capsule (default: {}):
+    #           :q      - The String search term that will be matched against
+    #           name,
+    #           :tag    - The String tag to search for
+    #           :start  - The Integer first record to be returned in
+    #           pagination.
+    #           The results start with an index of 1
+    #           :limit  - The Integer maximum number of matching records to be
+    #           returned
+    #
+    # Examples
+    #
+    # CapsuleCRM::Organization.all
+    #
+    # CapsuleCRM::Organization.all(q: "a search query", start: 10, limit: 20)
+    #
+    # Returns a ResultsProxy of organisations
+    def self.all(options = {})
+      init_collection(
+        CapsuleCRM::Connection.
+        get('/api/party', options)['parties']['person']
+      )
+    end
+
     # Public: Set the attributes of a person
     #
     # attributes  - The Hash of attributes (default: {}):

@@ -7,9 +7,7 @@ class CapsuleCRM::Party
 
   def self.all(options = {})
     attributes = CapsuleCRM::Connection.get('/api/party', options)
-    init_collection(
-      attributes['parties'].fetch('person', 'organisation')
-    )
+    init_collection(attributes['parties'])
   end
 
   def self.find(id)
@@ -20,6 +18,16 @@ class CapsuleCRM::Party
   end
 
   private
+
+  def self.init_collection(collection)
+    CapsuleCRM::ResultsProxy.new(
+      collection.map do |key, value|
+        [collection[key]].flatten.map do |attrs|
+          party_classes[key].constantize.new(attrs)
+        end.flatten
+      end.flatten
+    )
+  end
 
   def self.party_classes
     {

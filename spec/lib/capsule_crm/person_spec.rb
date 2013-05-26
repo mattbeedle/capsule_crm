@@ -6,6 +6,20 @@ describe CapsuleCRM::Person do
 
   before { configure }
 
+  describe '._for_organization' do
+    context 'when there are many people for the organization' do
+      pending
+    end
+
+    context 'when there is 1 person for the organization' do
+      pending
+    end
+
+    context 'when there are no people for the organization' do
+      pending
+    end
+  end
+
   describe '.all' do
     before do
       stub_request(:get, /\/api\/party$/).
