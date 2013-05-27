@@ -27,6 +27,40 @@ module CapsuleCRM
     validates :party, :kase, :opportunity,
       presence: { if: :belongs_to_required? }
 
+    def self._for_party(party_id)
+      init_collection(
+        CapsuleCRM::Connection.
+          get("/api/party/#{party_id}/history")['history'].
+          fetch('historyItem', nil)
+      )
+    end
+
+    class << self
+      alias :_for_organization :_for_party
+      alias :_for_person :_for_party
+    end
+
+    def self._for_case(case_id)
+      init_collection(
+        CapsuleCRM::Connection.
+          get("/api/kase/#{case_id}/history")['history']['historyItem']
+      )
+    end
+
+    def self._for_opportunity(opportunity_id)
+      init_collection(
+        CapsuleCRM::Connection.
+          get("/api/opportunity/#{opportunity_id}/history")\
+          ['history']['historyItem']
+      )
+    end
+
+    def self.init_collection(collection)
+      CapsuleCRM::ResultsProxy.new(
+        [collection].flatten.delete_if(&:blank?).map { |item| new(item) }
+      )
+    end
+
     # Public: Underscore all of the attributes keys and set the attributes of
     # this history item
     #

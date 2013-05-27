@@ -3,7 +3,96 @@ require 'spec_helper'
 describe CapsuleCRM::History do
   before { configure }
 
+  before do
+    stub_request(:get, /\/api\/users$/).
+      to_return(body: File.read('spec/support/all_users.json'))
+  end
+
   it { should validate_presence_of(:note) }
+
+  describe '_.for_party' do
+    let(:party) { Fabricate.build(:person, id: 1) }
+
+    subject { CapsuleCRM::History._for_party(party.id) }
+
+    context 'when there are some history items' do
+      before do
+        stub_request(:get, /\/api\/party\/#{party.id}\/history$/).
+          to_return(body: File.read('spec/support/all_history.json'))
+      end
+
+      it { should be_a(Array) }
+
+      it do
+        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should be_true
+      end
+    end
+
+    context 'when there are no history items' do
+      before do
+        stub_request(:get, /\/api\/party\/#{party.id}\/history$/).
+          to_return(body: File.read('spec/support/no_history.json'))
+      end
+
+      it { should be_blank }
+    end
+  end
+
+  describe '._for_case' do
+    let(:kase) { Fabricate.build(:case, id: 1) }
+
+    subject { CapsuleCRM::History._for_case(kase.id) }
+
+    context 'when there are some history items' do
+      before do
+        stub_request(:get, /\/api\/kase\/#{kase.id}\/history$/).
+          to_return(body: File.read('spec/support/all_history.json'))
+      end
+
+      it { should be_a(Array) }
+
+      it do
+        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should be_true
+      end
+    end
+
+    context 'when there are no history items' do
+      before do
+        stub_request(:get, /\/api\/kase\/#{kase.id}\/history$/).
+          to_return(body: File.read('spec/support/no_history.json'))
+      end
+
+      it { should be_blank }
+    end
+  end
+
+  describe '._for_opportunity' do
+    let(:opportunity) { Fabricate.build(:opportunity, id: 1) }
+
+    subject { CapsuleCRM::History._for_opportunity(opportunity.id) }
+
+    context 'when there are some history items' do
+      before do
+        stub_request(:get, /\/api\/opportunity\/#{opportunity.id}\/history$/).
+          to_return(body: File.read('spec/support/all_history.json'))
+      end
+
+      it { should be_a(Array) }
+
+      it do
+        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should be_true
+      end
+    end
+
+    context 'when there are no history items' do
+      before do
+        stub_request(:get, /\/api\/opportunity\/#{opportunity.id}\/history$/).
+          to_return(body: File.read('spec/support/no_history.json'))
+      end
+
+      it { should be_blank }
+    end
+  end
 
   describe 'find' do
     before do
