@@ -286,6 +286,10 @@ CapsuleCRM::Country.all
 CapsuleCRM::Currency.all
 ```
 
+## Supported Rubies
+
+1.9.2, 1.9.3, 2.0, jruby-19mode, rbx-19mode
+
 ## Feedback
 
 Please use github issues to give feedback. If you have a bug to report then an
