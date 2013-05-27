@@ -31,51 +31,255 @@ Or install it yourself as:
 
     $ gem install capsule_crm
 
+## Getting Started
+```ruby
+CapsuleCRM.configure do |config|
+  config.api_token = 'API Token here'
+  config.subdomain = 'your capsule crm company subdomain here'
+end
+```
+
 ## Usage
 
+### Parties
 ```ruby
-contacts = CapsuleCRM::Contacts.new(
-  addresses:  [CapsuleCRM::Address.new(street: 'Oranieburgerstr', city: 'Berlin')],
-  emails:     [CapsuleCRM::Email.new(email_address: 'mattbeedle@gmail.com')],
-  phones:     [CapsuleCRM::Phone.new(phone_number: '123456789')],
-  webstes:    [CapsuleCRM::Website.new(web_service: 'URL', web_address: 'http://github.com']
+# List Parties
+CapsuleCRM::Party.all
+
+# With query parameters
+CapsuleCRM::Party.all(
+  q: 'search term here', email: 'email to search for here',
+  lastmodified: 6.weeks.ago, tag: 'tag to search for here',
+  start: 10, limit: 55
 )
 
-person = CapsuleCRM::Person.new(
-  first_name: 'Matt', last_name: 'Beedle', organisation_name: "Matt's Company",
-  contacts: contacts
-)
+# Find one
+# When the party is an organization this returns a CapsuleCRM::Organization
+otherise it returns a CapsuleCRM::Person
+party = CapsuleCRM::Party.find(ID)
+```
+
+### People
+```ruby
+# Find a person
+person = CapsuleCRM::Person.find(ID)
+
+# List People
+CapsuleCRM::Person.all
+
+# Initialize a new person
+person = CapsuleCRM::Person.new(first_name: 'Matt', last_name: 'Beedle')
+
+# Validate a person
+person.valid?
+
+# Save a person
 person.save
 
-person.first_name = 'John'
-person.save #=> true
+# Update a person
+person.update_attributes first_name: 'John'
 
-person.valid? #=> true
-
-person.organization #=> CapsuleCRM::Organization
-
-person.organization.tap do |org|
-  org.update_attributes! contacts: CapsuleCRM::Contacts.new(
-    addresses: CapsuleCRM::Address.new(street: 'Thurneysserstr')
-  )
-
-  org.contacts.phones << CapsuleCRM::Phone.new(phone_number: '234243')
-  org.save
-end
-
-person.first_name = nil
-person.last_name = nil
-person.valid? #=> false
-
-person.save #=> false
-person.save! #=> CapsuleCRM::Errors::InvalidRecord
-
-person.destroy #=> true
-
+# Create a Person
 person = CapsuleCRM::Person.create(first_name: 'Matt', last_name: 'Beedle')
 
-kase = CapsuleCRM::Case.create! name: 'My First Case', party: person
-kase.update_attributes name: 'A New Case Name'
+# Get organization associated with a person
+person.organization
+
+# Delete a person
+person.destroy
+
+# List opportunities
+person.opportunities
+
+# List tags
+person.tags
+
+# Add a tag
+person.add_tag 'a test tag'
+
+# View history
+person.histories
+
+# Build a new history item
+history_item = person.histories.build note: 'a note'
+
+# Create a new history item
+history_item = person.histories.create note: 'a note'
+```
+
+### Organizations
+```ruby
+# Find an organization
+organization = CapsuleCRM::Organization.find(ID)
+
+# List Organizations
+CapsuleCRM::Organization.all
+
+# Initialize a new organization
+org = CapsuleCRM::Organization.new(name: 'Vegan.io')
+
+# Validate an organization
+org.valid?
+
+# Save an organization
+org.save
+
+# Update a person
+org.update_attributes name: 'Apple Inc'
+
+# Create an organization
+org = CapsuleCRM::Organization.create(name: 'Vegan.io')
+
+# Get people for an organization
+org.people
+
+# Delete an organization
+org.destroy
+
+# List opportunities
+org.opportunities
+
+# List tags
+org.tags
+
+# Add a tag
+org.add_tag 'a test tag'
+
+# View history
+org.histories
+
+# Build a new history item
+history = org.histories.build note: 'some note text'
+
+# Create a new history item
+history = org.histories.create note: 'some note text'
+```
+
+# Opportunities
+```ruby
+# Find an opportunity
+opportunity = CapsuleCRM::Opportunity.find(ID)
+
+# List all opportunities
+opportunities = CapsuleCRM::Opportunity.all
+
+# List tags
+opportunity.tags
+
+# Add a tag
+opportunity.add_tag 'tag here'
+
+# View history
+opportunity.histories
+
+# Build a new history item
+history = opportunity.histories.build note: 'some note text'
+
+# Create a new history item
+history_item = opportunity.histories.create note: 'some text here'
+```
+
+### Cases
+```ruby
+# Find a case
+kase = CapsuleCRM::Case.find(ID)
+
+# List Cases
+kase = CapsuleCRM::Case.all
+
+# Update a Case
+kase.update_attributes status: 'CLOSED'
+
+# Delete a Case
+kase.destroy
+
+# List tags
+kase.tags
+
+# Add a tag
+kase.add_tag 'A test tag'
+
+# View history
+kase.histories
+
+# Build a new history
+history = case.histories.build note: 'note text here'
+
+# Create a new history item
+history_item = case.histories.create note: 'another note'
+```
+
+### History
+```ruby
+# Find a history item
+history_item = CapsuleCRM::History.find(ID)
+
+# Get the party
+history_item.party
+
+# Get the case
+history_item.case
+
+# Get the opportunity
+history_item.opportunity
+
+# Update a history item
+history_item.update_attributes note: 'some new note text'
+
+# Delete a history item
+history_item.destroy
+```
+
+### Tasks
+```ruby
+# List open tasks
+tasks = CapsuleCRM::Task.all
+
+# Query open tasks
+tasks = CapsuleCRM::Task.all(
+  category: 'category name', user: 'username', start: 6, limit: 25
+)
+
+# Add a task
+CapsuleCRM::Task.create(
+  description: 'task description', due_date: Date.tomorrow
+)
+
+# Update task
+task.update_attributes description: 'a new improved task description'
+
+# Delete a task
+task.destroy
+
+# Complete a task
+task.complete
+
+# Reopen a task
+task.reopen
+
+# List available task categories
+CapsuleCRM::Task.categories
+```
+
+### Users
+```ruby
+# List all users
+CapsuleCRM::User.all
+
+# Find a user by username
+user = CapsuleCRM::User.find_by_username('username here')
+```
+
+### Countries
+```ruby
+# List all countries
+CapsuleCRM::Country.all
+```
+
+### Currencies
+```ruby
+# List all currencies
+CapsuleCRM::Currency.all
 ```
 
 ## Contributing
