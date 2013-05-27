@@ -3,7 +3,7 @@ class CapsuleCRM::Party
 
   include CapsuleCRM::Associations::HasMany
 
-  has_many :histories, class_name: 'CapsuleCRM::History'
+  has_many :histories, class_name: 'CapsuleCRM::History', source: :party
 
   def self.all(options = {})
     attributes = CapsuleCRM::Connection.get('/api/party', options)
