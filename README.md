@@ -32,6 +32,10 @@ Or install it yourself as:
     $ gem install capsule_crm
 
 ## Getting Started
+
+You need to configure CapsuleCRM with your API Token and subdomain before you
+can make any requests to it. If you are using rails then you can put this into
+your config/initializers folder.
 ```ruby
 CapsuleCRM.configure do |config|
   config.api_token = 'API Token here'
@@ -55,7 +59,7 @@ CapsuleCRM::Party.all(
 
 # Find one
 # When the party is an organization this returns a CapsuleCRM::Organization
-otherise it returns a CapsuleCRM::Person
+# otherise it returns a CapsuleCRM::Person
 party = CapsuleCRM::Party.find(ID)
 ```
 
@@ -124,7 +128,7 @@ org.valid?
 # Save an organization
 org.save
 
-# Update a person
+# Update an organization
 org.update_attributes name: 'Apple Inc'
 
 # Create an organization
@@ -155,7 +159,7 @@ history = org.histories.build note: 'some note text'
 history = org.histories.create note: 'some note text'
 ```
 
-# Opportunities
+### Opportunities
 ```ruby
 # Find an opportunity
 opportunity = CapsuleCRM::Opportunity.find(ID)
@@ -203,10 +207,10 @@ kase.add_tag 'A test tag'
 kase.histories
 
 # Build a new history
-history = case.histories.build note: 'note text here'
+history = kase.histories.build note: 'note text here'
 
 # Create a new history item
-history_item = case.histories.create note: 'another note'
+history_item = kase.histories.create note: 'another note'
 ```
 
 ### History
@@ -281,6 +285,12 @@ CapsuleCRM::Country.all
 # List all currencies
 CapsuleCRM::Currency.all
 ```
+
+## Feedback
+
+Please use github issues to give feedback. If you have a bug to report then an
+accompanying failing test would be great. Extra points for a full pull request
+with fix.
 
 ## Contributing
 
