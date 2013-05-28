@@ -16,6 +16,14 @@ module CapsuleCRM
       end
     end
 
+    def remove_tag(tag_name)
+      if id
+        CapsuleCRM::Connection.delete(
+          "/api/#{api_singular_name}/#{id}/#{URI.encode(tag_name)}"
+        )
+      end
+    end
+
     def api_singular_name
       self.class.to_s.demodulize.downcase.singularize
     end

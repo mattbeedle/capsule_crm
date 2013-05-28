@@ -56,4 +56,29 @@ describe CapsuleCRM::Taggable do
       it { subject.should be_nil }
     end
   end
+
+  describe '#remove_tag' do
+
+    subject { taggable_item.remove_tag 'A Test Tag' }
+
+    context 'when the taggable item has an id' do
+      let(:taggable_item) { TaggableItem.new(id: 1) }
+
+      before do
+        loc = 'https://sample.capsulecrm.com/api/party/1000/tag/A%20Test%20Tag'
+        stub_request(:delete, /\/api\/taggableitem\/1\/A%20Test%20Tag$/).
+          to_return(headers: { 'Location' => loc })
+      end
+
+      it { subject.should be_true }
+    end
+
+    context 'when the taggable item has no id' do
+      let(:taggable_item) { TaggableItem.new }
+
+      subject { taggable_item.remove_tag 'A Test Tag' }
+
+      it { subject.should be_nil }
+    end
+  end
 end
