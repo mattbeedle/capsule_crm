@@ -3,22 +3,51 @@ require 'spec_helper'
 describe CapsuleCRM::Opportunity do
   before { configure }
 
-  it { should validate_presence_of(:name) }
+  before do
+    stub_request(:get, /\/api\/opportunity\/milestones$/).
+      to_return(body: File.read('spec/support/milestones.json'))
+  end
 
-  it { should validate_presence_of(:milestone_id) }
+  it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:milestone) }
 
   context 'when milestone_id is set' do
     subject { CapsuleCRM::Opportunity.new(milestone_id: 1) }
 
-    it { should_not validate_presence_of(:milestone) }
+    before do
+      subject.valid?
+    end
+
+    it { subject.errors[:milestone].should be_blank }
   end
 
   context 'when milestone is set' do
-    subject { CapsuleCRM::Opportunity.new(milestone: 'a') }
+    let(:milestone) { CapsuleCRM::Milestone.new name: 'Bid' }
+
+    subject { CapsuleCRM::Opportunity.new(milestone: milestone) }
 
     it { should_not validate_presence_of(:milestone_id) }
+  end
+
+  describe '#milestone=' do
+    context 'when it receives a milestone name' do
+      subject { CapsuleCRM::Opportunity.new(milestone: 'Bid') }
+
+      it { subject.milestone.should be_a(CapsuleCRM::Milestone) }
+
+      it { subject.milestone_id.should_not be_blank }
+    end
+
+    context 'when it receives a milestone object' do
+      let(:milestone) { CapsuleCRM::Milestone.all.first }
+
+      subject { CapsuleCRM::Opportunity.new(milestone: milestone) }
+
+      it { subject.milestone.should be_a(CapsuleCRM::Milestone) }
+
+      it { subject.milestone_id.should_not be_blank }
+    end
   end
 
   describe '#party=' do
@@ -110,7 +139,7 @@ describe CapsuleCRM::Opportunity do
 
   describe '.find' do
     before do
-      stub_request(:get, /.*/).
+      stub_request(:get, /\/api\/opportunity\/1$/).
         to_return(body: File.read('spec/support/opportunity.json'))
     end
 
@@ -138,7 +167,7 @@ describe CapsuleCRM::Opportunity do
 
     it { subject.owner.should eql('a.user') }
 
-    it { subject.milestone.should eql('Bid') }
+    it { subject.milestone.name.should eql('Bid') }
 
     it { subject.probability.should eql(50.0) }
 

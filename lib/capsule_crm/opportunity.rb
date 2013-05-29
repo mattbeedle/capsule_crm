@@ -24,10 +24,19 @@ module CapsuleCRM
 
     validates :name, presence: true
     validates :party_id, presence: true
-    validates :milestone_id, presence: { unless: :milestone }
-    validates :milestone, presence: { unless: :milestone_id }
+    validates :milestone, presence: true
 
     belongs_to :party, class_name: 'CapsuleCRM::Party'
+    belongs_to :milestone, class_name: 'CapsuleCRM::Milestone'
+
+    def milestone=(milestone)
+      if milestone.is_a?(String)
+        milestone = CapsuleCRM::Milestone.find_by_name(milestone)
+      end
+      @milestone = milestone
+      self.milestone_id = milestone.try(:id)
+      self
+    end
 
     # Public: Set the attributes of a opportunity
     #
