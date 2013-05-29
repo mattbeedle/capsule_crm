@@ -1,0 +1,32 @@
+{
+  "milestones": {
+    "milestone": [
+      {
+        "id": "1",
+        "name": "New",
+        "description": "You have a potential buyer for your offering",
+        "probability": "10",
+        "complete": "false"
+      },
+      {
+        "id": "2",
+        "name": "Bid",
+        "description": "You have put forward a bid for your offering",
+        "probability": "50",
+        "complete": "false"
+      },
+      {
+        "id": "3",
+        "name": "Won",
+        "probability": "100",
+        "complete": "true"
+      },
+      {
+        "id": "4",
+        "name": "Lost",
+        "probability": "0",
+        "complete": "true"
+      }
+    ]
+  }
+}

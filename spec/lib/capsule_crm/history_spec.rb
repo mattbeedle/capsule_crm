@@ -6,6 +6,8 @@ describe CapsuleCRM::History do
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
+    stub_request(:get, /\/api\/opportunity\/milestones$/).
+      to_return(body: File.read('spec/support/milestones.json'))
   end
 
   it { should validate_presence_of(:note) }

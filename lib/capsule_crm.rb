@@ -30,6 +30,7 @@ require 'capsule_crm/opportunity'
 require 'capsule_crm/organization'
 require 'capsule_crm/participant'
 require 'capsule_crm/person'
+require 'capsule_crm/milestone'
 require 'capsule_crm/version'
 
 module CapsuleCRM
