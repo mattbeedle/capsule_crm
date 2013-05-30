@@ -6,6 +6,7 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
+    include CapsuleCRM::Associations::HasMany
     include CapsuleCRM::Associations::BelongsTo
 
     attribute :id, Integer
@@ -25,6 +26,8 @@ module CapsuleCRM
     validates :name, presence: true
     validates :party_id, presence: true
     validates :milestone, presence: true
+
+    has_many :tasks, class_name: 'CapsuleCRM::Task', source: :opportunity
 
     belongs_to :party, class_name: 'CapsuleCRM::Party'
     belongs_to :milestone, class_name: 'CapsuleCRM::Milestone'

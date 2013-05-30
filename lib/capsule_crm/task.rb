@@ -24,6 +24,30 @@ module CapsuleCRM
     validates :due_date, presence: { unless: :due_date_time }
     validates :due_date_time, presence: { unless: :due_date }
 
+    def self._for_party(party_id)
+      CapsuleCRM::ResultsProxy.new(
+        CapsuleCRM::Task.all.select { |task| task.party_id == party_id }
+      )
+    end
+    class << self
+      alias :_for_person :_for_party
+      alias :_for_organization :_for_party
+    end
+
+    def self._for_opportunity(opportunity_id)
+      CapsuleCRM::ResultsProxy.new(
+        CapsuleCRM::Task.all.select do |task|
+          task.opportunity_id == opportunity_id
+        end
+      )
+    end
+
+    def self._for_case(case_id)
+      CapsuleCRM::ResultsProxy.new(
+        CapsuleCRM::Task.all.select { |task| task.case_id == case_id }
+      )
+    end
+
     def attributes=(attributes)
       CapsuleCRM::HashHelper.underscore_keys!(attributes)
       super(attributes)
@@ -129,9 +153,21 @@ module CapsuleCRM
 
     def create_record
       self.attributes = CapsuleCRM::Connection.post(
-        '/api/task', to_capsule_json
+        create_url, to_capsule_json
       )
       self
+    end
+
+    def create_url
+      if party_id
+        "/api/party/#{party_id}/task"
+      elsif opportunity_id
+        "/api/opportunity/#{opportunity_id}/task"
+      elsif case_id
+        "/api/kase/#{case_id}/task"
+      else
+        '/api/task'
+      end
     end
 
     def update_record

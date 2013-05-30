@@ -10,6 +10,34 @@
         "owner": "a.user",
         "detail": "Meeting at Coffee shop",
         "partyId": "1"
+      },
+      {
+        "id": "101",
+        "dueDate": "2012-02-24T00:00:00Z",
+        "category": "Meeting",
+        "description": "Waste some time",
+        "owner": "a.user",
+        "detail": "Writing an open source gem instead of working",
+        "opportunityId": "5",
+        "opportunityName": "meeting"
+      },
+      {
+        "id": "102",
+        "dueDate": "2012-02-24T00:00:00Z",
+        "category": "Meeting",
+        "description": "Innovation time",
+        "owner": "a.user",
+        "detail": "Go and get drunk",
+        "caseId": "3",
+        "caseName": "I can't think of a good name"
+      },
+      {
+        "id": "103",
+        "dueDate": "2012-02-24T00:00:00Z",
+        "category": "Meeting",
+        "description": "An orphan task",
+        "owner": "a.user",
+        "detail": "Do something interesting"
       }
     ]
   }

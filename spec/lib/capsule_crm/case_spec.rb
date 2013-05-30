@@ -3,9 +3,31 @@ require 'spec_helper'
 describe CapsuleCRM::Case do
   before { configure }
 
+  before do
+    stub_request(:get, /\/api\/users$/).
+      to_return(body: File.read('spec/support/all_users.json'))
+  end
+
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:party) }
+
+  describe '#tasks' do
+    let(:kase) { Fabricate.build(:case, id: 3) }
+
+    before do
+      stub_request(:get, /\/api\/tasks$/).
+        to_return(body: File.read('spec/support/all_tasks.json'))
+    end
+
+    subject { kase.tasks }
+
+    it { should be_an(Array) }
+
+    it { subject.length.should eql(1) }
+
+    it { subject.first.detail.should eql('Go and get drunk') }
+  end
 
   describe '.all' do
     before do

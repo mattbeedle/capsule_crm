@@ -6,6 +6,7 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
+    include CapsuleCRM::Associations::HasMany
     include CapsuleCRM::Associations::BelongsTo
     include CapsuleCRM::Taggable
 
@@ -20,6 +21,8 @@ module CapsuleCRM
     validates :party, presence: true
 
     belongs_to :party, class_name: 'CapsuleCRM::Party'
+
+    has_many :tasks, class_name: 'CapsuleCRM::Task', source: :case
 
     # Public: Search and retrieve all cases in CapsuleCRM
     #

@@ -8,6 +8,11 @@ describe CapsuleCRM::Opportunity do
       to_return(body: File.read('spec/support/milestones.json'))
   end
 
+  before do
+    stub_request(:get, /\/api\/users$/).
+      to_return(body: File.read('spec/support/all_users.json'))
+  end
+
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:milestone) }
@@ -28,6 +33,21 @@ describe CapsuleCRM::Opportunity do
     subject { CapsuleCRM::Opportunity.new(milestone: milestone) }
 
     it { should_not validate_presence_of(:milestone_id) }
+  end
+
+  describe '#tasks' do
+    let(:opportunity) { Fabricate.build(:opportunity, id: 5) }
+
+    before do
+      stub_request(:get, /\/api\/tasks$/).
+        to_return(body: File.read('spec/support/all_tasks.json'))
+    end
+
+    subject { opportunity.tasks }
+
+    it { should be_a(Array) }
+
+    it { subject.length.should eql(1) }
   end
 
   describe '#milestone=' do

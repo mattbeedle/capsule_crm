@@ -37,7 +37,7 @@ module CapsuleCRM
 
           (class << self; self; end).instance_eval do
             define_method "_for_#{association_name}" do |id|
-              raise NotImplementedError
+              raise NotImplementedError.new("_for_#{association_name} needs to be implemented")
             end
           end
 
