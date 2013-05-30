@@ -52,20 +52,78 @@ describe CapsuleCRM::Task do
       subject.all? { |item| item.is_a?(CapsuleCRM::Task) }.should be_true
     end
 
-    it { subject.length.should eql(1) }
+    it { subject.length.should eql(4) }
 
     it { subject.first.description.should eql('Meet with customer') }
   end
 
   describe '.create' do
+    let(:location)  { 'https://sample.capsulecrm.com/api/task/59' }
+
     context 'when it is valid' do
       before do
-        location = 'https://sample.capsulecrm.com/api/task/59'
         stub_request(:post, /\/api\/task$/).
           to_return(headers: { 'Location' => location })
       end
 
       subject { CapsuleCRM::Task.create Fabricate.attributes_for(:task) }
+
+      it { should be_a(CapsuleCRM::Task) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it belongs to a party' do
+      before do
+        stub_request(:post, /\/api\/party\/#{party.id}\/task$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      let(:party) { Fabricate.build(:person, id: 1) }
+
+      subject do
+        CapsuleCRM::Task.create(
+          Fabricate.attributes_for(:task, party: party)
+        )
+      end
+
+      it { should be_a(CapsuleCRM::Task) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it belongs to a opportunity' do
+      before do
+        stub_request(:post, /\/api\/opportunity\/#{opportunity.id}\/task$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      let(:opportunity) { Fabricate.build(:opportunity, id: 2) }
+
+      subject do
+        CapsuleCRM::Task.create(
+          Fabricate.attributes_for(:task, opportunity: opportunity)
+        )
+      end
+
+      it { should be_a(CapsuleCRM::Task) }
+
+      it { should be_persisted }
+    end
+
+    context 'when it belongs to a case' do
+      before do
+        stub_request(:post, /\/api\/kase\/#{kase.id}\/task$/).
+          to_return(headers: { 'Location' => location })
+      end
+
+      let(:kase) { Fabricate.build(:case, id: 5) }
+
+      subject do
+        CapsuleCRM::Task.create(
+          Fabricate.attributes_for(:task, case: kase)
+        )
+      end
 
       it { should be_a(CapsuleCRM::Task) }
 

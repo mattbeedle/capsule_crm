@@ -4,6 +4,7 @@ class CapsuleCRM::Party
   include CapsuleCRM::Associations::HasMany
 
   has_many :histories, class_name: 'CapsuleCRM::History', source: :party
+  has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
 
   def self.all(options = {})
     attributes = CapsuleCRM::Connection.get('/api/party', options)

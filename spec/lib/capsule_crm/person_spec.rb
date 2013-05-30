@@ -3,8 +3,25 @@
 require 'spec_helper'
 
 describe CapsuleCRM::Person do
+  before do
+    stub_request(:get, /\/api\/users$/).
+      to_return(body: File.read('spec/support/all_users.json'))
+  end
 
   before { configure }
+
+  describe '#tasks' do
+    let(:person) { Fabricate.build(:person, id: 1) }
+
+    before do
+      stub_request(:get, /\/api\/tasks$/).
+        to_return(body: File.read('spec/support/all_tasks.json'))
+    end
+
+    subject { person.tasks }
+
+    it { should be_a(Array) }
+  end
 
   describe '._for_organization' do
     context 'when there are many people for the organization' do
