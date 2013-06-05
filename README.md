@@ -1,15 +1,11 @@
 [![Build
 Status](https://travis-ci.org/mattbeedle/capsule_crm.png)](https://travis-ci.org/mattbeedle/capsule_crm)
-
 [![Code
 Climate](https://codeclimate.com/github/mattbeedle/capsule_crm.png)](https://codeclimate.com/github/mattbeedle/capsule_crm)
-
 [![Gem
 Version](https://badge.fury.io/rb/capsule_crm.png)](http://badge.fury.io/rb/capsule_crm)
-
 [![Coverage
 Status](https://coveralls.io/repos/mattbeedle/capsule_crm/badge.png?branch=master)](https://coveralls.io/r/mattbeedle/capsule_crm)
-
 [![Dependency
 Status](https://gemnasium.com/mattbeedle/capsule_crm.png)](https://gemnasium.com/mattbeedle/capsule_crm)
 
