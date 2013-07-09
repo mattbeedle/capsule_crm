@@ -12,6 +12,7 @@ module CapsuleCRM
 
     include CapsuleCRM::Associations::HasMany
     include CapsuleCRM::Taggable
+    include CapsuleCRM::Contactable
 
     attribute :id,    Integer
     attribute :name,  String
