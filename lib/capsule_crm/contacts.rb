@@ -72,7 +72,7 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Email objects
     def emails
-      @emails || []
+      Array(@emails)
     end
 
     # Public: Sets the phones for this contacts controller
@@ -98,7 +98,7 @@ module CapsuleCRM
     #
     # Returns a Hash
     def phones
-      @phones || []
+      Array(@phones)
     end
 
     # Public: Sets the websites for this contacts container
@@ -126,7 +126,7 @@ module CapsuleCRM
     #
     # Returns a Hash
     def websites
-      @websites || []
+      Array(@websites)
     end
 
     # Public: Builds a hash of all contact information

@@ -4,6 +4,8 @@ require 'spec_helper'
 describe CapsuleCRM::Organization do
   before { configure }
 
+  it_should_behave_like 'contactable'
+
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
