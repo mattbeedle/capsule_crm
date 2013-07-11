@@ -25,7 +25,9 @@ module CapsuleCRM
     end
 
     def api_singular_name
-      self.class.to_s.demodulize.downcase.singularize
+      class_name = self.class.superclass.to_s unless self.class.superclass == Object
+      class_name ||= self.class.to_s
+      class_name.demodulize.downcase.singularize
     end
   end
 end

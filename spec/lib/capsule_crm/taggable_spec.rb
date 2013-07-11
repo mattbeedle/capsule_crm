@@ -7,6 +7,9 @@ class TaggableItem
   attribute :id
 end
 
+class SubclassedTaggableItem < TaggableItem
+end
+
 describe CapsuleCRM::Taggable do
   before { configure }
 
@@ -79,6 +82,16 @@ describe CapsuleCRM::Taggable do
       subject { taggable_item.remove_tag 'A Test Tag' }
 
       it { subject.should be_nil }
+    end
+  end
+
+  describe '#api_singular_name' do
+    it 'turns the class name into appropriate api name' do
+      TaggableItem.new.api_singular_name.should == 'taggableitem' 
+    end
+
+    it 'gives the superclass unless Object to work with Organization/Person subclassing of Party' do
+      SubclassedTaggableItem.new.api_singular_name.should == 'taggableitem'
     end
   end
 end
