@@ -11,7 +11,7 @@ module CapsuleCRM
     def add_tag(tag_name)
       if id
         CapsuleCRM::Connection.post(
-          "/api/#{api_singular_name}/#{id}/#{URI.encode(tag_name)}"
+          "/api/#{api_singular_name}/#{id}/tag/#{URI.encode(tag_name)}"
         )
       end
     end
@@ -19,7 +19,7 @@ module CapsuleCRM
     def remove_tag(tag_name)
       if id
         CapsuleCRM::Connection.delete(
-          "/api/#{api_singular_name}/#{id}/#{URI.encode(tag_name)}"
+          "/api/#{api_singular_name}/#{id}/tag/#{URI.encode(tag_name)}"
         )
       end
     end

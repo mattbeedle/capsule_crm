@@ -39,7 +39,7 @@ describe CapsuleCRM::Taggable do
 
       before do
         loc = 'https://sample.capsulecrm.com/api/party/1000/tag/A%20Test%20Tag'
-        stub_request(:post, /\/api\/taggableitem\/1\/A%20Test%20Tag$/).
+        stub_request(:post, /\/api\/taggableitem\/1\/tag\/A%20Test%20Tag$/).
           to_return(headers: { 'Location' =>  loc })
       end
 
@@ -66,7 +66,7 @@ describe CapsuleCRM::Taggable do
 
       before do
         loc = 'https://sample.capsulecrm.com/api/party/1000/tag/A%20Test%20Tag'
-        stub_request(:delete, /\/api\/taggableitem\/1\/A%20Test%20Tag$/).
+        stub_request(:delete, /\/api\/taggableitem\/1\/tag\/A%20Test%20Tag$/).
           to_return(headers: { 'Location' => loc })
       end
 
