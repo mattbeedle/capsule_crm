@@ -56,7 +56,7 @@ module CapsuleCRM
 
     def save
       if valid?
-        new_record? ? create_record : update_record
+        update_record
       else
         false
       end
