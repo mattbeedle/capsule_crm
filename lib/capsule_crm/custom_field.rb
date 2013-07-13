@@ -70,23 +70,28 @@ module CapsuleCRM
 
     def to_capsule_json
       {
-        customFields: CapsuleCRM::HashHelper.camelize_keys(
-          {
-          }.delete_if { |key, value| value.blank? }
-        )
+        customFields: {
+          customField: [CapsuleCRM::HashHelper.camelize_keys(
+            {
+              id: id,
+              label: label,
+              date: date,
+              tag: tag,
+              boolean: boolean,
+              text: text,
+              data_tag: data_tag
+            }.delete_if { |key, value| value.blank? }
+          )]
+        }
       }
     end
 
     private
 
-    def create_record
-      self.attributes = CapsuleCRM::Connection.post(
-        "/api/#{belongs_to_api_name}/#{belongs_to_id}/customfields", to_capsule_json
-      )
-      self
-    end
-
     def update_record
+      CapsuleCRM::Connection.post(
+        "/api/party/#{party.id}/customfields", to_capsule_json
+      )
     end
   end
 end
