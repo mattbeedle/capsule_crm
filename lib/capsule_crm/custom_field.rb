@@ -28,10 +28,22 @@ module CapsuleCRM
       )
     end
 
+    class << self
+      alias :_for_organization :_for_party
+      alias :_for_person :_for_party
+    end
+
+
     def self.init_collection(collection)
       CapsuleCRM::ResultsProxy.new(
         [collection].flatten.delete_if(&:blank?).map { |item| new(item) }
       )
+    end
+
+    def attributes=(attributes)
+      CapsuleCRM::HashHelper.underscore_keys!(attributes)
+      super(attributes)
+      self
     end
 
     def self.create(attributes = {})
