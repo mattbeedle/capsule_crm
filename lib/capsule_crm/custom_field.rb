@@ -16,6 +16,10 @@ module CapsuleCRM
 
     validates :label, presence: true
 
+    include CapsuleCRM::Associations
+    belongs_to :party, class_name: 'CapsuleCRM::Party'
+
+
     def self._for_party(party_id)
       init_collection(
         CapsuleCRM::Connection.
