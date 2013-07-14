@@ -12,7 +12,6 @@ module CapsuleCRM
     attribute :tag, String
     attribute :boolean, Boolean
     attribute :text, String
-    attribute :data_tag, String
 
     validates :label, presence: true
 
@@ -79,7 +78,6 @@ module CapsuleCRM
               tag: tag,
               boolean: boolean,
               text: text,
-              data_tag: data_tag
             }.delete_if { |key, value| value.blank? }
           )]
         }
