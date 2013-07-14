@@ -17,6 +17,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.required_ruby_version = '>= 1.9.3'
+
   gem.add_runtime_dependency('activemodel')
   gem.add_runtime_dependency('activesupport')
   gem.add_runtime_dependency('faraday')
@@ -28,6 +30,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('fabrication')
   gem.add_development_dependency('faker')
   gem.add_development_dependency('guard')
+  gem.add_development_dependency('guard-bundler')
   gem.add_development_dependency('guard-rspec')
   gem.add_development_dependency('rb-fsevent')
   gem.add_development_dependency('rspec')

@@ -8,6 +8,8 @@ Version](https://badge.fury.io/rb/capsule_crm.png)](http://badge.fury.io/rb/caps
 Status](https://coveralls.io/repos/mattbeedle/capsule_crm/badge.png?branch=master)](https://coveralls.io/r/mattbeedle/capsule_crm)
 [![Dependency
 Status](https://gemnasium.com/mattbeedle/capsule_crm.png)](https://gemnasium.com/mattbeedle/capsule_crm)
+[![Stories in
+Ready](http://badge.waffle.io/mattbeedle/capsule_crm.png)](http://waffle.io/mattbeedle/capsule_crm)
 
 # CapsuleCRM
 
