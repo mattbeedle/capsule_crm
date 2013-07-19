@@ -233,6 +233,13 @@ module CapsuleCRM
       }.stringify_keys
     end
 
+    # Public: Delete the organization in capsule
+    #
+    # Examples
+    #
+    # organization.destroy
+    #
+    # Return the CapsuleCRM::Organization
     def destroy
       self.id = nil if CapsuleCRM::Connection.delete("/api/party/#{id}")
       self
