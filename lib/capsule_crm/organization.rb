@@ -233,6 +233,11 @@ module CapsuleCRM
       }.stringify_keys
     end
 
+    def destroy
+      self.id = nil if CapsuleCRM::Connection.delete("/api/party/#{id}")
+      self
+    end
+
     private
 
     def create_record
