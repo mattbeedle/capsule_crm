@@ -25,9 +25,9 @@ module CapsuleCRM
 
     private
 
-    def self.init_collection(collection)
+    def self.init_collection(*collection)
       CapsuleCRM::ResultsProxy.new(
-        collection.map { |attributes| new attributes }
+        collection.flatten.map { |attributes| new attributes }
       )
     end
   end

@@ -147,8 +147,8 @@ module CapsuleCRM
       end
     end
 
-    def self.init_collection(collection)
-      CapsuleCRM::ResultsProxy.new(collection.map { |item| new item })
+    def self.init_collection(*collection)
+      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
 
     def create_record

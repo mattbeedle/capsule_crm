@@ -251,8 +251,8 @@ module CapsuleCRM
     # collection  - The Array of CapsuleCRM::Organization attributes hashes
     #
     # Returns a CapsuleCRM::ResultsProxy
-    def self.init_collection(collection)
-      CapsuleCRM::ResultsProxy.new(collection.map { |item| new item })
+    def self.init_collection(*collection)
+      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
   end
 end

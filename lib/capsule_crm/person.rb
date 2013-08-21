@@ -270,8 +270,8 @@ module CapsuleCRM
     # collection  - The Array of CapsuleCRM::Person attributes hashes
     #
     # Returns a CapsuleCRM::ResultsProxy
-    def self.init_collection(collection)
-      CapsuleCRM::ResultsProxy.new(collection.map { |item| new item })
+    def self.init_collection(*collection)
+      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
 
     # Private: Determines whether the person first name is required. Either the

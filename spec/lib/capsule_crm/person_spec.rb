@@ -32,7 +32,13 @@ describe CapsuleCRM::Person do
     end
 
     context 'when there is 1 person for the organization' do
-      pending
+      before do
+        stub_request(:get, /\/api\/party\/1\/people$/).
+          to_return(body: File.read('spec/support/single_user.json'))
+      end
+      subject { CapsuleCRM::Person._for_organization(1) }
+
+      it { should be_a(Array) }
     end
 
     context 'when there are no people for the organization' do
