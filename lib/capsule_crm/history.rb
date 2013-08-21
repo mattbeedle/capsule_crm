@@ -57,7 +57,7 @@ module CapsuleCRM
 
     def self.init_collection(collection)
       CapsuleCRM::ResultsProxy.new(
-        [collection].delete_if(&:blank?).map { |item| new(item) }
+        [collection].flatten.delete_if(&:blank?).map { |item| new(item) }
       )
     end
 
