@@ -43,6 +43,7 @@ describe CapsuleCRM::CustomField do
   describe '.create' do
     context 'when it belongs to a party' do
       let(:organization) { Fabricate.build(:organization, id: 1) }
+      let(:location) { "https://sample.capsulecrm.com/api/party/#{organization.id}/customfields" }
 
       subject do
         CapsuleCRM::CustomField.create(
@@ -52,12 +53,8 @@ describe CapsuleCRM::CustomField do
           text: 'Some text',
           date: Date.today,
           boolean: true,
-          organization: organization
+          party: organization
         )
-      end
-
-      let(:location) do
-        "https://sample.capsulecrm.com/api/party/#{organization.id}/customfields"
       end
 
       before do

@@ -62,6 +62,11 @@ module CapsuleCRM
     end
 
     def save!
+      if valid?
+        update_record
+      else
+        raise CapsuleCRM::Errors::RecordInvalid.new(self)
+      end
     end
 
     def destroy
