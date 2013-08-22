@@ -21,6 +21,7 @@ module CapsuleCRM
     validates :name, presence: true
 
     has_many :people, class_name: 'CapsuleCRM::Person', source: :organization
+    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField', source: :organization
 
     # Public: Set the attributes of an organization
     #
