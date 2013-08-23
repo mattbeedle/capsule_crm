@@ -228,8 +228,9 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
+      self.contacts = nil if self.contacts.blank?
       {
-        organisation: attributes.merge(contacts: contacts.to_capsule_json).
+        organisation: attributes.merge(self.contacts ? {contacts: (self.contacts.is_a?(Hash) ? self.contacts : self.contacts.to_capsule_json)} : {}).
         stringify_keys
       }.stringify_keys
     end
@@ -255,7 +256,8 @@ module CapsuleCRM
     end
 
     def update_record
-      CapsuleCRM::Connection.put("/api/organisation/#{id}", attributes)
+      CapsuleCRM::Connection.put("/api/organisation/#{id}", to_capsule_json)
+      self
     end
 
     # Private: Build a ResultsProxy from a Array of CapsuleCRM::Organization
