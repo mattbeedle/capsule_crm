@@ -20,6 +20,8 @@ module CapsuleCRM
     belongs_to :organization, class_name: 'CapsuleCRM::Organization',
       foreign_key: :organisation_id
 
+    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField', source: :person
+
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
 
@@ -243,10 +245,11 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
+      self.contacts = nil if self.contacts.blank?
       {
         person: CapsuleCRM::HashHelper.camelize_keys(
           attributes.dup.delete_if { |key, value| value.blank? }.
-          merge(contacts: contacts.to_capsule_json)
+          merge(self.contacts ? {contacts: (self.contacts.is_a?(Hash) ? self.contacts : self.contacts.to_capsule_json)} : {})
         )
       }.stringify_keys
     end

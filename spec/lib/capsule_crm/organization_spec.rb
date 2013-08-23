@@ -91,4 +91,18 @@ describe CapsuleCRM::Organization do
 
     it { email_json.should have_key('emailAddress') }
   end
+
+  describe '#destroy' do
+    let(:organization) { CapsuleCRM::Organization.new(id: 1) }
+
+    before do
+      stub_request(:delete, /\/api\/party\/#{organization.id}/).
+        to_return(status: 200)
+      organization.destroy
+    end
+
+    it { expect(organization.id).to be_blank }
+
+    it { expect(organization).to_not be_persisted }
+  end
 end

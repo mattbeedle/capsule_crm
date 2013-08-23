@@ -1,0 +1,23 @@
+{
+  "customFields": {
+    "customField": [
+      {
+        "id": "1",
+        "tag": "Staff",
+        "label": "NI Number",
+        "text": "12345678"
+      },
+      {
+        "id": "1",
+        "tag": "Staff",
+        "label": "Start Date",
+        "date": "2011-03-13T00:00:00Z"
+      },
+      {
+        "id": "1",
+        "label": "Send newsletter",
+        "boolean": "true"
+      }
+    ]
+  }
+}

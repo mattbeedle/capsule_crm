@@ -21,6 +21,7 @@ module CapsuleCRM
     validates :name, presence: true
 
     has_many :people, class_name: 'CapsuleCRM::Person', source: :organization
+    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField', source: :organization
 
     # Public: Set the attributes of an organization
     #
@@ -227,10 +228,23 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
+      self.contacts = nil if self.contacts.blank?
       {
-        organisation: attributes.merge(contacts: contacts.to_capsule_json).
+        organisation: attributes.merge(self.contacts ? {contacts: (self.contacts.is_a?(Hash) ? self.contacts : self.contacts.to_capsule_json)} : {}).
         stringify_keys
       }.stringify_keys
+    end
+
+    # Public: Delete the organization in capsule
+    #
+    # Examples
+    #
+    # organization.destroy
+    #
+    # Return the CapsuleCRM::Organization
+    def destroy
+      self.id = nil if CapsuleCRM::Connection.delete("/api/party/#{id}")
+      self
     end
 
     private
@@ -242,7 +256,8 @@ module CapsuleCRM
     end
 
     def update_record
-      CapsuleCRM::Connection.put("/api/organisation/#{id}", attributes)
+      CapsuleCRM::Connection.put("/api/organisation/#{id}", to_capsule_json)
+      self
     end
 
     # Private: Build a ResultsProxy from a Array of CapsuleCRM::Organization

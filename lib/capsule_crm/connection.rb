@@ -22,7 +22,7 @@ module CapsuleCRM
     end
 
     def self.put(path, params)
-      faraday.put(path, params) do |request|
+      faraday.put(path, params.to_json) do |request|
         request.headers.update default_request_headers
       end.success?
     end
