@@ -349,8 +349,8 @@ module CapsuleCRM
       self
     end
 
-    def self.init_collection(collection)
-      CapsuleCRM::ResultsProxy.new(collection.map { |item| new item })
+    def self.init_collection(*collection)
+      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
   end
 end

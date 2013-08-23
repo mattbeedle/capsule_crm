@@ -255,8 +255,8 @@ module CapsuleCRM
       CapsuleCRM::Connection.put("/api/kase/#{id}", to_capsule_json)
     end
 
-    def self.init_collection(results)
-      CapsuleCRM::ResultsProxy.new(results.map { |item| new item })
+    def self.init_collection(*results)
+      CapsuleCRM::ResultsProxy.new(results.flatten.map { |item| new item })
     end
   end
 end
