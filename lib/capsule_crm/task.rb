@@ -7,6 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations::BelongsTo
+    include CapsuleCRM::Collection
 
     attribute :id, Integer
     attribute :due_date, Date
@@ -145,10 +146,6 @@ module CapsuleCRM
         attrs.merge!(due_date: due_date.to_s(:db)) if due_date
         attrs.merge!(due_date_time: due_date_time.to_s(:db)) if due_date_time
       end
-    end
-
-    def self.init_collection(*collection)
-      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
 
     def create_record

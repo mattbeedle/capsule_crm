@@ -6,8 +6,8 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    include CapsuleCRM::Associations::HasMany
-    include CapsuleCRM::Associations::BelongsTo
+    include CapsuleCRM::Associations
+    include CapsuleCRM::Collection
 
     attribute :id, Integer
     attribute :name, String
@@ -347,10 +347,6 @@ module CapsuleCRM
     def update_record
       CapsuleCRM::Connection.put("/api/opportunity/#{id}", attributes)
       self
-    end
-
-    def self.init_collection(*collection)
-      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
   end
 end

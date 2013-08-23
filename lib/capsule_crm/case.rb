@@ -6,6 +6,7 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
+    include CapsuleCRM::Collection
     include CapsuleCRM::Associations::HasMany
     include CapsuleCRM::Associations::BelongsTo
     include CapsuleCRM::Taggable
@@ -253,10 +254,6 @@ module CapsuleCRM
 
     def update_record
       CapsuleCRM::Connection.put("/api/kase/#{id}", to_capsule_json)
-    end
-
-    def self.init_collection(*results)
-      CapsuleCRM::ResultsProxy.new(results.flatten.map { |item| new item })
     end
   end
 end

@@ -7,6 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
+    include CapsuleCRM::Collection
 
     attribute :id, Integer
     attribute :type, String
@@ -52,12 +53,6 @@ module CapsuleCRM
         CapsuleCRM::Connection.
           get("/api/opportunity/#{opportunity_id}/history")\
           ['history']['historyItem']
-      )
-    end
-
-    def self.init_collection(collection)
-      CapsuleCRM::ResultsProxy.new(
-        [collection].flatten.delete_if(&:blank?).map { |item| new(item) }
       )
     end
 

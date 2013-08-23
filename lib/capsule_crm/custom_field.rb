@@ -6,6 +6,9 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
+    include CapsuleCRM::Associations
+    include CapsuleCRM::Collection
+
     attribute :id, Integer
     attribute :label, String
     attribute :date, DateTime
@@ -15,9 +18,7 @@ module CapsuleCRM
 
     validates :label, presence: true
 
-    include CapsuleCRM::Associations
     belongs_to :party, class_name: 'CapsuleCRM::Party'
-
 
     def self._for_party(party_id)
       init_collection(
@@ -30,13 +31,6 @@ module CapsuleCRM
     class << self
       alias :_for_organization :_for_party
       alias :_for_person :_for_party
-    end
-
-
-    def self.init_collection(collection)
-      CapsuleCRM::ResultsProxy.new(
-        [collection].flatten.delete_if(&:blank?).map { |item| new(item) }
-      )
     end
 
     def attributes=(attributes)

@@ -11,8 +11,9 @@ module CapsuleCRM
     include ActiveModel::Validations::Callbacks
 
     include CapsuleCRM::Associations::HasMany
-    include CapsuleCRM::Taggable
+    include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
+    include CapsuleCRM::Taggable
 
     attribute :id,    Integer
     attribute :name,  String
@@ -258,16 +259,6 @@ module CapsuleCRM
     def update_record
       CapsuleCRM::Connection.put("/api/organisation/#{id}", to_capsule_json)
       self
-    end
-
-    # Private: Build a ResultsProxy from a Array of CapsuleCRM::Organization
-    # attributes
-    #
-    # collection  - The Array of CapsuleCRM::Organization attributes hashes
-    #
-    # Returns a CapsuleCRM::ResultsProxy
-    def self.init_collection(*collection)
-      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
   end
 end

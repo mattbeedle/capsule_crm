@@ -2,6 +2,7 @@ module CapsuleCRM
   class Person < CapsuleCRM::Party
     include Virtus
 
+    include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
     include CapsuleCRM::Associations::BelongsTo
 
@@ -266,15 +267,6 @@ module CapsuleCRM
     def update_record
       CapsuleCRM::Connection.put("/api/person/#{id}", to_capsule_json)
       self
-    end
-
-    # Private: Build a ResultsProxy from a Array of CapsuleCRM::Person attributes
-    #
-    # collection  - The Array of CapsuleCRM::Person attributes hashes
-    #
-    # Returns a CapsuleCRM::ResultsProxy
-    def self.init_collection(*collection)
-      CapsuleCRM::ResultsProxy.new(collection.flatten.map { |item| new item })
     end
 
     # Private: Determines whether the person first name is required. Either the
