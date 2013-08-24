@@ -1,0 +1,16 @@
+{
+  "tracks": {
+    "track": [
+      {
+        "id": "1",
+        "description": "Sales follow up",
+        "captureRule": "OPPORTUNITY"
+      },
+      {
+        "id": "2",
+        "description": "Customer service feedback",
+        "captureRule": "CASEFILE"
+      }
+    ]
+  }
+}

@@ -30,8 +30,9 @@ module CapsuleCRM
 
     has_many :tasks, class_name: 'CapsuleCRM::Task', source: :opportunity
 
-    belongs_to :party, class_name: 'CapsuleCRM::Party'
+    belongs_to :party,     class_name: 'CapsuleCRM::Party'
     belongs_to :milestone, class_name: 'CapsuleCRM::Milestone'
+    belongs_to :track,     class_name: 'CapsuleCRM::Track'
 
     def milestone=(milestone)
       if milestone.is_a?(String)
@@ -40,6 +41,10 @@ module CapsuleCRM
       @milestone = milestone
       self.milestone_id = milestone.try(:id)
       self
+    end
+
+    def self._for_track(track)
+      raise NotImplementedError.new("There is no way to find opportunities by trackId in the Capsule API right now")
     end
 
     # Public: Get all opportunities from Capsule. The list can be restricted
@@ -289,7 +294,9 @@ module CapsuleCRM
     def to_capsule_json
       {
         opportunity: CapsuleCRM::HashHelper.camelize_keys(
-          attributes.dup.delete_if { |key, value| value.blank? }
+          attributes.dup.delete_if do |key, value|
+            value.blank? || key == 'track_id'
+          end
         )
       }.stringify_keys
     end
@@ -309,9 +316,9 @@ module CapsuleCRM
     private
 
     def create_record
-      self.attributes = CapsuleCRM::Connection.post(
-        "/api/party/#{party_id}/opportunity", to_capsule_json
-      )
+      path = "/api/party/#{party_id}/opportunity"
+      path += "?trackId=#{track_id}" if track_id
+      self.attributes = CapsuleCRM::Connection.post(path, to_capsule_json)
       self
     end
 

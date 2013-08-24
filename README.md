@@ -157,6 +157,12 @@ history = org.histories.build note: 'some note text'
 history = org.histories.create note: 'some note text'
 ```
 
+### Tracks
+```ruby
+# List tracks
+tracks = CapsuleCRM::Track.all
+```
+
 ### Opportunities
 ```ruby
 # Find an opportunity
@@ -164,6 +170,18 @@ opportunity = CapsuleCRM::Opportunity.find(ID)
 
 # List all opportunities
 opportunities = CapsuleCRM::Opportunity.all
+
+# Build a new opportunity
+opportunity = CapsuleCRM::Opportunity.new(
+  name: 'my first opportunity',
+  party: CapsuleCRM::Party.find(1)
+  milestone: CapsuleCRM::Milestone.find(10)
+  track: CapsuleCRM::Track.all.first
+)
+
+# Save the opportunity
+opportunity.save
+opportunity.save!
 
 # List tags
 opportunity.tags

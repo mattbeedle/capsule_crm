@@ -35,6 +35,15 @@ describe CapsuleCRM::Opportunity do
     it { should_not validate_presence_of(:milestone_id) }
   end
 
+  describe '._for_track' do
+    let(:track) { CapsuleCRM::Track.new }
+
+    it 'should raise a not implemented error' do
+      expect { CapsuleCRM::Opportunity._for_track(track) }.
+        to raise_error(NotImplementedError)
+    end
+  end
+
   describe '#tasks' do
     let(:opportunity) { Fabricate.build(:opportunity, id: 5) }
 
@@ -237,6 +246,32 @@ describe CapsuleCRM::Opportunity do
       it { should be_persisted }
 
       it { subject.id.should eql(59) }
+
+      context 'when the opportunity has a track' do
+        before do
+          stub_request(:post, "#{request_path}?trackId=#{track.id}").to_return(
+            headers: {
+              'Location' => 'https://sample.capsulecrm.com/api/opportunity/59'
+            }
+          )
+        end
+
+        let(:track) { CapsuleCRM::Track.new(id: rand(10)) }
+
+        subject do
+          CapsuleCRM::Opportunity.
+            create(opportunity_attributes.merge(track: track))
+        end
+
+        it { expect(subject).to be_a(CapsuleCRM::Opportunity) }
+
+        it do
+          subject
+          WebMock.should have_requested(
+            :post, "#{request_path}?trackId=#{track.id}"
+          )
+        end
+      end
     end
 
     context 'when the opportunity is not valid' do
