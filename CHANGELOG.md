@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
+- Added Track support
+
 ## 0.9.1
 
 - Refactored code for finding parties/people/organizations to make sure that
