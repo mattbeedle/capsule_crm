@@ -22,6 +22,7 @@ module CapsuleCRM
     validates :party, presence: true
 
     belongs_to :party, class_name: 'CapsuleCRM::Party'
+    belongs_to :track, class_name: 'CapsuleCRM::Track'
 
     has_many :tasks, class_name: 'CapsuleCRM::Task', source: :case
 
@@ -238,16 +239,24 @@ module CapsuleCRM
     def to_capsule_json
       {
         kase: CapsuleCRM::HashHelper.camelize_keys(
-          attributes.dup.delete_if { |key, value| value.blank? }
+          attributes.dup.delete_if do |key, value|
+            value.blank? || key == 'track_id'
+          end
         )
       }
+    end
+
+    def self._for_track(track)
+      raise NotImplementedError.new("There is no way to find cases by trackId in the Capsule API right now")
     end
 
     private
 
     def create_record
+      path = "/api/party/#{party_id}/kase"
+      path += "?trackId=#{track_id}" if track_id
       self.attributes = CapsuleCRM::Connection.post(
-        "/api/party/#{party_id}/kase", to_capsule_json
+        path, to_capsule_json
       )
       self
     end

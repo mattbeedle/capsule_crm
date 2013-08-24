@@ -12,6 +12,15 @@ describe CapsuleCRM::Case do
 
   it { should validate_presence_of(:party) }
 
+  describe '._for_track' do
+    let(:track) { CapsuleCRM::Track.new }
+
+    it do
+      expect { CapsuleCRM::Case._for_track(track) }.
+        to raise_error(NotImplementedError)
+    end
+  end
+
   describe '#tasks' do
     let(:kase) { Fabricate.build(:case, id: 3) }
 
@@ -58,16 +67,18 @@ describe CapsuleCRM::Case do
   end
 
   describe '.create' do
+    let(:request_uri) do
+      'https://1234:@company.capsulecrm.com/api/party/1/kase'
+    end
+
+    let(:party) { CapsuleCRM::Person.new(id: 1, first_name: 'Matt') }
+
     context 'when the case is valid' do
       before do
-        stub_request(
-          :post, 'https://1234:@company.capsulecrm.com/api/party/1/kase'
-        ).to_return(
+        stub_request(:post, request_uri).to_return(
           headers: { 'Location' => 'https://sample.capsulecrm.com/api/kase/59' }
         )
       end
-
-      let(:party) { CapsuleCRM::Person.new(id: 1, first_name: 'Matt') }
 
       subject { CapsuleCRM::Case.create name: 'Test Case', party: party }
 
@@ -80,6 +91,30 @@ describe CapsuleCRM::Case do
       let(:kase) { CapsuleCRM::Case.create name: 'Test Case' }
 
       it { kase.errors.should_not be_blank }
+    end
+
+    context 'when the case has a track' do
+      before do
+        stub_request(:post, "#{request_uri}?trackId=#{track.id}").to_return(
+          headers: { 'Location' => 'https://sample.capsulecrm.com/api/kase/59' }
+        )
+      end
+
+      let(:track) { CapsuleCRM::Track.new(id: rand(10)) }
+
+      subject do
+        CapsuleCRM::Case.create(name: 'Test Case', party: party, track: track)
+      end
+
+      it { expect(subject).to be_a(CapsuleCRM::Case) }
+
+      it { expect(subject).to be_persisted }
+
+      it do
+        subject
+        expect(WebMock).
+          to have_requested(:post, "#{request_uri}?trackId=#{track.id}")
+      end
     end
   end
 
