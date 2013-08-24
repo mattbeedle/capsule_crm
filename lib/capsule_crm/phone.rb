@@ -9,5 +9,10 @@ module CapsuleCRM
 
     attribute :type
     attribute :phone_number
+
+    def initialize(attributes = {})
+      CapsuleCRM::HashHelper.underscore_keys!(attributes)
+      super(attributes)
+    end
   end
 end

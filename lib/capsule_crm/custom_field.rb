@@ -7,6 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
+    include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
 
     attribute :id, Integer
@@ -31,12 +32,6 @@ module CapsuleCRM
     class << self
       alias :_for_organization :_for_party
       alias :_for_person :_for_party
-    end
-
-    def attributes=(attributes)
-      CapsuleCRM::HashHelper.underscore_keys!(attributes)
-      super(attributes)
-      self
     end
 
     def self.create(attributes = {})
@@ -69,16 +64,10 @@ module CapsuleCRM
     def to_capsule_json
       {
         customFields: {
-          customField: [CapsuleCRM::HashHelper.camelize_keys(
-            {
-              id: id,
-              label: label,
-              date: date,
-              tag: tag,
-              boolean: boolean,
-              text: text,
-            }.delete_if { |key, value| value.blank? }
-          )]
+          customField: [
+            CapsuleCRM::HashHelper.camelize_keys(attributes).
+            delete_if { |key, value| value.blank? }
+          ]
         }
       }
     end

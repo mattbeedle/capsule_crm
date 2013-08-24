@@ -2,8 +2,6 @@ require 'active_support/core_ext'
 
 module CapsuleCRM
   class Organization < CapsuleCRM::Party
-    include Virtus
-
     extend ActiveModel::Naming
     extend ActiveModel::Callbacks
     extend ActiveModel::Conversion
@@ -23,23 +21,6 @@ module CapsuleCRM
 
     has_many :people, class_name: 'CapsuleCRM::Person', source: :organization
     has_many :custom_fields, class_name: 'CapsuleCRM::CustomField', source: :organization
-
-    # Public: Set the attributes of an organization
-    #
-    # attributes  - The Hash of attributes (default: {}):
-    #               :name   - The String organization name
-    #               :about  - The String information about the organization
-    #
-    # Examples
-    #
-    # CapsuleCRM::Organization.new
-    #
-    # Returns a CapsuleCRM::Organization
-    def attributes=(attributes)
-      CapsuleCRM::HashHelper.underscore_keys!(attributes)
-      super(attributes)
-      self
-    end
 
     # Public: Get all people from Capsule. The list can be restricted
     # and/or paginated with various query parameters sent through the options
@@ -229,9 +210,8 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
-      self.contacts = nil if self.contacts.blank?
       {
-        organisation: attributes.merge(self.contacts ? {contacts: (self.contacts.is_a?(Hash) ? self.contacts : self.contacts.to_capsule_json)} : {}).
+        organisation: attributes.merge(contacts: contacts.to_capsule_json).
         stringify_keys
       }.stringify_keys
     end

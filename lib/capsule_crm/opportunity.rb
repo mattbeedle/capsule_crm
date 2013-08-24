@@ -7,6 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
+    include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
 
     attribute :id, Integer
@@ -38,36 +39,6 @@ module CapsuleCRM
       end
       @milestone = milestone
       self.milestone_id = milestone.try(:id)
-      self
-    end
-
-    # Public: Set the attributes of a opportunity
-    #
-    # attributes  - The Hash of attributes (default: {}):
-    #               :name                 - The String opportunity name
-    #               :description          - The String opportunity description
-    #               :currency             - The String currency code
-    #               :value                - The Float opportunity (financial) value
-    #               :duration_basis       - The String duration basis
-    #               :duration             - The Integer duration (for opportunities
-    #               with a repeating (not FIXED) duratin basis
-    #               :party_id             - The Integer party id
-    #               :milestone_id         - The Integer milestone id
-    #               :expected_close_date  - The DateTime when the opportunity
-    #               is expected to be closed
-    #               :actual_close_date    - The DateTime when the opportunity
-    #               was actually closed
-    #               :probability          - The Float probability that this
-    #               opportunity will be won
-    #
-    # Examples
-    #
-    # CapsuleCRM::Opportunity.new
-    #
-    # Returns a CapsuleCRM::Opportunity
-    def attributes=(attributes)
-      CapsuleCRM::HashHelper.underscore_keys!(attributes)
-      super(attributes)
       self
     end
 

@@ -7,6 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
+    include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
 
     attribute :id, Integer
@@ -54,48 +55,6 @@ module CapsuleCRM
           get("/api/opportunity/#{opportunity_id}/history")\
           ['history']['historyItem']
       )
-    end
-
-    # Public: Underscore all of the attributes keys and set the attributes of
-    # this history item
-    #
-    # attributes  - The Hash of history attributes (default: {}):
-    #               :id               - The Integer ID of this history item
-    #               :creator          - The String username of the creator
-    #               (CapsuleCRM::User) OR a CapsuleCRM::User object
-    #               :type             - The String type (Note, Email or Task)
-    #               :note             - The String note
-    #               :subject          - The String email subject if this history
-    #               item is from an email
-    #               :entry_date       - The date when this history item was
-    #               created
-    #               :attachments      - An Array of CapsuleCRM::Attachment
-    #               objects OR an Array of CapsuleCRM::Attachment attributes
-    #               hashes
-    #               :participants     - An Array of CapsuleCRM::Participant
-    #               objects OR an Array of CapsuleCRM::Participant attributes
-    #               hashes
-    #               :party_id         - The Integer ID of the party that this
-    #               history item belongs to
-    #               :case_id          - The Integer ID of the case that this
-    #               history item belongs to
-    #               :opportunity_id   - The Integer ID of the opportunity that
-    #               this item belongs to
-    #
-    # Examples
-    #
-    # history = CapsuleCRM::History.new
-    # history.attributes = { entry_date: Time.now }
-    #
-    # or
-    #
-    # history.attributes = { entryDate: Time.now }
-    #
-    # Returns a CapsuleCRM::History object
-    def attributes=(attributes)
-      CapsuleCRM::HashHelper.underscore_keys!(attributes)
-      super(attributes)
-      self
     end
 
     # Public: find a CapsuleCRM::History by ID

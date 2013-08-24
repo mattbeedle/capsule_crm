@@ -15,10 +15,10 @@ module CapsuleCRM
     #
     # Returns a CapsuleCRM::Contact
     def initialize(attributes = {})
-      self.addresses  = Array(attributes[:addresses])
-      self.emails     = Array(attributes[:emails])
-      self.phones     = Array(attributes[:phones])
-      self.websites   = Array(attributes[:websites])
+      self.addresses  = attributes[:addresses] || attributes[:address]
+      self.emails     = attributes[:emails] || attributes[:email]
+      self.phones     = attributes[:phones] || attributes[:phone]
+      self.websites   = attributes[:websites] || attributes[:website]
     end
 
     # Public: Sets the addresses for this contacts container
@@ -34,7 +34,8 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Address objects
     def addresses=(addresses)
-      @addresses = addresses
+      addresses = CapsuleCRM::Address.new(addresses) if addresses.is_a?(Hash)
+      @addresses = Array(addresses)
     end
 
     # Public: Gets the addresses for this contacts container
@@ -45,7 +46,7 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Address objects
     def addresses
-      @addresses || []
+      Array(@addresses)
     end
 
     # Public: Sets the emails for this contacts container
@@ -61,7 +62,8 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Email objects
     def emails=(emails)
-      @emails = emails
+      emails = CapsuleCRM::Email.new(emails) if emails.is_a?(Hash)
+      @emails = Array(emails)
     end
 
     # Public: Gets the emails for this contacts container
@@ -87,7 +89,8 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Phone objects
     def phones=(phones)
-      @phones = phones
+      phones = CapsuleCRM::Phone.new(phones) if phones.is_a?(Hash)
+      @phones = Array(phones)
     end
 
     # Public: Gets the phones for this contacts container
@@ -115,7 +118,8 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Website objects
     def websites=(websites)
-      @websites = websites
+      websites = CapsuleCRM::Website.new(websites) if websites.is_a?(Hash)
+      @websites = Array(websites)
     end
 
     # Public: Gets the websites for this contacts container

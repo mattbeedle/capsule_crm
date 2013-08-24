@@ -7,6 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations::BelongsTo
+    include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
 
     attribute :id, Integer
@@ -47,11 +48,6 @@ module CapsuleCRM
       CapsuleCRM::ResultsProxy.new(
         CapsuleCRM::Task.all.select { |task| task.case_id == case_id }
       )
-    end
-
-    def attributes=(attributes)
-      CapsuleCRM::HashHelper.underscore_keys!(attributes)
-      super(attributes)
     end
 
     def owner=(user)

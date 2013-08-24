@@ -13,5 +13,10 @@ module CapsuleCRM
     attribute :web_address
 
     validates :web_service, :web_address, presence: true
+
+    def initialize(attributes = {})
+      CapsuleCRM::HashHelper.underscore_keys!(attributes)
+      super(attributes)
+    end
   end
 end

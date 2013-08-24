@@ -1,7 +1,5 @@
 module CapsuleCRM
   class Person < CapsuleCRM::Party
-    include Virtus
-
     include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
     include CapsuleCRM::Associations::BelongsTo
@@ -60,30 +58,6 @@ module CapsuleCRM
         CapsuleCRM::Connection.
         get('/api/party', options)['parties']['person']
       )
-    end
-
-    # Public: Set the attributes of a person
-    #
-    # attributes  - The Hash of attributes (default: {}):
-    #               :first_name         - The String person first name
-    #               :last_name          - The String person last name
-    #               :job_title          - The String job title
-    #               :about              - The String information about the person
-    #               :organisation_name  - The String name of the organisation. If
-    #               this organisation does not exist in capsule then a new one
-    #               will be created on save
-    #               :organisation_id    - The Integer ID of the organisation in
-    #               capsulecrm.
-    #
-    # Examples
-    #
-    # CapsuleCRM::Person.new
-    #
-    # Returns a CapsuleCRM::Person
-    def attributes=(attributes)
-      CapsuleCRM::HashHelper.underscore_keys!(attributes)
-      super(attributes)
-      self
     end
 
     # Public: Create a new person in capsulecrm
@@ -246,11 +220,10 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
-      self.contacts = nil if self.contacts.blank?
       {
         person: CapsuleCRM::HashHelper.camelize_keys(
           attributes.dup.delete_if { |key, value| value.blank? }.
-          merge(self.contacts ? {contacts: (self.contacts.is_a?(Hash) ? self.contacts : self.contacts.to_capsule_json)} : {})
+          merge(contacts: contacts.to_capsule_json)
         )
       }.stringify_keys
     end
