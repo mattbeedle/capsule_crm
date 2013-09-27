@@ -11,6 +11,36 @@ describe CapsuleCRM::Organization do
       to_return(body: File.read('spec/support/all_users.json'))
   end
 
+  describe '.all' do
+    context 'when some parties exist' do
+      before do
+        stub_request(:get, /\/api\/party$/).
+          to_return(body: File.read('spec/support/all_parties.json'))
+      end
+
+      subject { CapsuleCRM::Organization.all }
+
+      it { expect(subject).to be_a(Array) }
+
+      it { expect(subject.length).to eql(1) }
+
+      it { expect(subject.first).to be_a(CapsuleCRM::Organization) }
+    end
+
+    context 'when no parties exist' do
+      before do
+        stub_request(:get, /\/api\/party$/).
+          to_return(body: File.read('spec/support/no_parties.json'))
+      end
+
+      subject { CapsuleCRM::Organization.all }
+
+      it { expect(subject).to be_a(Array) }
+
+      it { expect(subject.length).to eql(0) }
+    end
+  end
+
   describe '#people' do
     let(:organization) { Fabricate.build(:organization, id: 1) }
 

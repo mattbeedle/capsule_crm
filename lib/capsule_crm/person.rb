@@ -54,10 +54,8 @@ module CapsuleCRM
     #
     # Returns a ResultsProxy of organisations
     def self.all(options = {})
-      init_collection(
-        CapsuleCRM::Connection.
-        get('/api/party', options)['parties']['person']
-      )
+      CapsuleCRM::Party.all(options).
+        delete_if { |item| !item.is_a?(CapsuleCRM::Person) }
     end
 
     # Public: Create a new person in capsulecrm

@@ -20,7 +20,8 @@ module CapsuleCRM
     validates :name, presence: true
 
     has_many :people, class_name: 'CapsuleCRM::Person', source: :organization
-    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField', source: :organization
+    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField',
+      source: :organization
 
     # Public: Get all people from Capsule. The list can be restricted
     # and/or paginated with various query parameters sent through the options
@@ -44,10 +45,8 @@ module CapsuleCRM
     #
     # Returns a ResultsProxy of organisations
     def self.all(options = {})
-      init_collection(
-        CapsuleCRM::Connection.
-        get('/api/party', options)['parties']['organisation']
-      )
+      CapsuleCRM::Party.all(options).
+        delete_if { |item| !item.is_a?(CapsuleCRM::Organization) }
     end
 
     # Public: Get an organization by ID
