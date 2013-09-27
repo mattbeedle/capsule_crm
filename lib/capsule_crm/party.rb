@@ -9,7 +9,9 @@ class CapsuleCRM::Party
   has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
 
   def self.all(options = {})
+    process_options(options)
     attributes = CapsuleCRM::Connection.get('/api/party', options)
+
     init_collection(attributes['parties'])
   end
 
@@ -25,6 +27,7 @@ class CapsuleCRM::Party
   def self.init_collection(collection)
     CapsuleCRM::ResultsProxy.new(
       collection.map do |key, value|
+        next unless %w(organisation person).include?(key)
         [collection[key]].flatten.map do |attrs|
           party_classes[key].constantize.new(attrs)
         end.flatten
@@ -33,9 +36,14 @@ class CapsuleCRM::Party
   end
 
   def self.party_classes
-    {
-      person:       'CapsuleCRM::Person',
-      organisation: 'CapsuleCRM::Organization'
-    }.stringify_keys
+    { person: 'CapsuleCRM::Person', organisation: 'CapsuleCRM::Organization' }.
+      stringify_keys
+  end
+
+  def self.process_options(options)
+    if options[:lastmodified] && options[:lastmodified].respond_to?(:strftime)
+      options[:lastmodified] = options[:lastmodified].
+        strftime("%Y%m%dT%H%M%SZ")
+    end
   end
 end
