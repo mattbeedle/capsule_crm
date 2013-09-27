@@ -110,7 +110,7 @@ describe CapsuleCRM::Case do
 
       it { expect(subject).to be_persisted }
 
-      it do
+      it 'should add the trackId to the URI' do
         subject
         expect(WebMock).
           to have_requested(:post, "#{request_uri}?trackId=#{track.id}")
