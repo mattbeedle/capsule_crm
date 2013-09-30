@@ -8,6 +8,7 @@ module CapsuleCRM
     #
     # Returns a Hash from the JSON response
     def self.get(path, params = {})
+      preprocess_params(params)
       response = faraday.get(path, params) do |req|
         req.headers.update default_request_headers
       end
@@ -34,6 +35,18 @@ module CapsuleCRM
     end
 
     private
+
+    def self.preprocess_params(params)
+      params.symbolize_keys!
+      if params_contains_lastmodified(params)
+        params[:lastmodified] = params[:lastmodified].strftime("%Y%m%dT%H%M%S")
+      end
+    end
+
+    def self.params_contains_lastmodified(params)
+      params.keys.include?(:lastmodified) &&
+        params[:lastmodified].respond_to?(:strftime)
+    end
 
     # TODO clean this shit up
     def self.process_post_response(response)
