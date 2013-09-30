@@ -9,10 +9,9 @@ class CapsuleCRM::Party
   has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
 
   def self.all(options = {})
-    process_options(options)
-    attributes = CapsuleCRM::Connection.get('/api/party', options)
-
-    init_collection(attributes['parties'])
+    init_collection(
+      CapsuleCRM::Connection.get('/api/party', options)['parties']
+    )
   end
 
   def self.find(id)
@@ -38,12 +37,5 @@ class CapsuleCRM::Party
   def self.party_classes
     { person: 'CapsuleCRM::Person', organisation: 'CapsuleCRM::Organization' }.
       stringify_keys
-  end
-
-  def self.process_options(options)
-    if options[:lastmodified] && options[:lastmodified].respond_to?(:strftime)
-      options[:lastmodified] = options[:lastmodified].
-        strftime("%Y%m%dT%H%M%SZ")
-    end
   end
 end
