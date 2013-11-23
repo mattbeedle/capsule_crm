@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Milestone
-    include Virtus
+    include Virtus.model
 
     include CapsuleCRM::Collection
 

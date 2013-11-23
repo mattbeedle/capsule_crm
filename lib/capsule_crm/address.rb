@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Address
-    include Virtus
+    include Virtus.model
 
     extend  ActiveModel::Naming
     include ActiveModel::Serializers::JSON

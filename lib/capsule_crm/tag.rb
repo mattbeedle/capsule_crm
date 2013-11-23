@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Tag
-    include Virtus
+    include Virtus.model
 
     extend  ActiveModel::Naming
     include ActiveModel::Conversion
