@@ -15,6 +15,12 @@ Ready](http://badge.waffle.io/mattbeedle/capsule_crm.png)](http://waffle.io/matt
 
 CapsuleCRM provides an ActiveModel compliant interface to the capsulecrm API
 
+## Versioning
+
+This project follows [semver](http://semver.org/spec/v2.0.0.html) so there will
+be no breaking changes in minor/patch version changes. It is pre 1.0
+though, so it's not finished and expect to find bugs.
+
 ## Installation
 
 Add this line to your application's Gemfile:
