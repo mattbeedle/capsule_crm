@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Attachment
-    include Virtus.model
+    include Virtus
 
     attribute :id,            Integer
     attribute :filename,      String

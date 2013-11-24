@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Participant
-    include Virtus.model
+    include Virtus
 
     extend  ActiveModel::Naming
     include ActiveModel::Validations

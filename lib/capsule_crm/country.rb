@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Country
-    include Virtus.model
+    include Virtus
 
     attribute :name
 

@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Phone
-    include Virtus.model
+    include Virtus
 
     extend  ActiveModel::Naming
     include ActiveModel::Serializers::JSON

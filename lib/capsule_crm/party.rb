@@ -1,5 +1,5 @@
 class CapsuleCRM::Party
-  include Virtus.model
+  include Virtus
 
   include CapsuleCRM::Attributes
   include CapsuleCRM::Taggable

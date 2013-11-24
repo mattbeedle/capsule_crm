@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Opportunity
-    include Virtus.model
+    include Virtus
 
     extend  ActiveModel::Naming
     include ActiveModel::Conversion
