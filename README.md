@@ -330,6 +330,6 @@ with fix.
 
 Many thanks to the following contributers:
 
-@srbaker
-@clod81
-@danthompson
+- @srbaker
+- @clod81
+- @danthompson
