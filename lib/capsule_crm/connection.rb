@@ -9,32 +9,36 @@ module CapsuleCRM
     # Returns a Hash from the JSON response
     def self.get(path, params = {})
       preprocess_params(params)
-      response = faraday.get(path, params) do |req|
-        req.headers.update default_request_headers
-      end
-      JSON.parse response.body
+      JSON.parse request(:get, path, params).body
     end
 
     def self.post(path, params = {})
-      response = faraday.post(path, params.to_json) do |request|
-        request.headers.update default_request_headers
-      end
-      process_post_response(response)
+      process_post_response request(:post, path, params)
     end
 
     def self.put(path, params)
-      faraday.put(path, params.to_json) do |request|
-        request.headers.update default_request_headers
-      end.success?
+      request(:put, path, params.to_json).success?
     end
 
     def self.delete(path)
-      faraday.delete(path) do |request|
-        request.headers.update default_request_headers
-      end.success?
+      request(:delete, path, {}).success?
     end
 
     private
+
+    def self.request(method, path, params)
+      faraday.send(method, path, params) do |req|
+        req.headers.update default_request_headers
+      end.tap do |response|
+        check_response_status(response)
+      end
+    end
+
+    def self.check_response_status(response)
+      if response.status == 401
+        raise CapsuleCRM::Errors::Unauthorized.new(response)
+      end
+    end
 
     def self.preprocess_params(params)
       params.symbolize_keys!
@@ -50,15 +54,11 @@ module CapsuleCRM
 
     # TODO clean this shit up
     def self.process_post_response(response)
-      if response.success?
-        if response.headers['Location'] &&
-          match = response.headers['Location'].match(/\/(?<id>\d+)$/)
-          { id: match[:id] }
-        else
-          true
-        end
+      if response.headers['Location'] &&
+        match = response.headers['Location'].match(/\/(?<id>\d+)$/)
+        { id: match[:id] }
       else
-        false
+        true
       end
     end
 
