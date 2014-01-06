@@ -312,11 +312,16 @@ CapsuleCRM::Currency.all
 
 1.9.3, 2.0, jruby-19mode
 
+## Versioning
+
+This gem follows [Semantic Versioning](http://semver.org/)
+
 ## Feedback
 
 Please use github issues to give feedback. If you have a bug to report then an
 accompanying failing test would be great. Extra points for a full pull request
 with fix.
+
 
 ## Contributing
 
@@ -325,3 +330,11 @@ with fix.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Contributers
+
+Many thanks to the following contributers:
+
+@srbaker
+@clod81
+@danthompson

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0
+
+- Using SemVer and this gem is being used in production, so bumped to version 1
+- Handle 401 responses by raising a CapsuleCRM::Errors::Unauthorized error
+
+## 0.10.1
+
+- Automatically strformat the lastmodified param for GET requests
+
 ## 0.10.0
 
 - Added Track support
