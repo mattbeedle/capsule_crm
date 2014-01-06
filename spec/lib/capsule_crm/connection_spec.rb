@@ -17,5 +17,18 @@ describe CapsuleCRM::Connection do
         ).with(query: { lastmodified: "20131001T133156" })
       end
     end
+
+    context 'when the request is not authorized' do
+      before do
+        stub_request(:get, /\/api\/v1\/foo/).
+          to_return(status: 401, body: '<html></html>')
+      end
+      subject { CapsuleCRM::Connection.get('/api/v1/food') }
+
+      it 'should raise an Unauthorized error' do
+        expect { CapsuleCRM::Connection.get('/api/v1/foo') }.
+          to raise_error(CapsuleCRM::Errors::Unauthorized)
+      end
+    end
   end
 end
