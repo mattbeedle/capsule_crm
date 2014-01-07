@@ -31,4 +31,16 @@ describe CapsuleCRM::Connection do
       end
     end
   end
+
+  describe '.post' do
+    pending
+  end
+
+  describe '.put' do
+    pending
+  end
+
+  describe '.delete' do
+    pending
+  end
 end
