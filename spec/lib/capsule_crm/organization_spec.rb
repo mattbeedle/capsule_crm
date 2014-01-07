@@ -97,45 +97,56 @@ describe CapsuleCRM::Organization do
         zip: '10117', country: 'de'
       )
     end
-
     let(:email) do
       CapsuleCRM::Email.new(type: 'Work', email_address: 'mattscompany@gmail.com')
     end
-
     let(:contacts) do
       CapsuleCRM::Contacts.new(addresses: [address], emails: [email])
     end
-
     let(:organization) do
       CapsuleCRM::Organization.new(
         name: "Matt's Company",
         contacts: contacts
       )
     end
-
     let(:email_json) { subject['contacts']['email'].first }
-
     let(:address_json) { subject['contacts']['address'].first }
 
     subject { organization.to_capsule_json['organisation'] }
 
     it { should have_key('name') }
-
     it { should have_key('contacts') }
-
     it { address_json.should have_key('street') }
-
     it { address_json.should have_key('city') }
-
     it { address_json.should have_key('state') }
-
     it { address_json.should have_key('zip') }
-
     it { address_json.should have_key('country') }
-
     it { email_json.should have_key('type') }
-
     it { email_json.should have_key('emailAddress') }
+  end
+
+  describe '.create' do
+    pending
+  end
+
+  describe '.create!' do
+    pending
+  end
+
+  describe '#update_attributes' do
+    pending
+  end
+
+  describe '#update_attributes!' do
+    pending
+  end
+
+  describe '#save' do
+    pending
+  end
+
+  describe '#save!' do
+    pending
   end
 
   describe '#destroy' do
