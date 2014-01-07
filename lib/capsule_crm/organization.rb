@@ -134,7 +134,7 @@ module CapsuleCRM
     # Returns a CapsuleCRM::Organization
     def save!
       if valid?
-        new_record ? create_record : update_record
+        new_record? ? create_record : update_record
       else
         raise CapsuleCRM::Errors::RecordInvalid.new(self)
       end
