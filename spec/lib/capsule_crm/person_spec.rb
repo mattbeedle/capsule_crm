@@ -26,6 +26,22 @@ describe CapsuleCRM::Person do
     it { should be_a(Array) }
   end
 
+  describe '#custom_fields' do
+    before do
+      stub_request(:get, /\/api\/party\/#{person.id}\/customfields/).
+        to_return(body: File.read('spec/support/no_customfields.json'))
+    end
+    let(:person) { Fabricate.build(:person, id: 1) }
+
+    describe '#build' do
+      before { person.custom_fields.build(label: 'test', text: 'bidule') }
+
+      it 'should add a custom field' do
+        expect(person.custom_fields.length).to eql(1)
+      end
+    end
+  end
+
   describe '._for_organization' do
     context 'when there are many people for the organization' do
       pending
