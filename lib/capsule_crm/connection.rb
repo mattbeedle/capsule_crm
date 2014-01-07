@@ -13,7 +13,7 @@ module CapsuleCRM
     end
 
     def self.post(path, params = {})
-      process_post_response request(:post, path, params)
+      process_post_response request(:post, path, params.to_json)
     end
 
     def self.put(path, params)
