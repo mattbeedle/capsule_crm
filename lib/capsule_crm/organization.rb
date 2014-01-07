@@ -21,7 +21,7 @@ module CapsuleCRM
 
     has_many :people, class_name: 'CapsuleCRM::Person', source: :organization
     has_many :custom_fields, class_name: 'CapsuleCRM::CustomField',
-      source: :organization
+      source: :party
 
     # Public: Get all people from Capsule. The list can be restricted
     # and/or paginated with various query parameters sent through the options
