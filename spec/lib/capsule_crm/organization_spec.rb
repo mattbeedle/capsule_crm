@@ -11,6 +11,22 @@ describe CapsuleCRM::Organization do
       to_return(body: File.read('spec/support/all_users.json'))
   end
 
+  describe '#custom_fields' do
+    before do
+      stub_request(:get, /\/api\/party\/#{organization.id}\/customfields/).
+        to_return(body: File.read('spec/support/no_customfields.json'))
+    end
+    let(:organization) { Fabricate.build(:organization, id: 1) }
+
+    describe '#build' do
+      before { organization.custom_fields.build(label: 'test', text: 'bidule') }
+
+      it 'should add a new custom field to the organization' do
+        expect(organization.custom_fields.length).to eql(1)
+      end
+    end
+  end
+
   describe '.all' do
     context 'when some parties exist' do
       before do

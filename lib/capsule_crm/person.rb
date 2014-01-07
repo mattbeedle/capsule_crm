@@ -19,7 +19,8 @@ module CapsuleCRM
     belongs_to :organization, class_name: 'CapsuleCRM::Organization',
       foreign_key: :organisation_id
 
-    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField', source: :person
+    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField',
+      source: :party
 
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
