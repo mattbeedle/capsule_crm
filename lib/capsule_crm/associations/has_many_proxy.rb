@@ -10,18 +10,20 @@ module CapsuleCRM
       end
 
       def method_missing(name, *args, &block)
-        @target.send(name, *args, &block)
+        target.send(name, *args, &block)
       end
 
       def build(attributes = {})
         target_klass.new(attributes).tap do |item|
           item.send("#{source}=", parent)
-          @target << item
+          target << item
         end
       end
 
       def create(attributes = {})
-        build(attributes).save
+        build(attributes).tap do |record|
+          record_not_saved(record) unless parent.persisted?
+        end.save
       end
 
       def tap
@@ -30,6 +32,14 @@ module CapsuleCRM
       end
 
       private
+
+      def record_not_saved(record)
+        raise ::CapsuleCRM::Errors::RecordNotSaved.new(record)
+      end
+
+      def target
+        @target
+      end
 
       def parent
         @parent

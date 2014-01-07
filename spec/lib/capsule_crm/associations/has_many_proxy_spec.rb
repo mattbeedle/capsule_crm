@@ -7,6 +7,10 @@ class Parent
   attribute :id, Integer
 
   has_many :children, class_name: 'Child', source: :parent
+
+  def persisted?
+    !!id
+  end
 end
 
 class Child
@@ -62,10 +66,22 @@ describe CapsuleCRM::Associations::HasManyProxy do
   end
 
   describe '#create' do
-    before { parent.children.create(name: 'a test name') }
+    subject { parent.children.create(name: 'a test name') }
+    context 'when the parent is persisted' do
+      before do
+        parent.id = Random.rand(1..10)
+        subject
+      end
 
-    it 'should persist the child' do
-      parent.children.last.should be_persisted
+      it 'should persist the child' do
+        expect(parent.children.last).to be_persisted
+      end
+    end
+
+    context 'when the parent is not persisted' do
+      it 'should raise a RecordNotSaved error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::RecordNotSaved)
+      end
     end
   end
 end
