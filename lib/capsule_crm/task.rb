@@ -22,6 +22,7 @@ module CapsuleCRM
     belongs_to :case, class_name: 'CapsuleCRM::Case'
     belongs_to :owner, class_name: 'CapsuleCRM::User'
 
+    validates :id, numericality: { allow_blank: true }
     validates :description, presence: true
     validates :due_date, presence: { unless: :due_date_time }
     validates :due_date_time, presence: { unless: :due_date }

@@ -18,6 +18,7 @@ module CapsuleCRM
     attribute :close_date, Date
     attribute :owner, String
 
+    validates :id, numericality: { allow_blank: true }
     validates :name, presence: true
     validates :party, presence: true
 

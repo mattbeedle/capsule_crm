@@ -13,6 +13,26 @@ describe CapsuleCRM::Person do
 
   before { configure }
 
+  describe 'validations' do
+    subject { described_class.new }
+
+    it { should validate_numericality_of(:id) }
+    it { should validate_presence_of(:first_name) }
+    it { should validate_presence_of(:last_name) }
+
+    context 'when the first name is set' do
+      before { subject.first_name = Faker::Lorem.word }
+
+      it { should_not validate_presence_of(:last_name) }
+    end
+
+    context 'when the last name is set' do
+      before { subject.last_name = Faker::Lorem.word }
+
+      it { should_not validate_presence_of(:first_name) }
+    end
+  end
+
   describe '#tasks' do
     let(:person) { Fabricate.build(:person, id: 1) }
 

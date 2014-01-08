@@ -24,8 +24,9 @@ module CapsuleCRM
 
     attr_accessor :milestone, :owner
 
+    validates :id, numericality: { allow_blank: true }
     validates :name, presence: true
-    validates :party_id, presence: true
+    validates :party, presence: true
     validates :milestone, presence: true
 
     has_many :tasks, class_name: 'CapsuleCRM::Task', source: :opportunity

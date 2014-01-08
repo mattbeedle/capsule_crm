@@ -29,14 +29,6 @@ module CapsuleCRM
     def self.request(method, path, params)
       faraday.send(method, path, params) do |req|
         req.headers.update default_request_headers
-      end.tap do |response|
-        check_response_status(response)
-      end
-    end
-
-    def self.check_response_status(response)
-      if response.status == 401
-        raise CapsuleCRM::Errors::Unauthorized.new(response)
       end
     end
 
@@ -56,7 +48,7 @@ module CapsuleCRM
     def self.process_post_response(response)
       if response.headers['Location'] &&
         match = response.headers['Location'].match(/\/(?<id>\d+)$/)
-        { id: match[:id] }
+        { id: match[:id].to_i }
       else
         true
       end
@@ -67,9 +59,10 @@ module CapsuleCRM
     end
 
     def self.faraday
-      Faraday.new("https://#{subdomain}.capsulecrm.com").tap do |connection|
+      ::Faraday.new("https://#{subdomain}.capsulecrm.com").tap do |connection|
         connection.basic_auth(CapsuleCRM.configuration.api_token, '')
         connection.request  :json
+        connection.use CapsuleCRM::Faraday::Middleware::RaiseError
       end
     end
 

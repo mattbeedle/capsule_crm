@@ -10,7 +10,43 @@ describe CapsuleCRM::History do
       to_return(body: File.read('spec/support/milestones.json'))
   end
 
-  it { should validate_presence_of(:note) }
+  describe 'validations' do
+    subject { described_class.new }
+
+    it { should validate_numericality_of(:id) }
+    it { should validate_presence_of(:note) }
+    it { should validate_presence_of(:kase) }
+    it { should validate_presence_of(:party) }
+    it { should validate_presence_of(:opportunity) }
+
+    context 'when it belongs to a case' do
+      before do
+        subject.kase = double('CapsuleCRM::Case', id: Random.rand(1..10))
+      end
+
+      it { should_not validate_presence_of(:party) }
+      it { should_not validate_presence_of(:opportunity) }
+    end
+
+    context 'when it belongs to a party' do
+      before do
+        subject.party = double('CapsuleCRM::Party', id: Random.rand(1..10))
+      end
+
+      it { should_not validate_presence_of(:kase) }
+      it { should_not validate_presence_of(:opportunity) }
+    end
+
+    context 'when it belongs to an opportunity' do
+      before do
+        subject.opportunity =
+          double('CapsuleCRM::Opportunity', id: Random.rand(1..10))
+      end
+
+      it { should_not validate_presence_of(:party) }
+      it { should_not validate_presence_of(:kase) }
+    end
+  end
 
   describe '_.for_party' do
     let(:party) { Fabricate.build(:person, id: 1) }

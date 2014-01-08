@@ -13,26 +13,13 @@ describe CapsuleCRM::Opportunity do
       to_return(body: File.read('spec/support/all_users.json'))
   end
 
-  it { should validate_presence_of(:name) }
+  describe 'validations' do
+    subject { described_class.new }
 
-  it { should validate_presence_of(:milestone) }
-
-  context 'when milestone_id is set' do
-    subject { CapsuleCRM::Opportunity.new(milestone_id: 1) }
-
-    before do
-      subject.valid?
-    end
-
-    it { subject.errors[:milestone].should be_blank }
-  end
-
-  context 'when milestone is set' do
-    let(:milestone) { CapsuleCRM::Milestone.new name: 'Bid' }
-
-    subject { CapsuleCRM::Opportunity.new(milestone: milestone) }
-
-    it { should_not validate_presence_of(:milestone_id) }
+    it { should validate_numericality_of(:id) }
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:milestone) }
+    it { should validate_presence_of(:party) }
   end
 
   describe '._for_track' do
@@ -215,7 +202,6 @@ describe CapsuleCRM::Opportunity do
     end
 
     it { opportunity.party_id.should eql(1) }
-
     it { opportunity.milestone_id.should eql(3) }
   end
 
@@ -226,25 +212,23 @@ describe CapsuleCRM::Opportunity do
           'Location' => 'https://sample.capsulecrm.com/api/opportunity/59'
         })
       end
-
       let(:request_path) do
         [
           'https://1234:@company.capsulecrm.com/api/party/',
-          opportunity_attributes[:party_id],
-          '/opportunity'
+          opportunity_attributes[:party].id, '/opportunity'
         ].join
       end
-
-      let(:opportunity_attributes) { Fabricate.attributes_for(:opportunity) }
+      let(:party) { Fabricate.build(:person, id: Random.rand(1..10)) }
+      let(:opportunity_attributes) do
+        Fabricate.attributes_for(:opportunity).merge(party: party)
+      end
 
       subject do
         CapsuleCRM::Opportunity.create opportunity_attributes
       end
 
       it { should be_a(CapsuleCRM::Opportunity) }
-
       it { should be_persisted }
-
       it { subject.id.should eql(59) }
 
       context 'when the opportunity has a track' do
@@ -288,15 +272,17 @@ describe CapsuleCRM::Opportunity do
           'Location' => 'https://sample.capsulecrm.com/api/opportunity/71'
         })
       end
+      let(:party) { Fabricate.build(:person, id: Random.rand(1..10)) }
+      let(:opportunity_attributes) do
+        Fabricate.attributes_for(:opportunity).merge(party: party)
+      end
 
       subject do
-        CapsuleCRM::Opportunity.create Fabricate.attributes_for(:opportunity)
+        CapsuleCRM::Opportunity.create opportunity_attributes
       end
 
       it { should be_a(CapsuleCRM::Opportunity) }
-
       it { should be_persisted }
-
       it { subject.id.should eql(71) }
     end
 
@@ -365,9 +351,9 @@ describe CapsuleCRM::Opportunity do
           'Location' => 'https://sample.capsulecrm.com/api/party/100'
         }, status: 200)
       end
-
+      let(:party) { Fabricate.build(:person) }
       let(:opportunity) do
-        Fabricate.build(:opportunity)
+        Fabricate.build(:opportunity, party: party)
       end
 
       before { opportunity.save }
@@ -388,9 +374,9 @@ describe CapsuleCRM::Opportunity do
             'Location' => 'https://sample.capsulecrm.com/api/party/100',
           }, status: 200)
         end
-
+        let(:party) { Fabricate.build(:person) }
         let(:opportunity) do
-          Fabricate.build(:opportunity)
+          Fabricate.build(:opportunity, party: party)
         end
 
         before { opportunity.save! }
