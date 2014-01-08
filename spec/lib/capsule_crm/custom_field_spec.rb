@@ -10,7 +10,10 @@ describe CapsuleCRM::CustomField do
       to_return(body: File.read('spec/support/milestones.json'))
   end
 
-  it { should validate_presence_of(:label) }
+  describe 'validations' do
+    it { should validate_numericality_of(:id) }
+    it { should validate_presence_of(:label) }
+  end
 
   describe '._for_party' do
     let(:party) { Fabricate.build(:organization, id: 1) }

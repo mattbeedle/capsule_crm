@@ -25,6 +25,7 @@ module CapsuleCRM
       foreign_key: :case_id
     belongs_to :opportunity,  class_name: 'CapsuleCRM::Opportunity'
 
+    validates :id, numericality: { allow_blank: true }
     validates :note, presence: true
     validates :party, :kase, :opportunity,
       presence: { if: :belongs_to_required? }

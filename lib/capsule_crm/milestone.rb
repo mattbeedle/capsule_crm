@@ -1,14 +1,16 @@
 module CapsuleCRM
   class Milestone
     include Virtus
-
     include CapsuleCRM::Collection
+    include ActiveModel::Validations
 
     attribute :id, Integer
     attribute :name, String
     attribute :description, String
     attribute :probability, Float
     attribute :complete, Boolean
+
+    validates :id, numericality: { allow_blank: true }
 
     def self.all
       init_collection(

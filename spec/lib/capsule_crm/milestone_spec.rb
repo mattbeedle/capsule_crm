@@ -3,6 +3,10 @@ require 'spec_helper'
 describe CapsuleCRM::Milestone do
   before { configure }
 
+  describe 'validations' do
+    it { should validate_numericality_of(:id) }
+  end
+
   describe '.all' do
     before do
       stub_request(:get, /\/api\/opportunity\/milestones$/).

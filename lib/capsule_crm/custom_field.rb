@@ -17,6 +17,7 @@ module CapsuleCRM
     attribute :boolean, Boolean
     attribute :text, String
 
+    validates :id, numericality: { allow_blank: true }
     validates :label, presence: true
 
     belongs_to :party, class_name: 'CapsuleCRM::Party'

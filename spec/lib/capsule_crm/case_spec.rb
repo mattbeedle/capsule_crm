@@ -8,9 +8,11 @@ describe CapsuleCRM::Case do
       to_return(body: File.read('spec/support/all_users.json'))
   end
 
-  it { should validate_presence_of(:name) }
-
-  it { should validate_presence_of(:party) }
+  describe 'validations' do
+    it { should validate_numericality_of(:id) }
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:party) }
+  end
 
   describe '._for_track' do
     let(:track) { CapsuleCRM::Track.new }

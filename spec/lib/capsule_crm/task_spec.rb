@@ -9,11 +9,12 @@ describe CapsuleCRM::Task do
       to_return(body: File.read('spec/support/person.json'))
   end
 
-  it { should validate_presence_of(:description) }
-
-  it { should validate_presence_of(:due_date) }
-
-  it { should validate_presence_of(:due_date_time) }
+  describe 'validations' do
+    it { should validate_numericality_of(:id) }
+    it { should validate_presence_of(:description) }
+    it { should validate_presence_of(:due_date) }
+    it { should validate_presence_of(:due_date_time) }
+  end
 
   describe '.find' do
     before do
@@ -24,17 +25,11 @@ describe CapsuleCRM::Task do
     subject { CapsuleCRM::Task.find(2) }
 
     it { should be_a(CapsuleCRM::Task) }
-
     it { subject.due_date.should_not be_blank }
-
     it { subject.category.should eql('Meeting') }
-
     it { subject.description.should eql('Meet with customer') }
-
     it { subject.detail.should eql('Meeting at Coffee shop') }
-
     it { subject.owner.should be_a(CapsuleCRM::User) }
-
     it { subject.party.should be_a(CapsuleCRM::Person) }
   end
 

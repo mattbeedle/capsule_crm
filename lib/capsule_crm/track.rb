@@ -17,6 +17,8 @@ module CapsuleCRM
     has_many :opportunities, class_name: 'CapsuleCRM::Opportunity'
     has_many :cases, class_name: 'CapsuleCRM::Case'
 
+    validates :id, numericality: { allow_blank: true }
+
     def self.all
       init_collection(
         CapsuleCRM::Connection.get('/api/tracks')['tracks']['track']

@@ -22,6 +22,7 @@ module CapsuleCRM
     has_many :custom_fields, class_name: 'CapsuleCRM::CustomField',
       source: :party
 
+    validates :id, numericality: { allow_blank: true }
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
 
