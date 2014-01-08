@@ -56,7 +56,7 @@ module CapsuleCRM
     def self.process_post_response(response)
       if response.headers['Location'] &&
         match = response.headers['Location'].match(/\/(?<id>\d+)$/)
-        { id: match[:id] }
+        { id: match[:id].to_i }
       else
         true
       end

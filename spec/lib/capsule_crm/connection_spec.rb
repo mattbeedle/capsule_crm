@@ -23,24 +23,98 @@ describe CapsuleCRM::Connection do
         stub_request(:get, /\/api\/v1\/foo/).
           to_return(status: 401, body: '<html></html>')
       end
-      subject { CapsuleCRM::Connection.get('/api/v1/food') }
+      subject { CapsuleCRM::Connection.get('/api/v1/foo') }
 
       it 'should raise an Unauthorized error' do
-        expect { CapsuleCRM::Connection.get('/api/v1/foo') }.
-          to raise_error(CapsuleCRM::Errors::Unauthorized)
+        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
       end
     end
   end
 
   describe '.post' do
-    pending
+    subject { CapsuleCRM::Connection.post('/foo', { bar: :baz }) }
+
+    context 'when it is a success' do
+      context 'when it returns a location header' do
+        before do
+          stub_request(:post, /.*/).to_return(
+            status: 200, headers: { 'Location' => "http://foo.bar/#{id}" }
+          )
+        end
+        let(:id) { Random.rand(1..100) }
+
+        it 'should return the ID' do
+          expect(subject).to eql({ id: id })
+        end
+      end
+
+      context 'when it does not return a location header' do
+        before do
+          stub_request(:post, /.*/).to_return(status: 200, body: {}.to_json)
+        end
+
+        it 'should return true' do
+          expect(subject).to eql(true)
+        end
+      end
+    end
+
+    context 'when the request is not authorized' do
+      before do
+        stub_request(:post, /.*/).to_return(status: 401, body: '<html></html>')
+      end
+
+      it 'should raise an Unauthorized error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
+      end
+    end
   end
 
   describe '.put' do
-    pending
+    subject { CapsuleCRM::Connection.put('/foo', { bar: :baz }) }
+
+    context 'when it is a success' do
+      before do
+        stub_request(:put, /.*/).to_return(status: 200, body: {}.to_json)
+      end
+
+      it 'should return true' do
+        expect(subject).to eql(true)
+      end
+    end
+
+    context 'when it is not authorized' do
+      before do
+        stub_request(:put, /\.*/).to_return(status: 401)
+      end
+
+      it 'should raise an Unauthorized error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
+      end
+    end
   end
 
   describe '.delete' do
-    pending
+    subject { CapsuleCRM::Connection.delete('/foo') }
+
+    context 'when it is a success' do
+      before do
+        stub_request(:delete, /.*/).to_return(status: 200)
+      end
+
+      it 'should return true' do
+        expect(subject).to eql(true)
+      end
+    end
+
+    context 'when it is not authorized' do
+      before do
+        stub_request(:delete, /.*/).to_return(status: 401)
+      end
+
+      it 'should raise an Unauthorized error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
+      end
+    end
   end
 end
