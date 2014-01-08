@@ -25,8 +25,8 @@ describe CapsuleCRM::Connection do
       end
       subject { CapsuleCRM::Connection.get('/api/v1/foo') }
 
-      it 'should raise an Unauthorized error' do
-        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
+      it 'should raise an NotAuthorized error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::NotAuthorized)
       end
     end
   end
@@ -64,8 +64,8 @@ describe CapsuleCRM::Connection do
         stub_request(:post, /.*/).to_return(status: 401, body: '<html></html>')
       end
 
-      it 'should raise an Unauthorized error' do
-        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
+      it 'should raise an NotAuthorized error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::NotAuthorized)
       end
     end
   end
@@ -88,8 +88,8 @@ describe CapsuleCRM::Connection do
         stub_request(:put, /\.*/).to_return(status: 401)
       end
 
-      it 'should raise an Unauthorized error' do
-        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
+      it 'should raise an NotAuthorized error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::NotAuthorized)
       end
     end
   end
@@ -112,8 +112,8 @@ describe CapsuleCRM::Connection do
         stub_request(:delete, /.*/).to_return(status: 401)
       end
 
-      it 'should raise an Unauthorized error' do
-        expect { subject }.to raise_error(CapsuleCRM::Errors::Unauthorized)
+      it 'should raise an NotAuthorized error' do
+        expect { subject }.to raise_error(CapsuleCRM::Errors::NotAuthorized)
       end
     end
   end

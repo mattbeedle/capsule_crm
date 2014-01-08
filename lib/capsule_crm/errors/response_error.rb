@@ -1,6 +1,6 @@
 module CapsuleCRM
   module Errors
-    class Unauthorized < StandardError
+    class ResponseError < StandardError
       attr_reader :response
 
       def initialize(response)
