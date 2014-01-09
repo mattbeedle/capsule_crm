@@ -2,7 +2,7 @@ require 'spec_helper'
 
 class Parent
   include Virtus
-  include CapsuleCRM::Associations::HasMany
+  include CapsuleCRM::Associations
 
   attribute :id, Integer
 
@@ -15,7 +15,7 @@ end
 
 class Child
   include Virtus
-  include CapsuleCRM::Associations::BelongsTo
+  include CapsuleCRM::Associations
 
   attribute :name
 

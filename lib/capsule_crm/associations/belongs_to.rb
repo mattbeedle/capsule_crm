@@ -1,3 +1,5 @@
+require_relative 'belongs_to_association'
+
 module CapsuleCRM
   module Associations
     module BelongsTo
@@ -29,10 +31,12 @@ module CapsuleCRM
         # person.organisation
         # => organisation
         def belongs_to(association_name, options = {})
-          foreign_key = options[:foreign_key] || :"#{association_name}_id"
+          association = CapsuleCRM::Associations::BelongsToAssociation.
+            new(association_name, self, options)
+          self.associations[association_name] = association
 
           class_eval do
-            attribute foreign_key, Integer
+            attribute association.foreign_key, Integer
           end
 
           (class << self; self; end).instance_eval do
@@ -43,20 +47,18 @@ module CapsuleCRM
 
           define_method association_name do
             instance_variable_get(:"@#{association_name}") ||
-              if self.send(foreign_key)
-                options[:class_name].constantize.
-                find(self.send(foreign_key)).tap do |object|
+              if self.send(association.foreign_key)
+                association.parent(self).tap do |object|
                   self.send("#{association_name}=", object)
                 end
-              else
-                nil
               end
           end
 
           define_method "#{association_name}=" do |associated_object|
-            instance_variable_set(:"@#{association_name}", associated_object)
-            id = associated_object ? associated_object.id : nil
-            self.send "#{foreign_key}=", id
+            associated_object.tap do |object|
+              instance_variable_set(:"@#{association_name}", associated_object)
+              self.send "#{association.foreign_key}=", associated_object.try(:id)
+            end
           end
         end
       end

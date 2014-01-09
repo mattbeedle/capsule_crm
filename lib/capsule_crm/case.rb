@@ -7,8 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Collection
-    include CapsuleCRM::Associations::HasMany
-    include CapsuleCRM::Associations::BelongsTo
+    include CapsuleCRM::Associations
     include CapsuleCRM::Taggable
 
     attribute :id, Integer

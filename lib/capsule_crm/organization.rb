@@ -6,12 +6,9 @@ module CapsuleCRM
     extend ActiveModel::Callbacks
     extend ActiveModel::Conversion
     include ActiveModel::Validations
-    include ActiveModel::Validations::Callbacks
 
-    include CapsuleCRM::Associations::HasMany
     include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
-    include CapsuleCRM::Taggable
 
     attribute :id,    Integer
     attribute :name,  String
