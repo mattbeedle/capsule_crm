@@ -3,7 +3,7 @@ class CapsuleCRM::Party
 
   include CapsuleCRM::Attributes
   include CapsuleCRM::Taggable
-  include CapsuleCRM::Associations::HasMany
+  include CapsuleCRM::Associations
 
   has_many :histories, class_name: 'CapsuleCRM::History', source: :party
   has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party

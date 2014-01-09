@@ -2,7 +2,6 @@ module CapsuleCRM
   class Person < CapsuleCRM::Party
     include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
-    include CapsuleCRM::Associations::BelongsTo
 
     extend ActiveModel::Naming
     include ActiveModel::Conversion

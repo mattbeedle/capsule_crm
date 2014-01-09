@@ -1,4 +1,5 @@
-require 'capsule_crm/associations/has_many_proxy'
+require_relative 'has_many_association'
+require_relative 'has_many_proxy'
 
 module CapsuleCRM
   module Associations
@@ -34,29 +35,18 @@ module CapsuleCRM
         # organization.people
         # => [person]
         def has_many(association_name, options = {})
+          association = CapsuleCRM::Associations::HasManyAssociation.
+            new(association_name, self, options)
+          self.associations[association_name] = association
+
           define_method association_name do
             instance_variable_get(:"@#{association_name}") ||
-              CapsuleCRM::Associations::HasManyProxy.new(
-                self, # parent
-                options[:class_name].constantize, # target class
-                options[:class_name].constantize.
-                  send("_for_#{self.class.to_s.demodulize.downcase}", self.id),
-                options[:source] # source
-              ).tap do |proxy|
-                instance_variable_set :"@#{association_name}", proxy
-              end
-            instance_variable_get :"@#{association_name}"
+              instance_variable_set(:"@#{association_name}", association.proxy(self))
           end
 
           define_method "#{association_name}=" do |associated_objects|
-            if associated_objects.is_a?(Hash)
-              associated_objects = Array(options[:class_name].constantize.new(associated_objects[options[:class_name].demodulize.downcase]))
-            end
             instance_variable_set :"@#{association_name}",
-              CapsuleCRM::Associations::HasManyProxy.new(
-                self, options[:class_name].constantize,
-                associated_objects, options[:source]
-              )
+              association.proxy(self, associated_objects)
           end
         end
       end

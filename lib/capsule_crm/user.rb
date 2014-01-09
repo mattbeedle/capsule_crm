@@ -6,7 +6,7 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    include CapsuleCRM::Associations::BelongsTo
+    include CapsuleCRM::Associations
 
     attribute :username, String
     attribute :name, String
