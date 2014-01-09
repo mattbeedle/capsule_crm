@@ -59,6 +59,13 @@ module CapsuleCRM
         :belongs_to
       end
 
+      # Public: The key to use when serializing this association
+      #
+      # Returns the String key
+      def serializable_key
+        @serializable_key ||= options[:serializable_key] || foreign_key
+      end
+
       private
 
       def target_klass

@@ -206,10 +206,7 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
-      {
-        organisation: attributes.merge(contacts: contacts.to_capsule_json).
-        stringify_keys
-      }.stringify_keys
+      serializer.serialize
     end
 
     # Public: Delete the organization in capsule
@@ -225,6 +222,11 @@ module CapsuleCRM
     end
 
     private
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.
+        new(self, root: :organisation, additional_methods: [:contacts])
+    end
 
     def create_record
       self.attributes = CapsuleCRM::Connection.post(
