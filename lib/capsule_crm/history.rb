@@ -19,11 +19,13 @@ module CapsuleCRM
     has_many :attachments,  class_name: 'CapsuleCRM::Attachment'
     has_many :participants, class_name: 'CapsuleCRM::Participant'
 
-    belongs_to :creator,      class_name: 'CapsuleCRM::Person'
-    belongs_to :party,        class_name: 'CapsuleCRM::Party'
+    belongs_to :creator,      class_name: 'CapsuleCRM::Person',
+      serializable_key: :creator
+    belongs_to :party,        class_name: 'CapsuleCRM::Party', serialize: false
     belongs_to :kase,         class_name: 'CapsuleCRM::Case',
-      foreign_key: :case_id
-    belongs_to :opportunity,  class_name: 'CapsuleCRM::Opportunity'
+      foreign_key: :case_id, serialize: false
+    belongs_to :opportunity,  class_name: 'CapsuleCRM::Opportunity',
+      serialize: false
 
     validates :id, numericality: { allow_blank: true }
     validates :note, presence: true
@@ -269,16 +271,14 @@ module CapsuleCRM
     #
     # Returns a Hash of attributes
     def to_capsule_json
-      {
-        historyItem: CapsuleCRM::HashHelper.camelize_keys(
-          {
-            note: note, entry_date: entry_date, creator: creator.try(:username)
-          }.delete_if { |key, value| value.blank? }
-        )
-      }
+      serializer.serialize
     end
 
     private
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.new(self, root: :historyItem)
+    end
 
     def belongs_to_required?
       party.blank? && kase.blank? && opportunity.blank?

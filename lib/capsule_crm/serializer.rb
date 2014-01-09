@@ -11,6 +11,11 @@ module CapsuleCRM
       @serialized ||= { root => build_attributes_hash }.stringify_keys
     end
 
+    def root
+      @root ||= options[:root] ||
+        object.class.to_s.demodulize.downcase.singularize.camelize(:lower)
+    end
+
     private
 
     def additional_methods
@@ -19,11 +24,6 @@ module CapsuleCRM
 
     def excluded_keys
       @excluded_keys ||= options[:excluded_keys] || []
-    end
-
-    def root
-      @root ||= options[:root] ||
-        object.class.to_s.demodulize.downcase.singularize
     end
 
     def build_attributes_hash
@@ -40,13 +40,16 @@ module CapsuleCRM
       object.attributes.dup.tap do |attrs|
         attrs.each do |key, value|
           attrs[key] = value.to_s(:db) if value.is_a?(Date)
+          attrs[key] = value.to_s(:db) if value.is_a?(DateTime)
         end
         additional_methods.each do |method|
           attrs.merge!(method => object.send(method).to_capsule_json)
         end
         object.class.belongs_to_associations.each do |name, association|
-          attrs.merge!(association.serializable_key => object.send(name).try(:id))
-        end
+          attrs.merge!(
+            association.serializable_key => object.send(name).try(:id)
+          ) unless association.serialize == false
+        end if object.class.respond_to?(:belongs_to_associations)
       end
     end
   end

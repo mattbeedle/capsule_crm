@@ -66,6 +66,10 @@ module CapsuleCRM
         @serializable_key ||= options[:serializable_key] || foreign_key
       end
 
+      def serialize
+        @serialize ||= options[:serialize]
+      end
+
       private
 
       def target_klass
