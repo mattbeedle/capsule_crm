@@ -63,17 +63,14 @@ module CapsuleCRM
     end
 
     def to_capsule_json
-      {
-        customFields: {
-          customField: [
-            CapsuleCRM::HashHelper.camelize_keys(attributes).
-            delete_if { |key, value| value.blank? }
-          ]
-        }
-      }
+      { 'customFields' => serializer.serialize }
     end
 
     private
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.new(self, root: 'customField')
+    end
 
     def update_record
       CapsuleCRM::Connection.post(

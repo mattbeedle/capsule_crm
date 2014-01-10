@@ -13,9 +13,5 @@ module CapsuleCRM
     def self._for_history(history_id)
       CapsuleCRM::ResultsProxy.new([])
     end
-
-    def to_capsule_json
-      CapsuleCRM::HashHelper.camelize_keys(attributes.dup)
-    end
   end
 end

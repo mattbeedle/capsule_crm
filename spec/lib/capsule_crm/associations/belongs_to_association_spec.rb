@@ -48,6 +48,24 @@ describe CapsuleCRM::Associations::BelongsToAssociation do
     end
   end
 
+  describe '#serializable_key' do
+    subject { association.serializable_key }
+    context 'when a serializable_key is supplied' do
+      let(:serializable_key) { Faker::Lorem.word }
+      before { options.merge!(serializable_key: serializable_key) }
+
+      it 'should return the serializable_key' do
+        expect(subject).to eql(serializable_key)
+      end
+    end
+
+    context 'when a serializable_key is not supplied' do
+      it 'should return the foreign key' do
+        expect(subject).to eql(association.foreign_key)
+      end
+    end
+  end
+
   describe '#object' do
     before { options.merge!(foreign_key: :some_id) }
     let(:object) { double(some_id: Random.rand(1..10)) }

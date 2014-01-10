@@ -31,6 +31,10 @@ module CapsuleCRM
       )
     end
 
+    def id
+      username
+    end
+
     def self.find_by_username(username)
       all.select { |user| user.username == username }.first
     end

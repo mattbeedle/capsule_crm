@@ -237,13 +237,7 @@ module CapsuleCRM
     end
 
     def to_capsule_json
-      {
-        kase: CapsuleCRM::HashHelper.camelize_keys(
-          attributes.dup.delete_if do |key, value|
-            value.blank? || key == 'track_id'
-          end
-        )
-      }
+      serializer.serialize
     end
 
     def self._for_track(track)
@@ -251,6 +245,11 @@ module CapsuleCRM
     end
 
     private
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.
+        new(self, excluded_keys: ['track_id'], root: :kaze)
+    end
 
     def create_record
       path = "/api/party/#{party_id}/kase"

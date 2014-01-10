@@ -10,6 +10,7 @@ require 'capsule_crm/associations'
 require 'capsule_crm/address'
 require 'capsule_crm/case'
 require 'capsule_crm/connection'
+require 'capsule_crm/serializer'
 
 require 'capsule_crm/attachment'
 require 'capsule_crm/country'

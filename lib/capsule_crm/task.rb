@@ -20,7 +20,7 @@ module CapsuleCRM
     belongs_to :party, class_name: 'CapsuleCRM::Party'
     belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
     belongs_to :case, class_name: 'CapsuleCRM::Case'
-    belongs_to :owner, class_name: 'CapsuleCRM::User'
+    belongs_to :owner, class_name: 'CapsuleCRM::User', serializable_key: :owner
 
     validates :id, numericality: { allow_blank: true }
     validates :description, presence: true
@@ -130,12 +130,14 @@ module CapsuleCRM
     end
 
     def to_capsule_json
-      {
-        task: CapsuleCRM::HashHelper.camelize_keys(capsule_attributes)
-      }.stringify_keys
+      serializer.serialize
     end
 
     private
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.new(self)
+    end
 
     def capsule_attributes
       { description: description, category: category }.tap do |attrs|
