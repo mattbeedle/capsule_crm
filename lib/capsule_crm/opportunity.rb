@@ -293,13 +293,7 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
-      {
-        opportunity: CapsuleCRM::HashHelper.camelize_keys(
-          attributes.dup.delete_if do |key, value|
-            value.blank? || key == 'track_id'
-          end
-        )
-      }.stringify_keys
+      serializer.serialize
     end
 
     # Public: Delete the opportunity in capsule
@@ -315,6 +309,10 @@ module CapsuleCRM
     end
 
     private
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.new(self, excluded_keys: ['track_id'])
+    end
 
     def create_record
       path = "/api/party/#{party_id}/opportunity"

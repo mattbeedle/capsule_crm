@@ -2,7 +2,6 @@ module CapsuleCRM
   class Person < CapsuleCRM::Party
     include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
-    include CapsuleCRM::Associations::BelongsTo
 
     extend ActiveModel::Naming
     include ActiveModel::Conversion
@@ -220,15 +219,15 @@ module CapsuleCRM
     #
     # Returns a Hash
     def to_capsule_json
-      {
-        person: CapsuleCRM::HashHelper.camelize_keys(
-          attributes.dup.delete_if { |key, value| value.blank? }.
-          merge(contacts: contacts.to_capsule_json)
-        )
-      }.stringify_keys
+      serializer.serialize
     end
 
     private
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.
+        new(self, additional_methods: [:contacts])
+    end
 
     def create_record
       self.attributes = CapsuleCRM::Connection.post(

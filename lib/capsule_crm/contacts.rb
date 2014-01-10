@@ -146,7 +146,7 @@ module CapsuleCRM
         email:    emails.map(&:to_capsule_json),
         phone:    phones.map(&:to_capsule_json),
         website:  websites.map(&:to_capsule_json)
-      }.stringify_keys
+      }.delete_if { |key, value| value.blank? }.stringify_keys
     end
   end
 end

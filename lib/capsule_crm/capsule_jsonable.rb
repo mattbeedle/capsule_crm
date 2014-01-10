@@ -3,7 +3,11 @@ module CapsuleCRM
     extend ActiveSupport::Concern
 
     def to_capsule_json
-      CapsuleCRM::HashHelper.camelize_keys attributes
+      serializer.serialize.delete(serializer.root)
+    end
+
+    def serializer
+      @serializer ||= CapsuleCRM::Serializer.new(self)
     end
   end
 end

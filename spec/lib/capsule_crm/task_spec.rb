@@ -92,17 +92,13 @@ describe CapsuleCRM::Task do
         stub_request(:post, /\/api\/opportunity\/#{opportunity.id}\/task$/).
           to_return(headers: { 'Location' => location })
       end
-
       let(:opportunity) { Fabricate.build(:opportunity, id: 2) }
-
-      subject do
-        CapsuleCRM::Task.create(
-          Fabricate.attributes_for(:task, opportunity: opportunity)
-        )
+      let(:task_attributes) do
+        Fabricate.attributes_for(:task).merge(opportunity: opportunity)
       end
+      subject { CapsuleCRM::Task.create task_attributes }
 
       it { should be_a(CapsuleCRM::Task) }
-
       it { should be_persisted }
     end
 
@@ -111,17 +107,13 @@ describe CapsuleCRM::Task do
         stub_request(:post, /\/api\/kase\/#{kase.id}\/task$/).
           to_return(headers: { 'Location' => location })
       end
-
       let(:kase) { Fabricate.build(:case, id: 5) }
-
-      subject do
-        CapsuleCRM::Task.create(
-          Fabricate.attributes_for(:task, case: kase)
-        )
+      let(:task_attributes) do
+        Fabricate.attributes_for(:task).merge(case: kase)
       end
+      subject { CapsuleCRM::Task.create(task_attributes) }
 
       it { should be_a(CapsuleCRM::Task) }
-
       it { should be_persisted }
     end
 

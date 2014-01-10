@@ -373,48 +373,32 @@ describe CapsuleCRM::Person do
         zip: '10117', country: 'de'
       )
     end
-
     let(:email) do
       CapsuleCRM::Email.new(type: 'Work', email_address: 'matt@gmail.com')
     end
-
     let(:contacts) do
       CapsuleCRM::Contacts.new(addresses: [address], emails: [email])
     end
-
     let(:person) do
       CapsuleCRM::Person.new(
         first_name: 'Matt', last_name: 'Beedle',
         organisation_name: "Matt's Company", contacts: contacts
       )
     end
-
     let(:email_json) { subject['contacts']['email'].first }
-
     let(:address_json) { subject['contacts']['address'].first }
-
     subject { person.to_capsule_json['person'] }
 
     it { should have_key('firstName') }
-
     it { should have_key('lastName') }
-
     it { should have_key('organisationName') }
-
     it { should have_key('contacts') }
-
     it { address_json.should have_key('street') }
-
     it { address_json.should have_key('city') }
-
     it { address_json.should have_key('state') }
-
     it { address_json.should have_key('zip') }
-
     it { address_json.should have_key('country') }
-
     it { email_json.should have_key('type') }
-
     it { email_json.should have_key('emailAddress') }
   end
 end

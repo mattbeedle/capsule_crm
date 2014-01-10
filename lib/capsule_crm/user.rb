@@ -6,7 +6,7 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    include CapsuleCRM::Associations::BelongsTo
+    include CapsuleCRM::Associations
 
     attribute :username, String
     attribute :name, String
@@ -29,6 +29,10 @@ module CapsuleCRM
           new item
         end
       )
+    end
+
+    def id
+      username
     end
 
     def self.find_by_username(username)
