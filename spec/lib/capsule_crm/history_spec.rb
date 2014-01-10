@@ -617,7 +617,10 @@ describe CapsuleCRM::History do
     subject { history.to_capsule_json }
 
     it { expect(subject.keys.first).to eql('historyItem') }
-    it { expect(subject['historyItem']['entryDate']).to eql(history.entry_date) }
+    it do
+      expect(subject['historyItem']['entryDate']).
+        to eql(history.entry_date.strftime("%Y-%m-%dT%H:%M:%SZ"))
+    end
     it { expect(subject['historyItem']['creator']).to eql(creator.username) }
     it { expect(subject['historyItem']['note']).to eql(history.note) }
     it { expect(subject['historyItem']).to have_key('note') }

@@ -40,7 +40,7 @@ module CapsuleCRM
       object.attributes.dup.tap do |attrs|
         attrs.each do |key, value|
           attrs[key] = value.to_s(:db) if value.is_a?(Date)
-          attrs[key] = value.to_s(:db) if value.is_a?(DateTime)
+          attrs[key] = value.strftime("%Y-%m-%dT%H:%M:%SZ") if value.is_a?(DateTime)
         end
         additional_methods.each do |method|
           attrs.merge!(method => object.send(method).to_capsule_json)
