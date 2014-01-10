@@ -373,4 +373,13 @@ describe CapsuleCRM::Case do
       it { should_not be_persisted }
     end
   end
+
+  describe '#to_capsule_json' do
+    let(:kase) { CapsuleCRM::Case.new }
+    subject { kase.to_capsule_json }
+
+    it 'should have a root of "kase"' do
+      expect(subject.keys.first).to eql('kase')
+    end
+  end
 end

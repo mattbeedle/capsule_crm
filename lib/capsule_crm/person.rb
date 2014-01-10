@@ -2,10 +2,15 @@ module CapsuleCRM
   class Person < CapsuleCRM::Party
     include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
+    include CapsuleCRM::Serializable
 
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::Validations
+
+    self.serializable_options = {
+      additional_methods: [:contacts]
+    }
 
     attribute :id, Integer
     attribute :title
@@ -210,24 +215,7 @@ module CapsuleCRM
       !new_record?
     end
 
-    # Public: Build a hash of attributes and merge in the attributes for the
-    # contact information
-    #
-    # Examples
-    #
-    # person.to_capsule_json
-    #
-    # Returns a Hash
-    def to_capsule_json
-      serializer.serialize
-    end
-
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.
-        new(self, additional_methods: [:contacts])
-    end
 
     def create_record
       self.attributes = CapsuleCRM::Connection.post(

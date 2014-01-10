@@ -9,6 +9,7 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Serializable
 
     attribute :id, Integer
     attribute :due_date, Date
@@ -129,23 +130,7 @@ module CapsuleCRM
       !new_record?
     end
 
-    def to_capsule_json
-      serializer.serialize
-    end
-
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.new(self)
-    end
-
-    def capsule_attributes
-      { description: description, category: category }.tap do |attrs|
-        attrs.merge!(owner: owner.username) if owner
-        attrs.merge!(due_date: due_date.to_s(:db)) if due_date
-        attrs.merge!(due_date_time: due_date_time.to_s(:db)) if due_date_time
-      end
-    end
 
     def create_record
       self.attributes = CapsuleCRM::Connection.post(

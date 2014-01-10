@@ -6,9 +6,14 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    include CapsuleCRM::Collection
     include CapsuleCRM::Associations
+    include CapsuleCRM::Collection
+    include CapsuleCRM::Serializable
     include CapsuleCRM::Taggable
+
+    self.serializable_options = {
+      root: :kase, excluded_keys: [:track_id]
+    }
 
     attribute :id, Integer
     attribute :name, String
@@ -236,20 +241,11 @@ module CapsuleCRM
       !new_record?
     end
 
-    def to_capsule_json
-      serializer.serialize
-    end
-
     def self._for_track(track)
       raise NotImplementedError.new("There is no way to find cases by trackId in the Capsule API right now")
     end
 
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.
-        new(self, excluded_keys: ['track_id'], root: :kaze)
-    end
 
     def create_record
       path = "/api/party/#{party_id}/kase"

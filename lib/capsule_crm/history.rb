@@ -9,6 +9,9 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Serializable
+
+    self.serializable_options = { root: :historyItem }
 
     attribute :id, Integer
     attribute :type, String
@@ -263,22 +266,7 @@ module CapsuleCRM
       !new_record?
     end
 
-    # Public: Generate the attributes hash to send to capsule
-    #
-    # Examples
-    #
-    # CapsuleCRM::History.find(1).to_capsule_json
-    #
-    # Returns a Hash of attributes
-    def to_capsule_json
-      serializer.serialize
-    end
-
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.new(self, root: :historyItem)
-    end
 
     def belongs_to_required?
       party.blank? && kase.blank? && opportunity.blank?

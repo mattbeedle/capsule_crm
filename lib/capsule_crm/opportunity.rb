@@ -9,6 +9,9 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Serializable
+
+    self.serializable_options = { excluded_keys: [:track_id] }
 
     attribute :id, Integer
     attribute :name, String
@@ -284,18 +287,7 @@ module CapsuleCRM
       self.attributes = attributes
       save!
     end
-
-    # Public: Build a hash of attributes and camelize the keys for capsule
     #
-    # Examples
-    #
-    # opportunity.to_capsule_json
-    #
-    # Returns a Hash
-    def to_capsule_json
-      serializer.serialize
-    end
-
     # Public: Delete the opportunity in capsule
     #
     # Examples
@@ -309,10 +301,6 @@ module CapsuleCRM
     end
 
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.new(self, excluded_keys: ['track_id'])
-    end
 
     def create_record
       path = "/api/party/#{party_id}/opportunity"

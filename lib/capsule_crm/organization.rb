@@ -9,6 +9,11 @@ module CapsuleCRM
 
     include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
+    include CapsuleCRM::Serializable
+
+    self.serializable_options = {
+      root: :organisation, additional_methods: [:contacts]
+    }
 
     attribute :id,    Integer
     attribute :name,  String
@@ -196,19 +201,7 @@ module CapsuleCRM
     def persisted?
       !new_record?
     end
-
-    # Public: Build a hash of attributes and merge in the attributes for the
-    # contact information
     #
-    # Examples
-    #
-    # organization.to_capsule_json
-    #
-    # Returns a Hash
-    def to_capsule_json
-      serializer.serialize
-    end
-
     # Public: Delete the organization in capsule
     #
     # Examples
@@ -222,11 +215,6 @@ module CapsuleCRM
     end
 
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.
-        new(self, root: :organisation, additional_methods: [:contacts])
-    end
 
     def create_record
       self.attributes = CapsuleCRM::Connection.post(

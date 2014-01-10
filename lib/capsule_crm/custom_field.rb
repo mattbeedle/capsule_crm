@@ -9,6 +9,9 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Serializable
+
+    self.serializable_options = { root: 'customField' }
 
     attribute :id, Integer
     attribute :label, String
@@ -67,10 +70,6 @@ module CapsuleCRM
     end
 
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.new(self, root: 'customField')
-    end
 
     def update_record
       CapsuleCRM::Connection.post(

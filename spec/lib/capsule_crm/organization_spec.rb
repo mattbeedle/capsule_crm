@@ -111,7 +111,6 @@ describe CapsuleCRM::Organization do
     end
     let(:email_json) { subject['contacts']['email'].first }
     let(:address_json) { subject['contacts']['address'].first }
-
     subject { organization.to_capsule_json['organisation'] }
 
     it { should have_key('name') }
