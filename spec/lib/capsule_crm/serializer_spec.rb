@@ -77,7 +77,7 @@ describe CapsuleCRM::Serializer do
     context 'when there are belongs to associations' do
       before do
         SerializableTest.send(
-          :belongs_to, :person, class_name: CapsuleCRM::Person
+          :belongs_to, :person, class_name: 'CapsuleCRM::Person'
         )
         object.person = person
       end
@@ -92,7 +92,7 @@ describe CapsuleCRM::Serializer do
       context 'with a serializable key' do
         before do
           SerializableTest.send(
-            :belongs_to, :person, class_name: CapsuleCRM::Person,
+            :belongs_to, :person, class_name: 'CapsuleCRM::Person',
             serializable_key: 'monkeys'
           )
         end

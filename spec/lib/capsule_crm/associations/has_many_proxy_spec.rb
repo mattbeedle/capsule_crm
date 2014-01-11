@@ -4,9 +4,14 @@ class Parent
   include Virtus
   include CapsuleCRM::Associations
 
+  class_attribute :api_plural
+  self.api_plural = 'people'
+
   attribute :id, Integer
 
   has_many :children, class_name: 'Child', source: :parent
+  has_many :embedded_children, class_name: 'Child', source: :parent_as_embedded,
+    embedded: true
 
   def persisted?
     !!id
@@ -16,10 +21,16 @@ end
 class Child
   include Virtus
   include CapsuleCRM::Associations
+  include CapsuleCRM::Serializable
+
+  class_attribute :collection_name, :api_plural
+  self.collection_name = 'childs'
+  self.api_plural = 'children'
 
   attribute :name
 
-  belongs_to :parent
+  belongs_to :parent, class_name: 'Parent'
+  belongs_to :parent_as_embedded, class_name: 'Parent'
 
   def self._for_parent(parent_id)
     []
@@ -40,10 +51,9 @@ describe CapsuleCRM::Associations::HasManyProxy do
       parent, Child, target, :parent
     )
   end
-
   let(:parent) { Parent.new }
-
   let(:target) { [] }
+  before { configure }
 
   describe '#build' do
     before { parent.children.build(name: 'a test name') }
@@ -66,21 +76,43 @@ describe CapsuleCRM::Associations::HasManyProxy do
   end
 
   describe '#create' do
-    subject { parent.children.create(name: 'a test name') }
-    context 'when the parent is persisted' do
-      before do
-        parent.id = Random.rand(1..10)
-        subject
-      end
+    context 'when the child is embedded' do
+      let(:name) { Faker::Lorem.word }
+      subject { parent.embedded_children.create(name: name) }
 
-      it 'should persist the child' do
-        expect(parent.children.last).to be_persisted
+      context 'when the parent is persisted' do
+        before do
+          stub_request(:put, /.*/).to_return(status: 200)
+          parent.id = Random.rand(1..10)
+          subject
+        end
+
+        it 'should send a put request to capsule' do
+          expect(WebMock).to have_requested(
+            :put, "https://1234:@company.capsulecrm.com/api/people/#{parent.id}/children"
+          ).with(body: { childs: [{ child: { name: name } }] })
+        end
       end
     end
 
-    context 'when the parent is not persisted' do
-      it 'should raise a RecordNotSaved error' do
-        expect { subject }.to raise_error(CapsuleCRM::Errors::RecordNotSaved)
+    context 'when the child is not embedded' do
+      subject { parent.children.create(name: 'a test name') }
+
+      context 'when the parent is persisted' do
+        before do
+          parent.id = Random.rand(1..10)
+          subject
+        end
+
+        it 'should persist the child' do
+          expect(parent.children.last).to be_persisted
+        end
+      end
+
+      context 'when the parent is not persisted' do
+        it 'should raise a RecordNotSaved error' do
+          expect { subject }.to raise_error(CapsuleCRM::Errors::RecordNotSaved)
+        end
       end
     end
   end

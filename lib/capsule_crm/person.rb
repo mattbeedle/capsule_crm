@@ -24,7 +24,7 @@ module CapsuleCRM
       foreign_key: :organisation_id
 
     has_many :custom_fields, class_name: 'CapsuleCRM::CustomField',
-      source: :party
+      source: :party, embedded: true
 
     validates :id, numericality: { allow_blank: true }
     validates :first_name, presence: { if: :first_name_required? }

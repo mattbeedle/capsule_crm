@@ -2,11 +2,12 @@ module CapsuleCRM
   module Associations
     class HasManyProxy < BasicObject
 
-      def initialize(parent, target_klass, target, source)
+      def initialize(parent, target_klass, target, source, embedded)
         @target         = target
         @parent         = parent
         @target_klass   = target_klass
         @source         = source
+        @embedded       = embedded
       end
 
       def method_missing(name, *args, &block)
@@ -21,9 +22,10 @@ module CapsuleCRM
       end
 
       def create(attributes = {})
-        build(attributes).tap do |record|
-          record_not_saved(record) unless parent.persisted?
-        end.save
+        record = build(attributes).tap do |r|
+          record_not_saved(r) unless parent.persisted?
+        end
+        embedded? ? save : record.save
       end
 
       def tap
@@ -31,7 +33,21 @@ module CapsuleCRM
         self
       end
 
+      def to_capsule_json(root = nil)
+        { root => target.map(&:to_capsule_json) }
+      end
+
+      def save
+        json = to_capsule_json(target_klass.collection_name)
+        path = "/api/#{parent.class.api_plural}/#{parent.id}/#{target_klass.api_plural}"
+        ::CapsuleCRM::Connection.put(path, json)
+      end
+
       private
+
+      def embedded?
+        @embedded
+      end
 
       def record_not_saved(record)
         raise ::CapsuleCRM::Errors::RecordNotSaved.new(record)

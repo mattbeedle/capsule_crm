@@ -38,7 +38,8 @@ module CapsuleCRM
       # Returns a CapsuleCRM::Associations::HasManyProxy
       def proxy(parent, collection = nil)
         CapsuleCRM::Associations::HasManyProxy.new(
-          parent, target_klass, build_target(parent, collection), source
+          parent, target_klass, build_target(parent, collection), source,
+          embedded
         )
       end
 
@@ -47,6 +48,14 @@ module CapsuleCRM
       # Return a Symbol :has_many
       def macro
         :has_many
+      end
+
+      def embedded
+        @embedded ||= !!options[:embedded]
+      end
+
+      def source
+        @source ||= options[:source]
       end
 
       private
@@ -70,10 +79,6 @@ module CapsuleCRM
       def target(parent)
         target_klass.
           send("_for_#{parent.class.to_s.demodulize.downcase}", parent.id)
-      end
-
-      def source
-        @source ||= options[:source]
       end
     end
   end

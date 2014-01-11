@@ -25,6 +25,13 @@ module CapsuleCRM
         @options          = options
       end
 
+      def inverse
+        @inverse ||=
+          target_klass.has_many_associations.find do |name, association|
+          association.source == association_name
+        end.try(:last) if target_klass.respond_to?(:has_many_associations)
+      end
+
       # Public: Build the foreign key column name. If a foreign key name was
       # supplied in the options during initialization, then that is returned.
       # Otherwise it is inferred from the association name

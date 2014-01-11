@@ -51,9 +51,21 @@ module CapsuleCRM
       CapsuleCRM::HashHelper.camelize_keys(cleaned_attributes)
     end
 
+    def excluded_association_keys
+      @excluded_association_keys ||=
+        if object.class.respond_to?(:belongs_to_associations)
+          object.class.belongs_to_associations.map do |name, association|
+          association.foreign_key if association.inverse && association.inverse.embedded
+        end.compact
+        else
+          []
+        end
+    end
+
     def cleaned_attributes
       attributes.delete_if do |key, value|
-        value.blank? || key.to_s == 'id' || excluded_keys.include?(key)
+        value.blank? || key.to_s == 'id' || excluded_keys.include?(key) ||
+          excluded_association_keys.include?(key.to_s)
       end
     end
 
