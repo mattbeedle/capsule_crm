@@ -8,7 +8,12 @@ module CapsuleCRM
     end
 
     def serialize
-      @serialized ||= { root => build_attributes_hash }.stringify_keys
+      @serialized ||=
+        if object.is_a?(Array)
+          serialize_collection
+        else
+          serialize_single
+        end
     end
 
     def root
@@ -16,7 +21,19 @@ module CapsuleCRM
         object.class.to_s.demodulize.downcase.singularize.camelize(:lower)
     end
 
+    def collection_root
+      @collection_root ||= options[:collection_root] || root.pluralize
+    end
+
     private
+
+    def serialize_single
+      { root => build_attributes_hash }.stringify_keys
+    end
+
+    def serialize_collection
+      { collection_root => serialize_single }.stringify_keys
+    end
 
     def additional_methods
       @additional_methods ||= options[:additional_methods] || []

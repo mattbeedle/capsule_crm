@@ -24,6 +24,8 @@ module CapsuleCRM
     validates :label, presence: true
 
     belongs_to :party, class_name: 'CapsuleCRM::Party'
+    belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
+    belongs_to :kase, class_name: 'CapsuleCRM::Case'
 
     def self._for_party(party_id)
       init_collection(
@@ -65,11 +67,13 @@ module CapsuleCRM
     def destroy
     end
 
-    def to_capsule_json
-      { 'customFields' => serializer.serialize }
-    end
-
     private
+
+    def parent
+      self.class.belongs_to_associations.each do |association|
+        return self.send(assocation) unless self.send(association).blank?
+      end
+    end
 
     def update_record
       CapsuleCRM::Connection.post(

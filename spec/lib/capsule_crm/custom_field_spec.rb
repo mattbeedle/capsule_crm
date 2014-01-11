@@ -71,11 +71,7 @@ describe CapsuleCRM::CustomField do
     end
 
     it 'should have a root element of "customField"' do
-      expect(subject.keys.first).to eql('customFields')
-    end
-
-    it 'should have an element named "customField"' do
-      expect(subject['customFields'].keys.first).to eql('customField')
+      expect(subject.keys.first).to eql('customField')
     end
   end
 end
