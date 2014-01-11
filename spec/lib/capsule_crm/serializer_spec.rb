@@ -30,6 +30,18 @@ describe CapsuleCRM::Serializer do
       end
     end
 
+    context 'when include_root is false' do
+      before do
+        options.merge!(include_root: false)
+      end
+
+      it 'should not include the root' do
+        expect(subject).to eql({
+          'name' => object.name, 'description' => object.description
+        })
+      end
+    end
+
     context 'when additional methods are supplied' do
       before do
         options.merge!(additional_methods: [:test])

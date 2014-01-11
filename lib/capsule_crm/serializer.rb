@@ -9,11 +9,19 @@ module CapsuleCRM
 
     def serialize
       @serialized ||=
-        if object.is_a?(Array)
-          serialize_collection
+        if include_root?
+          serialize_with_root
         else
-          serialize_single
+          serialize_without_root
         end
+    end
+
+    def serialize_with_root
+      { root => build_attributes_hash }.stringify_keys
+    end
+
+    def serialize_without_root
+      build_attributes_hash
     end
 
     def root
@@ -27,12 +35,8 @@ module CapsuleCRM
 
     private
 
-    def serialize_single
-      { root => build_attributes_hash }.stringify_keys
-    end
-
-    def serialize_collection
-      { collection_root => serialize_single }.stringify_keys
+    def include_root?
+      @include_root ||= true unless options[:include_root] == false
     end
 
     def additional_methods
@@ -53,6 +57,7 @@ module CapsuleCRM
       end
     end
 
+    # TODO OMG, clean this up!
     def attributes
       object.attributes.dup.tap do |attrs|
         attrs.each do |key, value|

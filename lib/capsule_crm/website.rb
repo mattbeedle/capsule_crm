@@ -1,12 +1,14 @@
 module CapsuleCRM
   class Website
     include Virtus
+    include CapsuleCRM::Serializable
 
     extend  ActiveModel::Naming
     include ActiveModel::Validations
-    include ActiveModel::Serializers::JSON
 
-    include CapsuleCRM::CapsuleJsonable
+    self.serializable_options = {
+      include_root: false
+    }
 
     attribute :type
     attribute :web_service

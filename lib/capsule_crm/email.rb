@@ -1,11 +1,12 @@
 module CapsuleCRM
   class Email
     include Virtus
-
+    include CapsuleCRM::Serializable
     extend  ActiveModel::Naming
-    include ActiveModel::Serializers::JSON
 
-    include CapsuleCRM::CapsuleJsonable
+    self.serializable_options = {
+      include_root: false
+    }
 
     attribute :type
     attribute :email_address
