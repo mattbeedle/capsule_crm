@@ -11,7 +11,9 @@ module CapsuleCRM
     include CapsuleCRM::Collection
     include CapsuleCRM::Serializable
 
-    self.serializable_options = { excluded_keys: [:track_id] }
+    serializable_config do |config|
+      config.excluded_keys = [:track_id]
+    end
 
     attribute :id, Integer
     attribute :name, String
@@ -72,10 +74,8 @@ module CapsuleCRM
     #
     # Returns a ResultsProxy of opportunities
     def self.all(options = {})
-      init_collection(
-        CapsuleCRM::Connection.get(
-          '/api/opportunity', options
-        )['opportunities']['opportunity']
+      CapsuleCRM::Serializer.normalize_collection(
+        self, CapsuleCRM::Connection.get('/api/opportunity', options)
       )
     end
 
@@ -106,7 +106,7 @@ module CapsuleCRM
     #
     # Returns a CapsuleCRM::Opportunity
     def self.find(id)
-      new CapsuleCRM::Connection.get("/api/opportunity/#{id}")['opportunity']
+      from_capsule_json CapsuleCRM::Connection.get("/api/opportunity/#{id}")
     end
 
     # Public: Create a new opportunity in capsulecrm

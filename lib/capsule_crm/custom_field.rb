@@ -11,7 +11,9 @@ module CapsuleCRM
     include CapsuleCRM::Collection
     include CapsuleCRM::Serializable
 
-    self.serializable_options = { root: 'customField' }
+    serializable_config do |config|
+      config.root = 'customField'
+    end
 
     attribute :id, Integer
     attribute :label, String

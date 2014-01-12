@@ -8,6 +8,11 @@ module CapsuleCRM
       end
     end
 
+    def self.underscore_keys(hash)
+      underscore_keys!(hash)
+      hash
+    end
+
     def self.camelize_keys!(hash)
       hash.keys.each do |key|
         hash[key.to_s.camelize(:lower)] = hash.delete(key)

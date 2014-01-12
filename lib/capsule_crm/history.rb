@@ -11,7 +11,9 @@ module CapsuleCRM
     include CapsuleCRM::Collection
     include CapsuleCRM::Serializable
 
-    self.serializable_options = { root: :historyItem }
+    serializable_config do |config|
+      config.root = :historyItem
+    end
 
     attribute :id, Integer
     attribute :type, String

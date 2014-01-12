@@ -9,6 +9,7 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Serializable
 
     attribute :id,            Integer
     attribute :description,   String
@@ -20,8 +21,8 @@ module CapsuleCRM
     validates :id, numericality: { allow_blank: true }
 
     def self.all
-      init_collection(
-        CapsuleCRM::Connection.get('/api/tracks')['tracks']['track']
+      CapsuleCRM::Serializer.normalize_collection(
+        self, CapsuleCRM::Connection.get('/api/tracks')
       )
     end
   end

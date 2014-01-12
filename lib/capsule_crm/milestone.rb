@@ -2,6 +2,7 @@ module CapsuleCRM
   class Milestone
     include Virtus
     include CapsuleCRM::Collection
+    include CapsuleCRM::Serializable
     include ActiveModel::Validations
 
     attribute :id, Integer
@@ -13,9 +14,8 @@ module CapsuleCRM
     validates :id, numericality: { allow_blank: true }
 
     def self.all
-      init_collection(
-        CapsuleCRM::Connection.
-          get('/api/opportunity/milestones')['milestones']['milestone']
+      CapsuleCRM::Serializer.normalize_collection(
+        self, CapsuleCRM::Connection.get('/api/opportunity/milestones')
       )
     end
 

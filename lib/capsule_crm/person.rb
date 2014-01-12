@@ -8,9 +8,9 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    self.serializable_options = {
-      additional_methods: [:contacts]
-    }
+    serializable_config do |config|
+      config.additional_methods = [:contacts]
+    end
 
     attribute :id, Integer
     attribute :title

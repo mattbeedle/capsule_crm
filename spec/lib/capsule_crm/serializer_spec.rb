@@ -11,18 +11,22 @@ class SerializableTest
 end
 
 describe CapsuleCRM::Serializer do
+  describe '#normalize' do
+    pending
+  end
+
   describe '#serialize' do
     let(:options) do
       {}
     end
-    let(:serializer) { described_class.new(object, options) }
+    let(:serializer) { described_class.new(options) }
     let(:object) do
       SerializableTest.new(
         id: Random.rand(1..10), name: Faker::Lorem.word,
         description: Faker::Lorem.word
       )
     end
-    subject { serializer.serialize }
+    subject { serializer.serialize(object) }
 
     context 'without an options' do
       it 'should not include the ID' do

@@ -4,8 +4,10 @@ class Parent
   include Virtus
   include CapsuleCRM::Associations
 
-  class_attribute :api_plural
-  self.api_plural = 'people'
+  class_attribute :connection_options
+  self.connection_options = {
+    plural: 'people'
+  }
 
   attribute :id, Integer
 
@@ -23,9 +25,10 @@ class Child
   include CapsuleCRM::Associations
   include CapsuleCRM::Serializable
 
-  class_attribute :collection_name, :api_plural
-  self.collection_name = 'childs'
-  self.api_plural = 'children'
+  class_attribute :connection_options
+  self.connection_options = {
+    collection_name: 'childs', plural: 'children'
+  }
 
   attribute :name
 

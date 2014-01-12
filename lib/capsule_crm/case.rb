@@ -11,9 +11,11 @@ module CapsuleCRM
     include CapsuleCRM::Serializable
     include CapsuleCRM::Taggable
 
-    self.serializable_options = {
-      root: :kase, excluded_keys: [:track_id]
-    }
+    serializable_config do |config|
+      config.collection_root = :kases
+      config.root            = :kase
+      config.excluded_keys   = [:track_id]
+    end
 
     attribute :id, Integer
     attribute :name, String
@@ -47,8 +49,8 @@ module CapsuleCRM
     #
     # Returns a CapsuleCRM::ResultsProxy of CapsuleCRM::Case objects
     def self.all(options = {})
-      init_collection(
-        CapsuleCRM::Connection.get('/api/kase', options)['kases']['kase']
+      CapsuleCRM::Serializer.normalize_collection(
+        self, CapsuleCRM::Connection.get('/api/kase', options)
       )
     end
 
@@ -62,7 +64,7 @@ module CapsuleCRM
     #
     # Returns a CapsuleCRM::Case object
     def self.find(id)
-      new CapsuleCRM::Connection.get("/api/kase/#{id}")['kase']
+      from_capsule_json CapsuleCRM::Connection.get("/api/kase/#{id}")
     end
 
     # Public: Create a CapsuleCRM::Case

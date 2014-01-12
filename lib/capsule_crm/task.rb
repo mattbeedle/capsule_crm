@@ -59,13 +59,13 @@ module CapsuleCRM
     end
 
     def self.all(options = {})
-      init_collection(
-        CapsuleCRM::Connection.get('/api/tasks', options)['tasks']['task']
+      CapsuleCRM::Serializer.normalize_collection(
+        self, CapsuleCRM::Connection.get('/api/tasks', options)
       )
     end
 
     def self.find(id)
-      new CapsuleCRM::Connection.get("/api/task/#{id}")['task']
+      from_capsule_json CapsuleCRM::Connection.get("/api/task/#{id}")
     end
 
     def self.create(attributes = {})

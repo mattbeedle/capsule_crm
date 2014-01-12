@@ -37,13 +37,13 @@ module CapsuleCRM
         { root => target.map(&:to_capsule_json) }
       end
 
+      private
+
       def save
-        json = to_capsule_json(target_klass.collection_name)
-        path = "/api/#{parent.class.api_plural}/#{parent.id}/#{target_klass.api_plural}"
+        json = to_capsule_json(target_klass.connection_options[:collection_name])
+        path = "/api/#{parent.class.connection_options[:plural]}/#{parent.id}/#{target_klass.connection_options[:plural]}"
         ::CapsuleCRM::Connection.put(path, json)
       end
-
-      private
 
       def embedded?
         @embedded

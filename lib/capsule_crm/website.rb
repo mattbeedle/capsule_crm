@@ -6,9 +6,9 @@ module CapsuleCRM
     extend  ActiveModel::Naming
     include ActiveModel::Validations
 
-    self.serializable_options = {
-      include_root: false
-    }
+    serializable_config do |config|
+      config.include_root = false
+    end
 
     attribute :type
     attribute :web_service

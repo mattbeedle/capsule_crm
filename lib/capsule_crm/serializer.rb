@@ -2,18 +2,42 @@ module CapsuleCRM
   class Serializer
     attr_reader :object, :options
 
-    def initialize(object, options = {})
-      @object  = object
+    def initialize(options = {})
       @options = options
     end
 
-    def serialize
+    def serialize(object)
+      @object = object
       @serialized ||=
         if include_root?
           serialize_with_root
         else
           serialize_without_root
         end
+    end
+
+    def self.root(klass)
+      klass.serializable_options.root
+    end
+
+    def self.collection_root(klass)
+      klass.serializable_options.collection_root
+    end
+
+    def self.normalize(klass, attrs = {})
+      CapsuleCRM::HashHelper.underscore_keys!(attrs[root(klass).to_s])
+      klass.new(attrs[root(klass).to_s])
+    end
+
+    def self.serialize_collection(klass, collection)
+      collection = collection.map { |item| item.to_capsule_json }
+      { klass.serializable_options.plural => collection }
+    end
+
+    def self.normalize_collection(klass, json)
+      json[collection_root(klass).to_s][root(klass).to_s].map do |singular|
+        klass.new CapsuleCRM::HashHelper.underscore_keys(singular)
+      end
     end
 
     def serialize_with_root
@@ -74,7 +98,9 @@ module CapsuleCRM
       object.attributes.dup.tap do |attrs|
         attrs.each do |key, value|
           attrs[key] = value.to_s(:db) if value.is_a?(Date)
-          attrs[key] = value.strftime("%Y-%m-%dT%H:%M:%SZ") if value.is_a?(DateTime)
+          if value.is_a?(DateTime)
+            attrs[key] = value.strftime("%Y-%m-%dT%H:%M:%SZ")
+          end
         end
         additional_methods.each do |method|
           attrs.merge!(method => object.send(method).to_capsule_json)

@@ -4,9 +4,9 @@ module CapsuleCRM
     include CapsuleCRM::Serializable
     extend  ActiveModel::Naming
 
-    self.serializable_options = {
-      include_root: false
-    }
+    serializable_config do |config|
+      config.include_root = false
+    end
 
     attribute :type
     attribute :phone_number

@@ -1,9 +1,9 @@
 class CapsuleCRM::Party
   include Virtus
 
+  include CapsuleCRM::Associations
   include CapsuleCRM::Attributes
   include CapsuleCRM::Taggable
-  include CapsuleCRM::Associations
 
   has_many :histories, class_name: 'CapsuleCRM::History', source: :party
   has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
