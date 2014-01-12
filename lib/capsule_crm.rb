@@ -8,6 +8,7 @@ require 'capsule_crm/taggable'
 require 'capsule_crm/collection'
 require 'capsule_crm/associations'
 require 'capsule_crm/connection'
+require 'capsule_crm/normalizer'
 require 'capsule_crm/serializer'
 require 'capsule_crm/serializable'
 

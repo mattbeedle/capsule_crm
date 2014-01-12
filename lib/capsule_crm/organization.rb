@@ -62,7 +62,7 @@ module CapsuleCRM
     #
     # Returns a CapsuleCRM::Organization
     def self.find(id)
-      new CapsuleCRM::Connection.get("/api/party/#{id}")['organisation']
+      from_capsule_json CapsuleCRM::Connection.get("/api/party/#{id}")
     end
 
     # Public: Create a new organization in capsulecrm

@@ -9,6 +9,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     serializable_config do |config|
+      config.collection_root    = :parties
       config.additional_methods = [:contacts]
     end
 
@@ -31,10 +32,8 @@ module CapsuleCRM
     validates :last_name, presence: { if: :last_name_required? }
 
     def self._for_organization(organization_id)
-      init_collection(
-        CapsuleCRM::Connection.get(
-          "/api/party/#{organization_id}/people"
-        )['parties']['person']
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
+        CapsuleCRM::Connection.get("/api/party/#{organization_id}/people")
       )
     end
 

@@ -3,38 +3,29 @@ class CapsuleCRM::Party
 
   include CapsuleCRM::Associations
   include CapsuleCRM::Attributes
+  include CapsuleCRM::Serializable
   include CapsuleCRM::Taggable
+
+  serializable_config do |config|
+    config.root = [:organisation, :person]
+  end
 
   has_many :histories, class_name: 'CapsuleCRM::History', source: :party
   has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
 
   def self.all(options = {})
-    init_collection(
-      CapsuleCRM::Connection.get('/api/party', options)['parties']
+    CapsuleCRM::Normalizer.new(self).normalize_collection(
+      CapsuleCRM::Connection.get('/api/party', options)
     )
   end
 
   def self.find(id)
-    attributes = CapsuleCRM::Connection.get("/api/party/#{id}")
-    party_classes[attributes.keys.first].constantize.new(
-      attributes[attributes.keys.first]
-    )
+    from_capsule_json CapsuleCRM::Connection.get("/api/party/#{id}")
   end
 
   private
 
-  def self.init_collection(collection)
-    CapsuleCRM::ResultsProxy.new(
-      collection.map do |key, value|
-        next unless %w(organisation person).include?(key)
-        [collection[key]].flatten.map do |attrs|
-          party_classes[key].constantize.new(attrs)
-        end.flatten
-      end.flatten
-    )
-  end
-
-  def self.party_classes
+  def self.child_classes
     { person: 'CapsuleCRM::Person', organisation: 'CapsuleCRM::Organization' }.
       stringify_keys
   end

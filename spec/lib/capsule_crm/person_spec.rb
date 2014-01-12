@@ -70,7 +70,7 @@ describe CapsuleCRM::Person do
     context 'when there is 1 person for the organization' do
       before do
         stub_request(:get, /\/api\/party\/1\/people$/).
-          to_return(body: File.read('spec/support/single_user.json'))
+          to_return(body: File.read('spec/support/single_person.json'))
       end
       subject { CapsuleCRM::Person._for_organization(1) }
 

@@ -21,8 +21,8 @@ module CapsuleCRM
     validates :id, numericality: { allow_blank: true }
 
     def self.all
-      CapsuleCRM::Serializer.normalize_collection(
-        self, CapsuleCRM::Connection.get('/api/tracks')
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
+        CapsuleCRM::Connection.get('/api/tracks')
       )
     end
   end

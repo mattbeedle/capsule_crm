@@ -74,8 +74,8 @@ module CapsuleCRM
     #
     # Returns a ResultsProxy of opportunities
     def self.all(options = {})
-      CapsuleCRM::Serializer.normalize_collection(
-        self, CapsuleCRM::Connection.get('/api/opportunity', options)
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
+        CapsuleCRM::Connection.get('/api/opportunity', options)
       )
     end
 

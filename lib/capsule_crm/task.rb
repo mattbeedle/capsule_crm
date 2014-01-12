@@ -59,8 +59,8 @@ module CapsuleCRM
     end
 
     def self.all(options = {})
-      CapsuleCRM::Serializer.normalize_collection(
-        self, CapsuleCRM::Connection.get('/api/tasks', options)
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
+        CapsuleCRM::Connection.get('/api/tasks', options)
       )
     end
 
@@ -117,6 +117,7 @@ module CapsuleCRM
       self
     end
 
+    # TODO Change this to an embedded association, like custom fields
     def self.categories
       CapsuleCRM::Connection.
         get('/api/task/categories')['taskCategories']['taskCategory']

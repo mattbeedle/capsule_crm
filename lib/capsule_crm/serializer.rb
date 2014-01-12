@@ -16,28 +16,9 @@ module CapsuleCRM
         end
     end
 
-    def self.root(klass)
-      klass.serializable_options.root
-    end
-
-    def self.collection_root(klass)
-      klass.serializable_options.collection_root
-    end
-
-    def self.normalize(klass, attrs = {})
-      CapsuleCRM::HashHelper.underscore_keys!(attrs[root(klass).to_s])
-      klass.new(attrs[root(klass).to_s])
-    end
-
     def self.serialize_collection(klass, collection)
       collection = collection.map { |item| item.to_capsule_json }
       { klass.serializable_options.plural => collection }
-    end
-
-    def self.normalize_collection(klass, json)
-      json[collection_root(klass).to_s][root(klass).to_s].map do |singular|
-        klass.new CapsuleCRM::HashHelper.underscore_keys(singular)
-      end
     end
 
     def serialize_with_root
