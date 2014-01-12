@@ -7,7 +7,6 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
-    include CapsuleCRM::Collection
     include CapsuleCRM::Persistable
     include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Serializable
@@ -68,10 +67,10 @@ module CapsuleCRM
     #
     # Returns a ResultsProxy of opportunities
     def self.deleted(since)
-      init_collection(
-        CapsuleCRM::Connection.get(
-          '/api/opportunity/deleted', since: since
-        )['deletedOpportunities']['deletedOpportunity']
+      CapsuleCRM::Normalizer.new(
+        self, root: 'deletedOpportunity', collection_root: 'deletedOpportunities'
+      ).normalize_collection(
+        CapsuleCRM::Connection.get('/api/opportunity/deleted', since: since)
       )
     end
 

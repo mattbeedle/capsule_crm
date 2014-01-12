@@ -1,18 +1,20 @@
 module CapsuleCRM
   class Normalizer
 
-    attr_reader :klass
+    attr_reader :klass, :options
 
-    def initialize(klass)
-      @klass = klass
+    def initialize(klass, options = {})
+      @klass   = klass
+      @options = options
     end
 
     def root
-      @root ||= klass.serializable_options.root
+      @root ||= options[:root] || klass.serializable_options.root
     end
 
     def collection_root
-      @collection_root ||= klass.serializable_options.collection_root
+      @collection_root ||= options[:collection_root] ||
+        klass.serializable_options.collection_root
     end
 
     def attribute_to_assign
