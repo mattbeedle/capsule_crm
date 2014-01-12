@@ -3,6 +3,8 @@ class CapsuleCRM::Party
 
   include CapsuleCRM::Associations
   include CapsuleCRM::Attributes
+  include CapsuleCRM::Persistable
+  include CapsuleCRM::Querying::Findable
   include CapsuleCRM::Serializable
   include CapsuleCRM::Taggable
 
@@ -10,18 +12,12 @@ class CapsuleCRM::Party
     config.root = [:organisation, :person]
   end
 
+  persistable_config do |config|
+    config.plural = :party
+  end
+
   has_many :histories, class_name: 'CapsuleCRM::History', source: :party
   has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
-
-  def self.all(options = {})
-    CapsuleCRM::Normalizer.new(self).normalize_collection(
-      CapsuleCRM::Connection.get('/api/party', options)
-    )
-  end
-
-  def self.find(id)
-    from_capsule_json CapsuleCRM::Connection.get("/api/party/#{id}")
-  end
 
   private
 

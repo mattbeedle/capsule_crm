@@ -1,9 +1,16 @@
 module CapsuleCRM
   class Milestone
-    include Virtus
-    include CapsuleCRM::Collection
-    include CapsuleCRM::Serializable
     include ActiveModel::Validations
+    include Virtus
+
+    include CapsuleCRM::Collection
+    include CapsuleCRM::Querying::FindAll
+    include CapsuleCRM::Persistable
+    include CapsuleCRM::Serializable
+
+    persistable_config do |config|
+      config.plural = 'opportunity/milestones'
+    end
 
     attribute :id, Integer
     attribute :name, String
@@ -12,12 +19,6 @@ module CapsuleCRM
     attribute :complete, Boolean
 
     validates :id, numericality: { allow_blank: true }
-
-    def self.all
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get('/api/opportunity/milestones')
-      )
-    end
 
     def self.find(id)
       all.select { |item| item.id == id }.first

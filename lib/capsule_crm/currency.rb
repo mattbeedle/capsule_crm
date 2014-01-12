@@ -6,6 +6,8 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
+    include CapsuleCRM::Persistable
+    include CapsuleCRM::Querying::FindAll
     include CapsuleCRM::Serializable
 
     serializable_config do |config|
@@ -13,18 +15,5 @@ module CapsuleCRM
     end
 
     attribute :code, String
-
-    # Public: Retrieve a list of all currencies in Capsule
-    #
-    # Examples
-    #
-    # CapsuleCRM::Currency.all
-    #
-    # Returns an Array of CapsuleCRM::Currency objects
-    def self.all
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get('/api/currencies')
-      )
-    end
   end
 end

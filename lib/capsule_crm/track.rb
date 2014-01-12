@@ -9,6 +9,8 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Persistable
+    include CapsuleCRM::Querying::FindAll
     include CapsuleCRM::Serializable
 
     attribute :id,            Integer
@@ -19,11 +21,5 @@ module CapsuleCRM
     has_many :cases, class_name: 'CapsuleCRM::Case'
 
     validates :id, numericality: { allow_blank: true }
-
-    def self.all
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get('/api/tracks')
-      )
-    end
   end
 end

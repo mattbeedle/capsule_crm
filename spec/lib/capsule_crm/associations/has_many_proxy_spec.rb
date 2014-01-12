@@ -3,11 +3,11 @@ require 'spec_helper'
 class Parent
   include Virtus
   include CapsuleCRM::Associations
+  include CapsuleCRM::Persistable
 
-  class_attribute :connection_options
-  self.connection_options = {
-    plural: 'people'
-  }
+  persistable_config do |config|
+    config.plural = :people
+  end
 
   attribute :id, Integer
 
@@ -23,12 +23,16 @@ end
 class Child
   include Virtus
   include CapsuleCRM::Associations
+  include CapsuleCRM::Persistable
   include CapsuleCRM::Serializable
 
-  class_attribute :connection_options
-  self.connection_options = {
-    collection_name: 'childs', plural: 'children'
-  }
+  persistable_config do |config|
+    config.plural = :children
+  end
+
+  serializable_config do |config|
+    config.collection_root = :childs
+  end
 
   attribute :name
 

@@ -9,9 +9,10 @@ module CapsuleCRM
 
     include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
+    include CapsuleCRM::Persistable
     include CapsuleCRM::Serializable
 
-    self.serializable_config do |config|
+    serializable_config do |config|
       config.root               = :organisation
       config.additional_methods = [:contacts]
     end

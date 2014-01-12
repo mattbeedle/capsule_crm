@@ -9,6 +9,8 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Persistable
+    include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Serializable
 
     attribute :id, Integer
@@ -56,16 +58,6 @@ module CapsuleCRM
       user = CapsuleCRM::User.find_by_username(user) if user.is_a?(String)
       @owner = user
       self
-    end
-
-    def self.all(options = {})
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get('/api/tasks', options)
-      )
-    end
-
-    def self.find(id)
-      from_capsule_json CapsuleCRM::Connection.get("/api/task/#{id}")
     end
 
     def self.create(attributes = {})

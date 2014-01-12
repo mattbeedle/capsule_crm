@@ -9,6 +9,8 @@ require 'capsule_crm/collection'
 require 'capsule_crm/associations'
 require 'capsule_crm/connection'
 require 'capsule_crm/normalizer'
+require 'capsule_crm/persistable'
+require 'capsule_crm/querying/findable'
 require 'capsule_crm/serializer'
 require 'capsule_crm/serializable'
 

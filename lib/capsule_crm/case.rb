@@ -8,6 +8,8 @@ module CapsuleCRM
 
     include CapsuleCRM::Associations
     include CapsuleCRM::Collection
+    include CapsuleCRM::Querying::Findable
+    include CapsuleCRM::Persistable
     include CapsuleCRM::Serializable
     include CapsuleCRM::Taggable
 
@@ -15,6 +17,11 @@ module CapsuleCRM
       config.collection_root = :kases
       config.root            = :kase
       config.excluded_keys   = [:track_id]
+    end
+
+    persistable_config do |config|
+      config.plural   = :kase
+      config.singular = :kase
     end
 
     attribute :id, Integer
@@ -32,40 +39,6 @@ module CapsuleCRM
     belongs_to :track, class_name: 'CapsuleCRM::Track'
 
     has_many :tasks, class_name: 'CapsuleCRM::Task', source: :case
-
-    # Public: Search and retrieve all cases in CapsuleCRM
-    #
-    # options   - the Hash of query options (default: {}):
-    #             :tag            - the String tag to search for
-    #             :lastmodified   - the Date after which the case was last
-    #             modified by
-    #             :start          - the Integer index of the first record to
-    #             return.
-    #             :limit          - the Integer number of records to return
-    #
-    # Examples
-    #
-    # CapsuleCRM::Case.all(tag: 'Some Tag')
-    #
-    # Returns a CapsuleCRM::ResultsProxy of CapsuleCRM::Case objects
-    def self.all(options = {})
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get('/api/kase', options)
-      )
-    end
-
-    # Public: Search for a single case by ID
-    #
-    # id - the Integer ID of the record to search for
-    #
-    # Examples
-    #
-    # CapsuleCRM::Case.find(1)
-    #
-    # Returns a CapsuleCRM::Case object
-    def self.find(id)
-      from_capsule_json CapsuleCRM::Connection.get("/api/kase/#{id}")
-    end
 
     # Public: Create a CapsuleCRM::Case
     #

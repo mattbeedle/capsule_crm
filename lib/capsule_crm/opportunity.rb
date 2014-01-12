@@ -9,10 +9,16 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Attributes
     include CapsuleCRM::Collection
+    include CapsuleCRM::Persistable
+    include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Serializable
 
     serializable_config do |config|
       config.excluded_keys = [:track_id]
+    end
+
+    persistable_config do |config|
+      config.plural = :opportunity
     end
 
     attribute :id, Integer
@@ -53,32 +59,6 @@ module CapsuleCRM
       raise NotImplementedError.new("There is no way to find opportunities by trackId in the Capsule API right now")
     end
 
-    # Public: Get all opportunities from Capsule. The list can be restricted
-    # and/or paginated with various query parameters sent through the options
-    # hash.
-    #
-    # options - The Hash of allowed query parameters for Capsule (default: {}):
-    #           :milestone      - The String milestone name
-    #           :lastmodified   - The Date when the opportunity was last modified
-    #           :tag            - The String tag to search for
-    #           :start          - The Integer first record to be returned in pagination.
-    #           The results start with an index of 1
-    #           :limit          - The Integer maximum number of matching records to be
-    #           returned
-    #
-    # Examples
-    #
-    # CapsuleCRM::Opportunity.all
-    #
-    # CapsuleCRM::Opportunity.all(start: 10, limit: 20)
-    #
-    # Returns a ResultsProxy of opportunities
-    def self.all(options = {})
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get('/api/opportunity', options)
-      )
-    end
-
     # Public: Get all deleted opportunities since the specified date
     #
     # since - The Date to start checking for deleted opportunities
@@ -94,19 +74,6 @@ module CapsuleCRM
           '/api/opportunity/deleted', since: since
         )['deletedOpportunities']['deletedOpportunity']
       )
-    end
-
-    # Public: Find an opportunity by id
-    #
-    # id  - The Integer ID
-    #
-    # Examples
-    #
-    # CapsuleCRM::Opportunity.find(id)
-    #
-    # Returns a CapsuleCRM::Opportunity
-    def self.find(id)
-      from_capsule_json CapsuleCRM::Connection.get("/api/opportunity/#{id}")
     end
 
     # Public: Create a new opportunity in capsulecrm
