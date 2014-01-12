@@ -432,24 +432,6 @@ describe CapsuleCRM::Opportunity do
     end
   end
 
-  describe '.init_collection' do
-    subject do
-      CapsuleCRM::Opportunity.init_collection(
-        JSON.parse(
-          File.read('spec/support/all_opportunities.json')
-        )['opportunities']['opportunity']
-      )
-    end
-
-    it { should be_a(Array) }
-
-    it { subject.length.should eql(1) }
-
-    it do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Opportunity) }.should be_true
-    end
-  end
-
   describe '#destroy' do
     let(:opportunity) do
       CapsuleCRM::Opportunity.new(id: 1)
