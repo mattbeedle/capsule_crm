@@ -7,8 +7,6 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
-    include CapsuleCRM::Attributes
-    include CapsuleCRM::Collection
     include CapsuleCRM::Persistable
     include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Serializable

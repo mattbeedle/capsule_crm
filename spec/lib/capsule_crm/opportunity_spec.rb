@@ -194,17 +194,6 @@ describe CapsuleCRM::Opportunity do
     it { subject.party_id.should eql(2) }
   end
 
-  describe '#attributes=' do
-    let(:opportunity) { CapsuleCRM::Opportunity.new }
-
-    before do
-      opportunity.attributes = { partyId: '1', milestoneId: '3' }
-    end
-
-    it { opportunity.party_id.should eql(1) }
-    it { opportunity.milestone_id.should eql(3) }
-  end
-
   describe '.create' do
     context 'when the opportunity is valid' do
       before do

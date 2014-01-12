@@ -7,12 +7,11 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
-    include CapsuleCRM::Attributes
-    include CapsuleCRM::Collection
     include CapsuleCRM::Serializable
 
     serializable_config do |config|
       config.root = 'customField'
+      config.collection_root = 'customFields'
     end
 
     attribute :id, Integer
@@ -28,10 +27,9 @@ module CapsuleCRM
     belongs_to :party, class_name: 'CapsuleCRM::Party'
 
     def self._for_party(party_id)
-      init_collection(
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
         CapsuleCRM::Connection.
-          get("/api/party/#{party_id}/customfields")['customFields'].
-          fetch('customField', nil)
+          get("/api/party/#{party_id}/customfields")
       )
     end
 

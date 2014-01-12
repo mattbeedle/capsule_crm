@@ -2,7 +2,6 @@ class CapsuleCRM::Party
   include Virtus
 
   include CapsuleCRM::Associations
-  include CapsuleCRM::Attributes
   include CapsuleCRM::Persistable
   include CapsuleCRM::Querying::Findable
   include CapsuleCRM::Serializable

@@ -7,7 +7,6 @@ module CapsuleCRM
     extend ActiveModel::Conversion
     include ActiveModel::Validations
 
-    include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
     include CapsuleCRM::Persistable
     include CapsuleCRM::Serializable

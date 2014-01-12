@@ -3,7 +3,6 @@ module CapsuleCRM
     include ActiveModel::Validations
     include Virtus
 
-    include CapsuleCRM::Collection
     include CapsuleCRM::Querying::FindAll
     include CapsuleCRM::Persistable
     include CapsuleCRM::Serializable

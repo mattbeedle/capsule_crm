@@ -7,12 +7,11 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
-    include CapsuleCRM::Attributes
-    include CapsuleCRM::Collection
     include CapsuleCRM::Serializable
 
     serializable_config do |config|
-      config.root = :historyItem
+      config.root            = :historyItem
+      config.collection_root = :history
     end
 
     attribute :id, Integer
@@ -38,10 +37,8 @@ module CapsuleCRM
       presence: { if: :belongs_to_required? }
 
     def self._for_party(party_id)
-      init_collection(
-        CapsuleCRM::Connection.
-          get("/api/party/#{party_id}/history")['history'].
-          fetch('historyItem', nil)
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
+        CapsuleCRM::Connection.get("/api/party/#{party_id}/history")
       )
     end
 
@@ -51,17 +48,15 @@ module CapsuleCRM
     end
 
     def self._for_case(case_id)
-      init_collection(
-        CapsuleCRM::Connection.
-          get("/api/kase/#{case_id}/history")['history']['historyItem']
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
+        CapsuleCRM::Connection.get("/api/kase/#{case_id}/history")
       )
     end
 
     def self._for_opportunity(opportunity_id)
-      init_collection(
+      CapsuleCRM::Normalizer.new(self).normalize_collection(
         CapsuleCRM::Connection.
-          get("/api/opportunity/#{opportunity_id}/history")\
-          ['history']['historyItem']
+          get("/api/opportunity/#{opportunity_id}/history")
       )
     end
 
@@ -75,7 +70,7 @@ module CapsuleCRM
     #
     # Returns a CapsuleCRM::History object
     def self.find(id)
-      new CapsuleCRM::Connection.get("/api/history/#{id}")['historyItem']
+      from_capsule_json CapsuleCRM::Connection.get("/api/history/#{id}")
     end
 
     # Public: Set the creator of this history item

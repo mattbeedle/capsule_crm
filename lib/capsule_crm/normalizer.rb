@@ -61,7 +61,8 @@ module CapsuleCRM
     end
 
     def normalize_standard_collection(json)
-      json[collection_root.to_s][root.to_s].map do |singular|
+      return [] unless json[collection_root.to_s][root.to_s]
+      [json[collection_root.to_s][root.to_s]].flatten.map do |singular|
         if attribute_to_assign
           klass.new attribute_to_assign => singular
         else

@@ -1,6 +1,5 @@
 module CapsuleCRM
   class Person < CapsuleCRM::Party
-    include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
     include CapsuleCRM::Serializable
 

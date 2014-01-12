@@ -114,18 +114,6 @@ describe CapsuleCRM::Person do
     it { subject.last_name.should eql('Schmidt') }
   end
 
-  describe '#attributes=' do
-    let(:person) { CapsuleCRM::Person.new }
-
-    before do
-      person.attributes= { firstName: 'Matt', lastName: 'Beedle' }
-    end
-
-    it { person.first_name.should eql('Matt') }
-
-    it { person.last_name.should eql('Beedle') }
-  end
-
   describe '.create' do
     context 'when the person is valid' do
       before do
@@ -313,24 +301,6 @@ describe CapsuleCRM::Person do
       subject { person.persisted? }
 
       it { should be_false }
-    end
-  end
-
-  describe '.init_collection' do
-    subject do
-      CapsuleCRM::Person.init_collection(
-        JSON.parse(
-          File.read('spec/support/all_parties.json')
-        )['parties']['person']
-      )
-    end
-
-    it { should be_a(Array) }
-
-    it { subject.length.should eql(2) }
-
-    it do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Person) }.should be_true
     end
   end
 
