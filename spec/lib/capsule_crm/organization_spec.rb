@@ -10,6 +10,8 @@ describe CapsuleCRM::Organization do
     let(:attributes) { Fabricate.attributes_for(:organization) }
   end
 
+  it_behaves_like 'deletable'
+
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
@@ -126,19 +128,5 @@ describe CapsuleCRM::Organization do
     it { address_json.should have_key('country') }
     it { email_json.should have_key('type') }
     it { email_json.should have_key('emailAddress') }
-  end
-
-  describe '#destroy' do
-    let(:organization) { CapsuleCRM::Organization.new(id: 1) }
-
-    before do
-      stub_request(:delete, /\/api\/party\/#{organization.id}/).
-        to_return(status: 200)
-      organization.destroy
-    end
-
-    it { expect(organization.id).to be_blank }
-
-    it { expect(organization).to_not be_persisted }
   end
 end

@@ -10,6 +10,8 @@ describe CapsuleCRM::Person do
     let(:attributes) { Fabricate.attributes_for(:person) }
   end
 
+  it_behaves_like 'deletable'
+
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))

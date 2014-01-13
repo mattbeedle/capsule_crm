@@ -20,6 +20,8 @@ describe CapsuleCRM::Opportunity do
     let(:party) { Fabricate.build(:person, id: Random.rand(1..10)) }
   end
 
+  it_behaves_like 'deletable'
+
   describe 'validations' do
     subject { described_class.new }
 
@@ -199,21 +201,6 @@ describe CapsuleCRM::Opportunity do
     end
 
     it { subject.party_id.should eql(2) }
-  end
-
-  describe '#destroy' do
-    let(:opportunity) do
-      CapsuleCRM::Opportunity.new(id: 1)
-    end
-
-    before do
-      stub_request(:delete, /.*/).to_return(status: 200)
-      opportunity.destroy
-    end
-
-    it { opportunity.id.should be_blank }
-
-    it { opportunity.should_not be_persisted }
   end
 
   describe '.deleted' do

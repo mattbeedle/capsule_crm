@@ -15,6 +15,7 @@ describe CapsuleCRM::History do
     let(:party) { Fabricate.build(:person, id: Random.rand(1..10)) }
   end
 
+  it_behaves_like 'deletable'
 
   describe 'validations' do
     subject { described_class.new }
@@ -220,18 +221,6 @@ describe CapsuleCRM::History do
 
       its(:creator) { should eql(user) }
     end
-  end
-
-  describe '#destroy' do
-    let(:history) { Fabricate.build(:history, id: 19) }
-    before do
-      stub_request(:delete, /\/api\/history\/#{history.id}$/).
-        to_return(status: 200)
-      history.destroy
-    end
-    subject { history }
-
-    it { should_not be_persisted }
   end
 
   describe '#to_capsule_json' do

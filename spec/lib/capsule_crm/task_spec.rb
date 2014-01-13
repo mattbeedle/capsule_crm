@@ -13,6 +13,8 @@ describe CapsuleCRM::Task do
     let(:attributes) { Fabricate.attributes_for(:task) }
   end
 
+  it_behaves_like 'deletable'
+
   describe 'validations' do
     it { should validate_numericality_of(:id) }
     it { should validate_presence_of(:description) }
@@ -54,17 +56,6 @@ describe CapsuleCRM::Task do
     it { subject.length.should eql(4) }
 
     it { subject.first.description.should eql('Meet with customer') }
-  end
-
-  describe '#destroy' do
-    subject { Fabricate.build(:task, id: 1) }
-
-    before do
-      stub_request(:delete, /\/api\/task\/1$/).to_return(status: 200)
-      subject.destroy
-    end
-
-    it { should_not be_persisted }
   end
 
   # Not really sure what to test here. CapsuleCRM API doesn't actually tell you

@@ -8,6 +8,8 @@ describe CapsuleCRM::Case do
     let(:party) { Fabricate.build(:person, id: Random.rand(1..10)) }
   end
 
+  it_behaves_like 'deletable'
+
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
@@ -71,19 +73,6 @@ describe CapsuleCRM::Case do
     it { should be_a(CapsuleCRM::Case) }
 
     it { subject.name.should eql('Consulting') }
-  end
-
-  describe '#destroy' do
-    let(:party) { CapsuleCRM::Person.new(id: 2) }
-
-    let(:kase) { CapsuleCRM::Case.new(id: 1, party: party, name: 'Test Case') }
-
-    before do
-      stub_request(:delete, /^.*\/api\/kase\/1$/).to_return(status: 200)
-      kase.destroy
-    end
-
-    it { kase.should_not be_persisted }
   end
 
   describe '#to_capsule_json' do
