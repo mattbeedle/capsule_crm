@@ -28,6 +28,13 @@ module CapsuleCRM
         embedded? ? save : record.save
       end
 
+      def create!(attributes = {})
+        record = build(attributes).tap do |r|
+          record_not_saved(r) unless parent.persisted?
+        end
+        embedded? ? save! : record.save!
+      end
+
       def tap
         yield self
         self
@@ -46,6 +53,10 @@ module CapsuleCRM
           target_klass.queryable_options[:plural]
         ].join('/')
         ::CapsuleCRM::Connection.put(path, json)
+      end
+
+      def save!
+        save
       end
 
       def embedded?

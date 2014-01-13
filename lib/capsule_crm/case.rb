@@ -8,6 +8,7 @@ module CapsuleCRM
 
     include CapsuleCRM::Associations
     include CapsuleCRM::Persistence::Persistable
+    include CapsuleCRM::Persistence::Deletable
     include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Serializable
     include CapsuleCRM::Taggable
@@ -30,6 +31,7 @@ module CapsuleCRM
         path
       end
       config.update = lambda { |kase| "kase/#{kase.id}" }
+      config.destroy = lambda { |kase| "kase/#{kase.id}" }
     end
 
     attribute :id, Integer
@@ -47,18 +49,6 @@ module CapsuleCRM
     belongs_to :track, class_name: 'CapsuleCRM::Track'
 
     has_many :tasks, class_name: 'CapsuleCRM::Task', source: :case
-
-    # Public: Deletes this CapsuleCRM::Case from CapsuleCRM
-    #
-    # Examples
-    #
-    # CapsuleCRM::Case.find(1).destroy
-    #
-    # Returns the CapsuleCRM::Case object
-    def destroy
-      self.id = nil if CapsuleCRM::Connection.delete("/api/kase/#{id}")
-      self
-    end
 
     def self._for_track(track)
       raise NotImplementedError.new("There is no way to find cases by trackId in the Capsule API right now")

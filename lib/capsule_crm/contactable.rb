@@ -17,7 +17,7 @@ module CapsuleCRM
       if contacts.is_a?(Hash)
         contacts = CapsuleCRM::Contacts.new(contacts.symbolize_keys)
       end
-      @contacts = contacts
+      @contacts = contacts unless contacts.blank?
     end
 
     def contacts

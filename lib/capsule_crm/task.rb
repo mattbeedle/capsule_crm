@@ -8,6 +8,7 @@ module CapsuleCRM
 
     include CapsuleCRM::Associations
     include CapsuleCRM::Persistence::Persistable
+    include CapsuleCRM::Persistence::Deletable
     include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Serializable
 
@@ -59,11 +60,6 @@ module CapsuleCRM
     def owner=(user)
       user = CapsuleCRM::User.find_by_username(user) if user.is_a?(String)
       @owner = user
-      self
-    end
-
-    def destroy
-      self.id = nil if CapsuleCRM::Connection.delete("/api/task/#{id}")
       self
     end
 

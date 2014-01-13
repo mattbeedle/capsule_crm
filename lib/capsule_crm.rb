@@ -55,4 +55,10 @@ module CapsuleCRM
     yield(self.configuration)
     self.configuration
   end
+
+  def self.log(message, level = :debug)
+    unless self.configuration.perform_logging == false
+      self.configuration.logger.send(level, message)
+    end
+  end
 end

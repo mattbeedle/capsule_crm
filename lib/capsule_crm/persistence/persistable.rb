@@ -60,11 +60,11 @@ module CapsuleCRM
       end
 
       def build_create_path
-        "/api/#{self.connection_options.create.call(self)}"
+        "/api/#{self.class.connection_options.create.call(self)}"
       end
 
       def build_update_path
-        "/api/#{self.connection_options.update.call(self)}"
+        "/api/#{self.class.connection_options.update.call(self)}"
       end
 
       def update_record

@@ -8,6 +8,7 @@ module CapsuleCRM
 
     include CapsuleCRM::Associations
     include CapsuleCRM::Persistence::Persistable
+    include CapsuleCRM::Persistence::Deletable
     include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Querying::FindOne
     include CapsuleCRM::Serializable
@@ -87,18 +88,6 @@ module CapsuleCRM
         user = CapsuleCRM::User.find_by_username(user)
       end
       @creator = user
-      self
-    end
-
-    # Public: Delete this history item from capsule crm.
-    #
-    # Examples
-    #
-    # CapsuleCRM::History.find(1).destroy
-    #
-    # Returns the CapsuleCRM::History object
-    def destroy
-      self.id = nil if CapsuleCRM::Connection.delete("/api/history/#{id}")
       self
     end
 

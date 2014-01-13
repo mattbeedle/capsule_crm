@@ -9,6 +9,7 @@ module CapsuleCRM
 
     include CapsuleCRM::Contactable
     include CapsuleCRM::Persistence::Persistable
+    include CapsuleCRM::Persistence::Deletable
     include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Querying::FindOne
     include CapsuleCRM::Serializable
@@ -20,6 +21,11 @@ module CapsuleCRM
     serializable_config do |config|
       config.root               = :organisation
       config.additional_methods = [:contacts]
+    end
+
+    persistable_config do |config|
+      config.create = lambda { |org| "organisation" }
+      config.destroy = lambda { |org| "party/#{org.id}" }
     end
 
     attribute :id,    Integer
@@ -56,18 +62,6 @@ module CapsuleCRM
     def self.all(options = {})
       CapsuleCRM::Party.all(options).
         delete_if { |item| !item.is_a?(CapsuleCRM::Organization) }
-    end
-
-    # Public: Delete the organization in capsule
-    #
-    # Examples
-    #
-    # organization.destroy
-    #
-    # Return the CapsuleCRM::Organization
-    def destroy
-      self.id = nil if CapsuleCRM::Connection.delete("/api/party/#{id}")
-      self
     end
   end
 end

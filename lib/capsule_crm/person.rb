@@ -2,6 +2,7 @@ module CapsuleCRM
   class Person < CapsuleCRM::Party
     include CapsuleCRM::Contactable
     include CapsuleCRM::Persistence::Persistable
+    include CapsuleCRM::Persistence::Deletable
     include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Querying::FindOne
     include CapsuleCRM::Serializable
@@ -17,6 +18,11 @@ module CapsuleCRM
 
     queryable_config do |config|
       config.singular = :party
+    end
+
+    persistable_config do |config|
+      config.create = lambda { |person| "person" }
+      config.destroy = lambda { |person| "party/#{person.id}" }
     end
 
     attribute :id, Integer
@@ -67,11 +73,6 @@ module CapsuleCRM
     def self.all(options = {})
       CapsuleCRM::Party.all(options).
         delete_if { |item| !item.is_a?(CapsuleCRM::Person) }
-    end
-
-    def destroy
-      self.id = nil if CapsuleCRM::Connection.delete("/api/party/#{id}")
-      self
     end
 
     private

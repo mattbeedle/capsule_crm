@@ -60,7 +60,7 @@ module CapsuleCRM
       @excluded_association_keys ||=
         if object.class.respond_to?(:belongs_to_associations)
           object.class.belongs_to_associations.map do |name, association|
-          association.foreign_key if association.inverse && association.inverse.embedded
+          association.foreign_key if association.inverse.try(:embedded)
         end.compact
         else
           []
@@ -84,7 +84,9 @@ module CapsuleCRM
           end
         end
         additional_methods.each do |method|
-          attrs.merge!(method => object.send(method).to_capsule_json)
+          unless object.send(method).blank?
+            attrs.merge!(method => object.send(method).to_capsule_json)
+          end
         end
         object.class.belongs_to_associations.each do |name, association|
           attrs.merge!(

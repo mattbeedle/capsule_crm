@@ -9,6 +9,7 @@ module CapsuleCRM
     include CapsuleCRM::Associations
     include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Persistence::Persistable
+    include CapsuleCRM::Persistence::Deletable
     include CapsuleCRM::Serializable
 
     serializable_config do |config|
@@ -80,18 +81,6 @@ module CapsuleCRM
       ).normalize_collection(
         CapsuleCRM::Connection.get('/api/opportunity/deleted', since: since)
       )
-    end
-
-    # Public: Delete the opportunity in capsule
-    #
-    # Examples
-    #
-    # opportunity.destroy
-    #
-    # Return the CapsuleCRM::Opportunity
-    def destroy
-      self.id = nil if CapsuleCRM::Connection.delete("/api/opportunity/#{id}")
-      self
     end
   end
 end
