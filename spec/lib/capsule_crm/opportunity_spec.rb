@@ -22,6 +22,8 @@ describe CapsuleCRM::Opportunity do
 
   it_behaves_like 'deletable'
 
+  it_behaves_like 'listable', File.read('spec/support/all_opportunities.json'), 1
+
   describe 'validations' do
     subject { described_class.new }
 
@@ -145,22 +147,7 @@ describe CapsuleCRM::Opportunity do
     end
   end
 
-  describe '.all' do
-    before do
-      stub_request(:get, /\/api\/opportunity$/).
-        to_return(body: File.read('spec/support/all_opportunities.json'))
-    end
-
-    subject { CapsuleCRM::Opportunity.all }
-
-    it { should be_a(Array) }
-
-    it { subject.length.should eql(1) }
-
-    it 'should only contain people' do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Opportunity) }.should be_true
-    end
-  end
+  it_behaves_like 'listable', File.read('spec/support/all_opportunities.json'), 1
 
   describe '.find' do
     before do

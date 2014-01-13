@@ -3,6 +3,8 @@ require 'spec_helper'
 describe CapsuleCRM::Party do
   before { configure }
 
+  it_behaves_like 'listable', File.read('spec/support/all_parties.json'), 3
+
   describe '.find' do
     context 'when finding an organization' do
       before do
@@ -61,20 +63,5 @@ describe CapsuleCRM::Party do
         expect(subject.websites.first.web_address).to eql('www.google.com')
       end
     end
-  end
-
-  describe '.all' do
-    before do
-      stub_request(:get, /\/api\/party$/).
-        to_return(body: File.read('spec/support/all_parties.json'))
-    end
-
-    subject { CapsuleCRM::Party.all }
-
-    it { subject.length.should eql(3) }
-
-    it { subject.first.should be_a(CapsuleCRM::Organization) }
-
-    it { subject.last.should be_a(CapsuleCRM::Person) }
   end
 end

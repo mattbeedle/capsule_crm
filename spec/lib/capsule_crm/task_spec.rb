@@ -15,6 +15,8 @@ describe CapsuleCRM::Task do
 
   it_behaves_like 'deletable'
 
+  it_behaves_like 'listable', File.read('spec/support/all_tasks.json'), 4
+
   describe 'validations' do
     it { should validate_numericality_of(:id) }
     it { should validate_presence_of(:description) }
@@ -37,25 +39,6 @@ describe CapsuleCRM::Task do
     it { subject.detail.should eql('Meeting at Coffee shop') }
     it { subject.owner.should be_a(CapsuleCRM::User) }
     it { subject.party.should be_a(CapsuleCRM::Person) }
-  end
-
-  describe '.all' do
-    before do
-      stub_request(:get, /\/api\/tasks$/).
-        to_return(body: File.read('spec/support/all_tasks.json'))
-    end
-
-    subject { CapsuleCRM::Task.all }
-
-    it { should be_a(Array) }
-
-    it do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Task) }.should be_true
-    end
-
-    it { subject.length.should eql(4) }
-
-    it { subject.first.description.should eql('Meet with customer') }
   end
 
   # Not really sure what to test here. CapsuleCRM API doesn't actually tell you
