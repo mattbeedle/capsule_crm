@@ -2,7 +2,6 @@ class CapsuleCRM::Party
   include Virtus
 
   include CapsuleCRM::Associations
-  include CapsuleCRM::Persistable
   include CapsuleCRM::Querying::Findable
   include CapsuleCRM::Serializable
   include CapsuleCRM::Taggable
@@ -11,7 +10,7 @@ class CapsuleCRM::Party
     config.root = [:organisation, :person]
   end
 
-  persistable_config do |config|
+  queryable_config do |config|
     config.plural = :party
   end
 

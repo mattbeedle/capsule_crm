@@ -3,11 +3,11 @@ module CapsuleCRM
     include ActiveModel::Validations
     include Virtus
 
+    include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Querying::FindAll
-    include CapsuleCRM::Persistable
     include CapsuleCRM::Serializable
 
-    persistable_config do |config|
+    queryable_config do |config|
       config.plural = 'opportunity/milestones'
     end
 

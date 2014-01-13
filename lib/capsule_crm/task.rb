@@ -7,9 +7,13 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
-    include CapsuleCRM::Persistable
+    include CapsuleCRM::Persistence::Persistable
     include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Serializable
+
+    persistable_config do |config|
+      config.create = lambda { |task| task.create_url }
+    end
 
     attribute :id, Integer
     attribute :due_date, Date
@@ -58,40 +62,6 @@ module CapsuleCRM
       self
     end
 
-    def self.create(attributes = {})
-      new(attributes).tap(&:save)
-    end
-
-    def self.create!(attributes = {})
-      new(attributes).tap(&:save!)
-    end
-
-    def update_attributes(attributes = {})
-      self.attributes = attributes
-      save
-    end
-
-    def update_attributes!(attributes = {})
-      self.attributes = attributes
-      save!
-    end
-
-    def save
-      if valid?
-        new_record? ? create_record : update_record
-      else
-        false
-      end
-    end
-
-    def save!
-      if valid?
-        save
-      else
-        raise CapsuleCRM::Errors::RecordInvalid.new(self)
-      end
-    end
-
     def destroy
       self.id = nil if CapsuleCRM::Connection.delete("/api/task/#{id}")
       self
@@ -113,38 +83,16 @@ module CapsuleCRM
         get('/api/task/categories')['taskCategories']['taskCategory']
     end
 
-    def new_record?
-      !id
-    end
-
-    def persisted?
-      !new_record?
-    end
-
-    private
-
-    def create_record
-      self.attributes = CapsuleCRM::Connection.post(
-        create_url, to_capsule_json
-      )
-      self
-    end
-
     def create_url
       if party_id
-        "/api/party/#{party_id}/task"
+        "party/#{party_id}/task"
       elsif opportunity_id
-        "/api/opportunity/#{opportunity_id}/task"
+        "opportunity/#{opportunity_id}/task"
       elsif case_id
-        "/api/kase/#{case_id}/task"
+        "kase/#{case_id}/task"
       else
-        '/api/task'
+        'task'
       end
-    end
-
-    def update_record
-      CapsuleCRM::Connection.put("/api/task/#{id}", to_capsule_json)
-      self
     end
   end
 end

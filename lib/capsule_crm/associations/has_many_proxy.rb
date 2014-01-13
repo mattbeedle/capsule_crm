@@ -42,8 +42,8 @@ module CapsuleCRM
       def save
         json = to_capsule_json(target_klass.serializable_options.collection_root)
         path = [
-          '/api', parent.class.connection_options[:plural], parent.id,
-          target_klass.connection_options[:plural]
+          '/api', parent.class.queryable_options[:plural], parent.id,
+          target_klass.queryable_options[:plural]
         ].join('/')
         ::CapsuleCRM::Connection.put(path, json)
       end

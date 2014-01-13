@@ -3,9 +3,9 @@ require 'spec_helper'
 class Parent
   include Virtus
   include CapsuleCRM::Associations
-  include CapsuleCRM::Persistable
+  include CapsuleCRM::Querying::Configuration
 
-  persistable_config do |config|
+  queryable_config do |config|
     config.plural = :people
   end
 
@@ -23,10 +23,10 @@ end
 class Child
   include Virtus
   include CapsuleCRM::Associations
-  include CapsuleCRM::Persistable
+  include CapsuleCRM::Querying::Configuration
   include CapsuleCRM::Serializable
 
-  persistable_config do |config|
+  queryable_config do |config|
     config.plural = :children
   end
 

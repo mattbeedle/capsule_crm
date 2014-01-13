@@ -7,7 +7,7 @@ module CapsuleCRM
         def all(options = {})
           CapsuleCRM::Normalizer.new(self).normalize_collection(
             CapsuleCRM::Connection.
-            get("/api/#{connection_options.plural}", options)
+            get("/api/#{queryable_options.plural}", options)
           )
         end
       end

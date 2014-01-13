@@ -3,7 +3,7 @@ module CapsuleCRM
     include Virtus
 
     include CapsuleCRM::Serializable
-    include CapsuleCRM::Persistable
+    include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Querying::FindAll
 
     serializable_config do |config|
