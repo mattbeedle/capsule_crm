@@ -9,6 +9,10 @@ describe CapsuleCRM::Task do
       to_return(body: File.read('spec/support/person.json'))
   end
 
+  it_behaves_like 'persistable', 'https://sample.capsulecrm.com/api/task/91', 91 do
+    let(:attributes) { Fabricate.attributes_for(:task) }
+  end
+
   describe 'validations' do
     it { should validate_numericality_of(:id) }
     it { should validate_presence_of(:description) }
@@ -50,213 +54,6 @@ describe CapsuleCRM::Task do
     it { subject.length.should eql(4) }
 
     it { subject.first.description.should eql('Meet with customer') }
-  end
-
-  describe '.create' do
-    let(:location)  { 'https://sample.capsulecrm.com/api/task/59' }
-
-    context 'when it is valid' do
-      before do
-        stub_request(:post, /\/api\/task$/).
-          to_return(headers: { 'Location' => location })
-      end
-
-      subject { CapsuleCRM::Task.create Fabricate.attributes_for(:task) }
-
-      it { should be_a(CapsuleCRM::Task) }
-
-      it { should be_persisted }
-    end
-
-    context 'when it belongs to a party' do
-      before do
-        stub_request(:post, /\/api\/party\/#{party.id}\/task$/).
-          to_return(headers: { 'Location' => location })
-      end
-
-      let(:party) { Fabricate.build(:person, id: 1) }
-
-      subject do
-        CapsuleCRM::Task.create(
-          Fabricate.attributes_for(:task, party: party)
-        )
-      end
-
-      it { should be_a(CapsuleCRM::Task) }
-
-      it { should be_persisted }
-    end
-
-    context 'when it belongs to a opportunity' do
-      before do
-        stub_request(:post, /\/api\/opportunity\/#{opportunity.id}\/task$/).
-          to_return(headers: { 'Location' => location })
-      end
-      let(:opportunity) { Fabricate.build(:opportunity, id: 2) }
-      let(:task_attributes) do
-        Fabricate.attributes_for(:task).merge(opportunity: opportunity)
-      end
-      subject { CapsuleCRM::Task.create task_attributes }
-
-      it { should be_a(CapsuleCRM::Task) }
-      it { should be_persisted }
-    end
-
-    context 'when it belongs to a case' do
-      before do
-        stub_request(:post, /\/api\/kase\/#{kase.id}\/task$/).
-          to_return(headers: { 'Location' => location })
-      end
-      let(:kase) { Fabricate.build(:case, id: 5) }
-      let(:task_attributes) do
-        Fabricate.attributes_for(:task).merge(case: kase)
-      end
-      subject { CapsuleCRM::Task.create(task_attributes) }
-
-      it { should be_a(CapsuleCRM::Task) }
-      it { should be_persisted }
-    end
-
-    context 'when it is not valid' do
-      subject { CapsuleCRM::Task.create }
-
-      it { should_not be_persisted }
-    end
-  end
-
-  describe '.create!' do
-    context 'when it is valid' do
-      before do
-        location = 'https://sample.capsulecrm.com/api/task/59'
-        stub_request(:post, /\/api\/task$/).
-          to_return(headers: { 'Location' => location })
-      end
-
-      subject { CapsuleCRM::Task.create! Fabricate.attributes_for(:task) }
-
-      it { should be_a(CapsuleCRM::Task) }
-
-      it { should be_persisted }
-    end
-
-    context 'when it is not valid' do
-      subject { CapsuleCRM::Task.create! }
-
-      it do
-        expect { subject }.to raise_error(CapsuleCRM::Errors::RecordInvalid)
-      end
-    end
-  end
-
-  describe '#save' do
-    let(:task) { Fabricate.build(:task) }
-
-    context 'when it is a new record' do
-      before do
-        location = 'https://sample.capsulecrm.com/api/task/59'
-        stub_request(:post, /\/api\/task$/).
-          to_return(headers: { 'Location' => location })
-      end
-
-      subject { task.save }
-
-      it { subject.id.should eql(59) }
-
-      it { should be_persisted }
-    end
-
-    context 'when it is an existing record' do
-      before do
-        task.id = 12
-        stub_request(:put, /\/api\/task\/12$/).to_return(status: 200)
-      end
-
-      subject { task.save }
-
-      it { should be_persisted }
-    end
-
-    context 'when it is invalid' do
-      it { subject.save.should be_false }
-    end
-  end
-
-  describe '#save!' do
-    let(:task) { Fabricate.build(:task) }
-
-    context 'when it is a new record' do
-      before do
-        location = 'https://sample.capsulecrm.com/api/task/59'
-        stub_request(:post, /\/api\/task$/).
-          to_return(headers: { 'Location' => location })
-      end
-
-      subject { task.save! }
-
-      it { subject.id.should eql(59) }
-
-      it { should be_persisted }
-    end
-
-    context 'when it is an existing record' do
-      before do
-        task.id = 12
-        stub_request(:put, /\/api\/task\/12$/).to_return(status: 200)
-      end
-
-      subject { task.save! }
-
-      it { should be_persisted }
-    end
-
-    context 'when it is invalid' do
-      it do
-        expect { subject.save! }.
-          to raise_error(CapsuleCRM::Errors::RecordInvalid)
-      end
-    end
-  end
-
-  describe '#update_attributes' do
-    context 'when it is valid' do
-      let(:task) { Fabricate.build(:task, id: 1) }
-
-      subject { task.update_attributes description: Faker::Lorem.sentence }
-
-      before { stub_request(:put, /\/api\/task\/1$/).to_return(status: 200) }
-
-      it { should be_persisted }
-    end
-
-    context 'when it is not valid' do
-      let(:task) { CapsuleCRM::Task.new(id: 1) }
-
-      subject { task.update_attributes }
-
-      it { should be_false }
-    end
-  end
-
-  describe '#update_attributes!' do
-    context 'when it is valid' do
-      let(:task) { Fabricate.build(:task, id: 1) }
-
-      subject { task.update_attributes! description: Faker::Lorem.sentence }
-
-      before { stub_request(:put, /\/api\/task\/1$/).to_return(status: 200) }
-
-      it { should be_persisted }
-    end
-
-    context 'when it is not valid' do
-      let(:task) { CapsuleCRM::Task.new(id: 1) }
-
-      subject { task.update_attributes! }
-
-      it do
-        expect { subject }.to raise_error(CapsuleCRM::Errors::RecordInvalid)
-      end
-    end
   end
 
   describe '#destroy' do
@@ -301,7 +98,6 @@ describe CapsuleCRM::Task do
 
   describe '.categories' do
     subject { CapsuleCRM::Task.categories }
-
     before do
       stub_request(:get, /\/api\/task\/categories$/).
         to_return(body: File.read('spec/support/task_categories.json'))
@@ -318,14 +114,11 @@ describe CapsuleCRM::Task do
     subject { task.to_capsule_json }
 
     it { expect(subject.keys).to include('task') }
-
     it { expect(subject['task']['description']).to eql(task.description) }
-
     it { expect(subject['task']['dueDate']).to eql(task.due_date.to_s) }
 
     context 'when it has an owner' do
       let(:owner) { CapsuleCRM::User.new(username: 'matt.beedle') }
-
       before { task.owner = owner }
 
       it { expect(subject['task']['owner']).to eql(task.owner.username) }

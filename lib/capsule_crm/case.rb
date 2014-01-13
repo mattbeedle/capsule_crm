@@ -26,7 +26,7 @@ module CapsuleCRM
 
     persistable_config do |config|
       config.create = lambda do |kase|
-        path = "party/#{kase.party.id}/kase"
+        path = "party/#{kase.party.try(:id)}/kase"
         path += "?trackId=#{kase.track.id}" if kase.track
         path
       end

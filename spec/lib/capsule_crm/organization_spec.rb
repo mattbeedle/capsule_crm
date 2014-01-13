@@ -6,6 +6,10 @@ describe CapsuleCRM::Organization do
 
   it_should_behave_like 'contactable'
 
+  it_behaves_like 'persistable', 'https://sample.capsulecrm.com/api/organisation/13', 13 do
+    let(:attributes) { Fabricate.attributes_for(:organization) }
+  end
+
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
@@ -122,30 +126,6 @@ describe CapsuleCRM::Organization do
     it { address_json.should have_key('country') }
     it { email_json.should have_key('type') }
     it { email_json.should have_key('emailAddress') }
-  end
-
-  describe '.create' do
-    pending
-  end
-
-  describe '.create!' do
-    pending
-  end
-
-  describe '#update_attributes' do
-    pending
-  end
-
-  describe '#update_attributes!' do
-    pending
-  end
-
-  describe '#save' do
-    pending
-  end
-
-  describe '#save!' do
-    pending
   end
 
   describe '#destroy' do

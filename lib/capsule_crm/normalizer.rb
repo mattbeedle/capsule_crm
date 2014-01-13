@@ -1,12 +1,25 @@
 module CapsuleCRM
   class Normalizer
-
     attr_reader :klass, :options
 
     def initialize(klass, options = {})
       @klass   = klass
       @options = options
     end
+
+    def normalize(attrs = {})
+      subclasses? ? normalize_subclass(attrs) : normalize_single(attrs)
+    end
+
+    def normalize_collection(attrs)
+      if subclasses?
+        normalize_subclass_collection(attrs)
+      else
+        normalize_standard_collection(attrs)
+      end
+    end
+
+    private
 
     def root
       @root ||= options[:root] || klass.serializable_options.root
@@ -21,10 +34,6 @@ module CapsuleCRM
       @attribute_to_assign ||= klass.serializable_options.attribute_to_assign
     end
 
-    def normalize(attrs = {})
-      subclasses? ? normalize_subclass(attrs) : normalize_single(attrs)
-    end
-
     def normalize_subclass(attrs)
       hash_helper.underscore_keys!(attrs[attrs.keys.first])
       klass.child_classes[attrs.keys.first].constantize.new(
@@ -37,34 +46,26 @@ module CapsuleCRM
       klass.new(attrs[root.to_s])
     end
 
-    def normalize_collection(json)
-      if subclasses?
-        normalize_subclass_collection(json)
-      else
-        normalize_standard_collection(json)
-      end
-    end
-
-    def normalize_subclass_collection(json)
+    def normalize_subclass_collection(attrs)
       [].tap do |objects|
-        json[collection_root.to_s].each do |key, value|
+        attrs[collection_root.to_s].each do |key, value|
           next unless klass.child_classes.keys.include?(key)
           if value.is_a?(Hash)
             objects << klass.child_classes[key].constantize.
               new(hash_helper.underscore_keys(value))
           else
-            value.each do |attrs|
+            value.each do |attributes|
               objects << klass.child_classes[key].constantize.
-                new(hash_helper.underscore_keys(attrs))
+                new(hash_helper.underscore_keys(attributes))
             end
           end
         end
       end
     end
 
-    def normalize_standard_collection(json)
-      return [] unless json[collection_root.to_s][root.to_s]
-      [json[collection_root.to_s][root.to_s]].flatten.map do |singular|
+    def normalize_standard_collection(attrs)
+      return [] unless attrs[collection_root.to_s][root.to_s]
+      [attrs[collection_root.to_s][root.to_s]].flatten.map do |singular|
         if attribute_to_assign
           klass.new attribute_to_assign => singular
         else

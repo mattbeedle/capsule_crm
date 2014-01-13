@@ -22,7 +22,7 @@ module CapsuleCRM
 
     persistable_config do |config|
       config.create = lambda do |opportunity|
-        path = "party/#{opportunity.party.id}/opportunity"
+        path = "party/#{opportunity.party.try(:id)}/opportunity"
         path += "?trackId=#{opportunity.track_id}" if opportunity.track_id
         path
       end

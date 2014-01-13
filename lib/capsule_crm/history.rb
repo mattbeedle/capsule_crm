@@ -99,7 +99,7 @@ module CapsuleCRM
     end
 
     def belongs_to_id
-      (party || kase || opportunity).id
+      (party || kase || opportunity).try(:id)
     end
 
     private
