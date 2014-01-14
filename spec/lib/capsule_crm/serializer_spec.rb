@@ -10,23 +10,40 @@ class SerializableTest
   attribute :something, Date
 end
 
+class SerializableInverse
+  include Virtus
+  include CapsuleCRM::Associations
+end
+
 describe CapsuleCRM::Serializer do
   describe '#serialize' do
     let(:options) do
       {}
     end
-    let(:serializer) { described_class.new(object, options) }
+    let(:serializer) { described_class.new(options) }
     let(:object) do
       SerializableTest.new(
         id: Random.rand(1..10), name: Faker::Lorem.word,
         description: Faker::Lorem.word
       )
     end
-    subject { serializer.serialize }
+    subject { serializer.serialize(object) }
 
     context 'without an options' do
       it 'should not include the ID' do
         expect(subject['serializabletest'].keys).not_to include('id')
+      end
+    end
+
+    context 'when include_root is false' do
+      before do
+        options.merge!(include_root: false)
+      end
+
+      it 'should not include the root' do
+        expect(subject).to eql({
+          'name' => object.name, 'description' => object.description
+        })
       end
     end
 
@@ -65,7 +82,11 @@ describe CapsuleCRM::Serializer do
     context 'when there are belongs to associations' do
       before do
         SerializableTest.send(
-          :belongs_to, :person, class_name: CapsuleCRM::Person
+          :belongs_to, :person, class_name: 'SerializableTest'
+        )
+        SerializableTest.send(
+          :has_many, :things, class_name: 'SerializableTest',
+          source: :person
         )
         object.person = person
       end
@@ -80,7 +101,7 @@ describe CapsuleCRM::Serializer do
       context 'with a serializable key' do
         before do
           SerializableTest.send(
-            :belongs_to, :person, class_name: CapsuleCRM::Person,
+            :belongs_to, :person, class_name: 'CapsuleCRM::Person',
             serializable_key: 'monkeys'
           )
         end

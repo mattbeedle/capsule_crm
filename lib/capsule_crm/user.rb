@@ -7,6 +7,9 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
+    include CapsuleCRM::Querying::Configuration
+    include CapsuleCRM::Querying::FindAll
+    include CapsuleCRM::Serializable
 
     attribute :username, String
     attribute :name, String
@@ -15,21 +18,6 @@ module CapsuleCRM
     attribute :logged_in, Boolean
 
     belongs_to :party, class_name: 'CapsuleCRM::Party'
-
-    # Public: Retrieve all users from CapsuleCRM
-    #
-    # Examples:
-    #
-    # CapsuleCRM::User.all
-    #
-    # Returns a CapsuleCRM::ResultsProxy of CapsuleCRM::User objects
-    def self.all
-      CapsuleCRM::ResultsProxy.new(
-        CapsuleCRM::Connection.get('/api/users')['users']['user'].map do |item|
-          new item
-        end
-      )
-    end
 
     def id
       username

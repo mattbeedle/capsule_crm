@@ -7,7 +7,7 @@ describe CapsuleCRM::CustomField do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
     stub_request(:get, /\/api\/opportunity\/milestones$/).
-      to_return(body: File.read('spec/support/milestones.json'))
+      to_return(body: File.read('spec/support/all_milestones.json'))
   end
 
   describe 'validations' do
@@ -41,27 +41,6 @@ describe CapsuleCRM::CustomField do
     end
   end
 
-  describe '.create' do
-    context 'when it belongs to a party' do
-      let(:organization) { Fabricate.build(:organization, id: 1) }
-      let(:location) do
-        'https://sample.capsulecrm.com/api/party/#{organization.id}/customfields'
-      end
-      subject do
-        CapsuleCRM::CustomField.create(
-          id: 100, tag: 'The tag', label: 'A field', text: 'Some text',
-          date: Date.today, boolean: true, party: organization
-        )
-      end
-      before do
-        stub_request(:post, /\/api\/party\/#{organization.id}\/customfields$/).
-          to_return(headers: { 'Location' => location})
-      end
-
-      it { expect(subject.id).to eql(100) }
-    end
-  end
-
   describe '#to_capsule_json' do
     let(:custom_field) { Fabricate.build(:custom_field) }
     subject { custom_field.to_capsule_json }
@@ -71,11 +50,7 @@ describe CapsuleCRM::CustomField do
     end
 
     it 'should have a root element of "customField"' do
-      expect(subject.keys.first).to eql('customFields')
-    end
-
-    it 'should have an element named "customField"' do
-      expect(subject['customFields'].keys.first).to eql('customField')
+      expect(subject.keys.first).to eql('customField')
     end
   end
 end

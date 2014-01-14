@@ -1,11 +1,28 @@
 module CapsuleCRM
   class Person < CapsuleCRM::Party
-    include CapsuleCRM::Collection
     include CapsuleCRM::Contactable
+    include CapsuleCRM::Persistence::Persistable
+    include CapsuleCRM::Persistence::Deletable
+    include CapsuleCRM::Querying::Configuration
+    include CapsuleCRM::Serializable
 
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::Validations
+
+    serializable_config do |config|
+      config.collection_root    = :parties
+      config.additional_methods = [:contacts]
+    end
+
+    queryable_config do |config|
+      config.singular = :party
+    end
+
+    persistable_config do |config|
+      config.create = lambda { |person| "person" }
+      config.destroy = lambda { |person| "party/#{person.id}" }
+    end
 
     attribute :id, Integer
     attribute :title
@@ -15,23 +32,11 @@ module CapsuleCRM
     attribute :about
     attribute :organisation_name
 
-    belongs_to :organization, class_name: 'CapsuleCRM::Organization',
-      foreign_key: :organisation_id
-
-    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField',
-      source: :party
+    belongs_to :organization, foreign_key: :organisation_id
 
     validates :id, numericality: { allow_blank: true }
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
-
-    def self._for_organization(organization_id)
-      init_collection(
-        CapsuleCRM::Connection.get(
-          "/api/party/#{organization_id}/people"
-        )['parties']['person']
-      )
-    end
 
     # Public: Get all people from Capsule. The list can be restricted
     # and/or paginated with various query parameters sent through the options
@@ -59,187 +64,7 @@ module CapsuleCRM
         delete_if { |item| !item.is_a?(CapsuleCRM::Person) }
     end
 
-    # Public: Create a new person in capsulecrm
-    #
-    # attributes  - The Hash of person attributes (default: {}):
-    #               :first_name         - The String first name
-    #               :last_name          - The String last name
-    #               :job_title          - The String job title
-    #               :about              - The String information about the person
-    #               :organisation_name  - The String organisation name. If now
-    #               :organisation_id is supplied, then a new one will be created
-    #               with this name
-    #               :organisation_id    - The Integer ID of the organisation this
-    #               person belongs to
-    #
-    # Examples
-    #
-    # CapsuleCRM::Person.create(first_name: 'Matt', last_name: 'Beedle')
-    #
-    # Returns a CapsuleCRM::Person
-    def self.create(attributes = {})
-      new(attributes).tap(&:save)
-    end
-
-    # Public: Create a new person in capsulecrm and raise a
-    # CapsuleCRM::Errors::InvalidRecord error if not possible
-    #
-    # attributes  - The Hash of person attributes (default: {}):
-    #               :first_name         - The String first name
-    #               :last_name          - The String last name
-    #               :job_title          - The String job title
-    #               :about              - The String information about the person
-    #               :organisation_name  - The String organisation name. If now
-    #               :organisation_id is supplied, then a new one will be created
-    #               with this name
-    #               :organisation_id    - The Integer ID of the organisation this
-    #               person belongs to
-    #
-    # Examples
-    #
-    # CapsuleCRM::Person.create!(first_name: 'Matt', last_name: 'Beedle')
-    #
-    # Returns a CapsuleCRM
-    def self.create!(attributes = {})
-      new(attributes).tap(&:save!)
-    end
-
-    # Public: If the person already exists in capsule then update them,
-    # otherwise create a new person
-    #
-    # Examples
-    #
-    # person = CapsuleCRM::Person.new(first_name: 'Matt')
-    # person.save
-    #
-    # person = CapsuleCRM::Person.find(1)
-    # person.first_name = 'Matt'
-    # person.save
-    #
-    # Returns a CapsuleCRM::Person
-    def save
-      if valid?
-        new_record? ? create_record : update_record
-      else
-        false
-      end
-    end
-
-    # Public: If the person already exists in capsule then update them,
-    # otherwise create a new person. If the person is not valid then a
-    # CapsuleCRM::Errors::RecordInvalid exception is raised
-    #
-    # Examples
-    #
-    # person = CapsuleCRM::Person.new(first_name: 'Matt')
-    # person.save
-    #
-    # person = CapsuleCRM::Person.find(1)
-    # person.first_name = 'Matt'
-    # person.save
-    #
-    # Returns a CapsuleCRM::Person
-    def save!
-      if valid?
-        new_record? ? create_record : update_record
-      else
-        raise CapsuleCRM::Errors::RecordInvalid.new(self)
-      end
-    end
-
-    # Public: Update the person in capsule
-    #
-    # attributes  - The Hash of person attributes (default: {}):
-    #               :first_name         - The String first name
-    #               :last_name          - The String last name
-    #               :job_title          - The String job title
-    #               :about              - The String information about the person
-    #               :organisation_name  - The String organisation name
-    #               :organisation_id    - The String organisation id
-    #
-    # Examples
-    #
-    # person = CapsuleCRM::Person.find(1)
-    # person.update_attributes first_name: 'Matt', last_name: 'Beedle'
-    #
-    # Returns a CapsuleCRM::Person
-    def update_attributes(attributes = {})
-      self.attributes = attributes
-      save
-    end
-
-    # Public: Update the person in capsule. If the person is not valid then a
-    # CapsuleCRM::Errors::RecordInvalid exception will be raised
-    #
-    # attributes  - The Hash of person attributes (default: {}):
-    #               :first_name         - The String first name
-    #               :last_name          - The String last name
-    #               :job_title          - The String job title
-    #               :about              - The String information about the person
-    #               :organisation_name  - The String organisation name
-    #               :organisation_id    - The String organisation id
-    #
-    # Examples
-    #
-    # person = CapsuleCRM::Person.find(1)
-    # person.update_attributes first_name: 'Matt', last_name: 'Beedle'
-    #
-    # Returns a CapsuleCRM::Person
-    def update_attributes!(attributes = {})
-      self.attributes = attributes
-      save!
-    end
-
-    def destroy
-      self.id = nil if CapsuleCRM::Connection.delete("/api/party/#{id}")
-      self
-    end
-
-    # Public: Determine whether this CapsuleCRM::Person is a new record or not
-    #
-    # Returns a Boolean
-    def new_record?
-      !id
-    end
-
-    # Public: Determine whether or not this CapsuleCRM::Person has already been
-    # persisted to capsulecrm
-    #
-    # Returns a Boolean
-    def persisted?
-      !new_record?
-    end
-
-    # Public: Build a hash of attributes and merge in the attributes for the
-    # contact information
-    #
-    # Examples
-    #
-    # person.to_capsule_json
-    #
-    # Returns a Hash
-    def to_capsule_json
-      serializer.serialize
-    end
-
     private
-
-    def serializer
-      @serializer ||= CapsuleCRM::Serializer.
-        new(self, additional_methods: [:contacts])
-    end
-
-    def create_record
-      self.attributes = CapsuleCRM::Connection.post(
-        '/api/person', to_capsule_json
-      )
-      self
-    end
-
-    def update_record
-      CapsuleCRM::Connection.put("/api/person/#{id}", to_capsule_json)
-      self
-    end
 
     # Private: Determines whether the person first name is required. Either the
     # first or the last name is always required

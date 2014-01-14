@@ -6,20 +6,14 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
-    attribute :code, String
+    include CapsuleCRM::Querying::Configuration
+    include CapsuleCRM::Querying::FindAll
+    include CapsuleCRM::Serializable
 
-    # Public: Retrieve a list of all currencies in Capsule
-    #
-    # Examples
-    #
-    # CapsuleCRM::Currency.all
-    #
-    # Returns an Array of CapsuleCRM::Currency objects
-    def self.all
-      CapsuleCRM::Connection.
-        get('/api/currencies')['currencies']['currency'].map do |currency_code|
-        new code: currency_code
-      end
+    serializable_config do |config|
+      config.attribute_to_assign = :code
     end
+
+    attribute :code, String
   end
 end

@@ -27,8 +27,11 @@ module CapsuleCRM
     private
 
     def self.request(method, path, params)
+      CapsuleCRM.log "CapsuleCRM: #{method.upcase} #{path} with #{params}"
       faraday.send(method, path, params) do |req|
         req.headers.update default_request_headers
+      end.tap do |response|
+        CapsuleCRM.log "CapsuleCRM Response: #{response.body}"
       end
     end
 

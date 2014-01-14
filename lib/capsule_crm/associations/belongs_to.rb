@@ -1,4 +1,5 @@
 require_relative 'belongs_to_association'
+require_relative 'belongs_to_finder'
 
 module CapsuleCRM
   module Associations
@@ -41,7 +42,7 @@ module CapsuleCRM
 
           (class << self; self; end).instance_eval do
             define_method "_for_#{association_name}" do |id|
-              raise NotImplementedError.new("_for_#{association_name} needs to be implemented")
+              CapsuleCRM::Associations::BelongsToFinder.new(association).call(id)
             end
           end
 

@@ -2,13 +2,35 @@ module CapsuleCRM
   class Serializer
     attr_reader :object, :options
 
-    def initialize(object, options = {})
-      @object  = object
+    def initialize(options = {})
       @options = options
     end
 
-    def serialize
-      @serialized ||= { root => build_attributes_hash }.stringify_keys
+    def serialize(object)
+      @object = object
+      @serialized ||=
+        if include_root?
+          serialize_with_root
+        else
+          serialize_without_root
+        end
+    end
+
+    def self.serialize_collection(klass, collection)
+      collection = collection.map do |item|
+        options = klass.serializable_options
+        options.include_root = false
+        ::CapsuleCRM::Serializer.new(options).serialize(item)
+      end
+      { klass.serializable_options.root => collection }
+    end
+
+    def serialize_with_root
+      { root => build_attributes_hash }.stringify_keys
+    end
+
+    def serialize_without_root
+      build_attributes_hash
     end
 
     def root
@@ -16,7 +38,15 @@ module CapsuleCRM
         object.class.to_s.demodulize.downcase.singularize.camelize(:lower)
     end
 
+    def collection_root
+      @collection_root ||= options[:collection_root] || root.pluralize
+    end
+
     private
+
+    def include_root?
+      @include_root ||= true unless options[:include_root] == false
+    end
 
     def additional_methods
       @additional_methods ||= options[:additional_methods] || []
@@ -30,20 +60,37 @@ module CapsuleCRM
       CapsuleCRM::HashHelper.camelize_keys(cleaned_attributes)
     end
 
+    def excluded_association_keys
+      @excluded_association_keys ||=
+        if object.class.respond_to?(:belongs_to_associations)
+          object.class.belongs_to_associations.map do |name, association|
+          association.foreign_key if association.inverse.try(:embedded)
+        end.compact
+        else
+          []
+        end
+    end
+
     def cleaned_attributes
       attributes.delete_if do |key, value|
-        value.blank? || key.to_s == 'id' || excluded_keys.include?(key)
+        value.blank? || key.to_s == 'id' || excluded_keys.include?(key) ||
+          excluded_association_keys.include?(key.to_s)
       end
     end
 
+    # TODO OMG, clean this up!
     def attributes
       object.attributes.dup.tap do |attrs|
         attrs.each do |key, value|
           attrs[key] = value.to_s(:db) if value.is_a?(Date)
-          attrs[key] = value.strftime("%Y-%m-%dT%H:%M:%SZ") if value.is_a?(DateTime)
+          if value.is_a?(DateTime)
+            attrs[key] = value.strftime("%Y-%m-%dT%H:%M:%SZ")
+          end
         end
         additional_methods.each do |method|
-          attrs.merge!(method => object.send(method).to_capsule_json)
+          unless object.send(method).blank?
+            attrs.merge!(method => object.send(method).to_capsule_json)
+          end
         end
         object.class.belongs_to_associations.each do |name, association|
           attrs.merge!(

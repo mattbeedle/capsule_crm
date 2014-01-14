@@ -1,18 +1,20 @@
 require 'active_model'
+require 'active_support/core_ext/string/inflections'
 require 'faraday'
 require 'faraday_middleware'
 require 'virtus'
-require 'capsule_crm/attributes'
-require 'capsule_crm/capsule_jsonable'
 require 'capsule_crm/taggable'
-require 'capsule_crm/collection'
 require 'capsule_crm/associations'
-require 'capsule_crm/address'
-require 'capsule_crm/case'
 require 'capsule_crm/connection'
+require 'capsule_crm/normalizer'
+require 'capsule_crm/persistence'
+require 'capsule_crm/querying'
 require 'capsule_crm/serializer'
+require 'capsule_crm/serializable'
 
+require 'capsule_crm/address'
 require 'capsule_crm/attachment'
+require 'capsule_crm/case'
 require 'capsule_crm/country'
 require 'capsule_crm/currency'
 require 'capsule_crm/email'
@@ -52,5 +54,11 @@ module CapsuleCRM
     self.configuration = CapsuleCRM::Configuration.new
     yield(self.configuration)
     self.configuration
+  end
+
+  def self.log(message, level = :debug)
+    unless self.configuration.perform_logging == false
+      self.configuration.logger.send(level, message)
+    end
   end
 end

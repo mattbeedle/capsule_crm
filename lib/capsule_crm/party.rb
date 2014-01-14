@@ -1,40 +1,26 @@
 class CapsuleCRM::Party
   include Virtus
 
-  include CapsuleCRM::Attributes
-  include CapsuleCRM::Taggable
   include CapsuleCRM::Associations
+  include CapsuleCRM::Querying::Findable
+  include CapsuleCRM::Serializable
+  include CapsuleCRM::Taggable
 
-  has_many :histories, class_name: 'CapsuleCRM::History', source: :party
-  has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
-
-  def self.all(options = {})
-    init_collection(
-      CapsuleCRM::Connection.get('/api/party', options)['parties']
-    )
+  serializable_config do |config|
+    config.root = [:organisation, :person]
   end
 
-  def self.find(id)
-    attributes = CapsuleCRM::Connection.get("/api/party/#{id}")
-    party_classes[attributes.keys.first].constantize.new(
-      attributes[attributes.keys.first]
-    )
+  queryable_config do |config|
+    config.plural = :party
   end
+
+  has_many :histories
+  has_many :tasks
+  has_many :custom_fields, embedded: true
 
   private
 
-  def self.init_collection(collection)
-    CapsuleCRM::ResultsProxy.new(
-      collection.map do |key, value|
-        next unless %w(organisation person).include?(key)
-        [collection[key]].flatten.map do |attrs|
-          party_classes[key].constantize.new(attrs)
-        end.flatten
-      end.flatten
-    )
-  end
-
-  def self.party_classes
+  def self.child_classes
     { person: 'CapsuleCRM::Person', organisation: 'CapsuleCRM::Organization' }.
       stringify_keys
   end

@@ -38,7 +38,8 @@ module CapsuleCRM
       # Returns a CapsuleCRM::Associations::HasManyProxy
       def proxy(parent, collection = nil)
         CapsuleCRM::Associations::HasManyProxy.new(
-          parent, target_klass, build_target(parent, collection), source
+          parent, target_klass, build_target(parent, collection), source,
+          embedded
         )
       end
 
@@ -49,7 +50,28 @@ module CapsuleCRM
         :has_many
       end
 
+      def embedded
+        @embedded ||= !!options[:embedded]
+      end
+
+      def source
+        @source ||= options[:source] || infer_source
+      end
+
+      def target_klass
+        @target_klass ||=
+          (options[:class_name] || infer_target_klass).constantize
+      end
+
       private
+
+      def infer_source
+        defined_on.to_s.demodulize.downcase.singularize.to_sym
+      end
+
+      def infer_target_klass
+        "CapsuleCRM::#{association_name.to_s.singularize.camelize}"
+      end
 
       def build_target(parent, collection)
         collection.nil? ? target(parent) : collection_to_array(collection)
@@ -63,17 +85,9 @@ module CapsuleCRM
         end
       end
 
-      def target_klass
-        @target_klass ||= options[:class_name].constantize
-      end
-
       def target(parent)
         target_klass.
           send("_for_#{parent.class.to_s.demodulize.downcase}", parent.id)
-      end
-
-      def source
-        @source ||= options[:source]
       end
     end
   end
