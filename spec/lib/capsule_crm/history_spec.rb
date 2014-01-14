@@ -7,7 +7,7 @@ describe CapsuleCRM::History do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
     stub_request(:get, /\/api\/opportunity\/milestones$/).
-      to_return(body: File.read('spec/support/milestones.json'))
+      to_return(body: File.read('spec/support/all_milestones.json'))
   end
 
   it_behaves_like 'persistable', 'https://sample.capsulecrm.com/api/history/205', 205 do
@@ -139,7 +139,7 @@ describe CapsuleCRM::History do
     end
   end
 
-  describe 'find' do
+  describe '.find' do
     let(:first_attachment) { subject.attachments.first }
     let(:first_participant) { subject.participants.first }
     before do

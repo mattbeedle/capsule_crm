@@ -12,6 +12,30 @@ describe CapsuleCRM::Person do
 
   it_behaves_like 'deletable'
 
+  it_behaves_like 'listable', '/party', 'parties', 2
+
+  it_behaves_like 'findable', '/api/party/12', 12, 'person' do
+    let(:attributes) do
+      {
+        first_name: 'Eric', last_name: 'Schmidt', job_title: 'Chairman',
+        about: 'A comment here'
+      }
+    end
+
+    it 'should get the email address' do
+      expect(subject.emails.first.email_address).
+        to eql('e.schmidt@google.com')
+    end
+
+    it 'should get the phone number' do
+      expect(subject.phones.first.phone_number).to eql('+1 888 555555')
+    end
+
+    it 'should get the website' do
+      expect(subject.websites.first.web_address).to eql('www.google.com')
+    end
+  end
+
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
@@ -87,39 +111,6 @@ describe CapsuleCRM::Person do
       pending
     end
   end
-
-  describe '.all' do
-    before do
-      stub_request(:get, /\/api\/party$/).
-        to_return(body: File.read('spec/support/all_parties.json'))
-    end
-
-    subject { CapsuleCRM::Person.all }
-
-    it { should be_a(Array) }
-
-    it { subject.length.should eql(2) }
-
-    it 'should only contain people' do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Person) }.should be_true
-    end
-  end
-
-  describe '.find' do
-    before do
-      stub_request(:get, /.*/).
-        to_return(body: File.read('spec/support/person.json'))
-    end
-
-    subject { CapsuleCRM::Person.find(1) }
-
-    it { should be_a(CapsuleCRM::Person) }
-
-    it { subject.first_name.should eql('Eric') }
-
-    it { subject.last_name.should eql('Schmidt') }
-  end
-
 
   describe '#first_name_required?' do
     let(:person) { CapsuleCRM::Person.new }

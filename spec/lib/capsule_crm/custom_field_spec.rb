@@ -7,7 +7,7 @@ describe CapsuleCRM::CustomField do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))
     stub_request(:get, /\/api\/opportunity\/milestones$/).
-      to_return(body: File.read('spec/support/milestones.json'))
+      to_return(body: File.read('spec/support/all_milestones.json'))
   end
 
   describe 'validations' do

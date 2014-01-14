@@ -5,7 +5,7 @@ describe CapsuleCRM::Opportunity do
 
   before do
     stub_request(:get, /\/api\/opportunity\/milestones$/).
-      to_return(body: File.read('spec/support/milestones.json'))
+      to_return(body: File.read('spec/support/all_milestones.json'))
   end
 
   before do
@@ -22,7 +22,17 @@ describe CapsuleCRM::Opportunity do
 
   it_behaves_like 'deletable'
 
-  it_behaves_like 'listable', File.read('spec/support/all_opportunities.json'), 1
+  it_behaves_like 'listable', '/opportunity', 'opportunities', 1
+
+  it_behaves_like 'findable', '/api/opportunity/1', 1, 'opportunity' do
+    let(:attributes) do
+      {
+        value: 500.0, id: 43, duration_basis: 'DAY', milestone_id: 2,
+        duration: 10, currency: 'GBP',
+        description: 'Scope and design web site shopping cart'
+      }
+    end
+  end
 
   describe 'validations' do
     subject { described_class.new }
@@ -145,49 +155,6 @@ describe CapsuleCRM::Opportunity do
     context 'when the party_id is nil' do
       it { opportunity.party.should be_nil }
     end
-  end
-
-  it_behaves_like 'listable', File.read('spec/support/all_opportunities.json'), 1
-
-  describe '.find' do
-    before do
-      stub_request(:get, /\/api\/opportunity\/1$/).
-        to_return(body: File.read('spec/support/opportunity.json'))
-    end
-
-    subject { CapsuleCRM::Opportunity.find(1) }
-
-    it { should be_a(CapsuleCRM::Opportunity) }
-
-    it { subject.value.should eql(500.0) }
-
-    it { subject.id.should eql(43) }
-
-    it { subject.duration_basis.should eql('DAY') }
-
-    it { subject.milestone_id.should eql(2) }
-
-    it { subject.duration.should eql(10) }
-
-    it { subject.currency.should eql('GBP') }
-
-    it do
-      subject.description.should eql('Scope and design web site shopping cart')
-    end
-
-    it { subject.name.should eql('Consulting') }
-
-    it { subject.owner.should eql('a.user') }
-
-    it { subject.milestone.name.should eql('Bid') }
-
-    it { subject.probability.should eql(50.0) }
-
-    it do
-      subject.expected_close_date.should eql(Date.parse('2012-09-30T00:00:00Z'))
-    end
-
-    it { subject.party_id.should eql(2) }
   end
 
   describe '.deleted' do

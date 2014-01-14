@@ -7,5 +7,5 @@ describe CapsuleCRM::Track do
     it { should validate_numericality_of(:id) }
   end
 
-  it_behaves_like 'listable', File.read('spec/support/tracks.json'), 2
+  it_behaves_like 'listable', '/tracks', 'tracks', 2
 end

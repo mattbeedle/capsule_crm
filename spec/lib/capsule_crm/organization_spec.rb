@@ -4,6 +4,11 @@ require 'spec_helper'
 describe CapsuleCRM::Organization do
   before { configure }
 
+  before do
+    stub_request(:get, /\/api\/users$/).
+      to_return(body: File.read('spec/support/all_users.json'))
+  end
+
   it_should_behave_like 'contactable'
 
   it_behaves_like 'persistable', 'https://sample.capsulecrm.com/api/organisation/13', 13 do
@@ -12,9 +17,35 @@ describe CapsuleCRM::Organization do
 
   it_behaves_like 'deletable'
 
-  before do
-    stub_request(:get, /\/api\/users$/).
-      to_return(body: File.read('spec/support/all_users.json'))
+  it_behaves_like 'listable', '/party', 'parties', 1
+
+  it_behaves_like 'findable', '/api/party/10', 10, 'organisation' do
+    let(:attributes) do
+      { name: 'Google Inc', about: 'A comment here' }
+    end
+
+    it 'should get the contact address street' do
+      expect(subject.addresses.first.street).
+        to eql('1600 Amphitheatre Parkway')
+    end
+
+    it 'should get the contact address city' do
+      expect(subject.addresses.first.city).
+        to eql('Mountain View')
+    end
+
+    it 'should get the contact address state' do
+      expect(subject.addresses.first.state).to eql('CA')
+    end
+
+    it 'should get the contact address zip' do
+      expect(subject.addresses.first.zip).to eql('94043')
+    end
+
+    it 'should get the contact address country' do
+      expect(subject.addresses.first.country).
+        to eql('United States')
+    end
   end
 
   describe '#custom_fields' do
@@ -30,36 +61,6 @@ describe CapsuleCRM::Organization do
       it 'should add a new custom field to the organization' do
         expect(organization.custom_fields.length).to eql(1)
       end
-    end
-  end
-
-  describe '.all' do
-    context 'when some parties exist' do
-      before do
-        stub_request(:get, /\/api\/party$/).
-          to_return(body: File.read('spec/support/all_parties.json'))
-      end
-
-      subject { CapsuleCRM::Organization.all }
-
-      it { expect(subject).to be_a(Array) }
-
-      it { expect(subject.length).to eql(1) }
-
-      it { expect(subject.first).to be_a(CapsuleCRM::Organization) }
-    end
-
-    context 'when no parties exist' do
-      before do
-        stub_request(:get, /\/api\/party$/).
-          to_return(body: File.read('spec/support/no_parties.json'))
-      end
-
-      subject { CapsuleCRM::Organization.all }
-
-      it { expect(subject).to be_a(Array) }
-
-      it { expect(subject.length).to eql(0) }
     end
   end
 

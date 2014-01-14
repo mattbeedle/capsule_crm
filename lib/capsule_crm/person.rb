@@ -4,7 +4,6 @@ module CapsuleCRM
     include CapsuleCRM::Persistence::Persistable
     include CapsuleCRM::Persistence::Deletable
     include CapsuleCRM::Querying::Configuration
-    include CapsuleCRM::Querying::FindOne
     include CapsuleCRM::Serializable
 
     extend ActiveModel::Naming

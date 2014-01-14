@@ -10,7 +10,13 @@ describe CapsuleCRM::Case do
 
   it_behaves_like 'deletable'
 
-  it_behaves_like 'listable', File.read('spec/support/all_cases.json'), 1
+  it_behaves_like 'listable', '/kase',  'cases', 1
+
+  it_behaves_like 'findable', '/api/kase/43', 43, 'case' do
+    let(:attributes) do
+      { name: 'Consulting' }
+    end
+  end
 
   before do
     stub_request(:get, /\/api\/users$/).
@@ -47,19 +53,6 @@ describe CapsuleCRM::Case do
     it { subject.length.should eql(1) }
 
     it { subject.first.detail.should eql('Go and get drunk') }
-  end
-
-  describe '.find' do
-    before do
-      stub_request(:get, 'https://1234:@company.capsulecrm.com/api/kase/43').
-        to_return(body: File.read('spec/support/case.json'))
-    end
-
-    subject { CapsuleCRM::Case.find(43) }
-
-    it { should be_a(CapsuleCRM::Case) }
-
-    it { subject.name.should eql('Consulting') }
   end
 
   describe '#to_capsule_json' do

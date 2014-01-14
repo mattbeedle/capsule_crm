@@ -7,5 +7,5 @@ describe CapsuleCRM::Milestone do
     it { should validate_numericality_of(:id) }
   end
 
-  it_behaves_like 'listable', File.read('spec/support/milestones.json'), 4
+  it_behaves_like 'listable', '/opportunity/milestones', 'milestones', 4
 end

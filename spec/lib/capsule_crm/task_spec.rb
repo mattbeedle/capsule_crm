@@ -15,30 +15,34 @@ describe CapsuleCRM::Task do
 
   it_behaves_like 'deletable'
 
-  it_behaves_like 'listable', File.read('spec/support/all_tasks.json'), 4
+  it_behaves_like 'listable', '/tasks', 'tasks', 4
+
+  it_behaves_like 'findable', '/api/task/2', 2, 'task' do
+    let(:attributes) do
+      {
+        category: 'Meeting', description: 'Meet with customer',
+        detail: 'Meeting at Coffee shop'
+      }
+    end
+
+    it 'should populate the due date' do
+      expect(subject.due_date).not_to be_blank
+    end
+
+    it 'should populate the owner' do
+      expect(subject.owner).to be_a(CapsuleCRM::User)
+    end
+
+    it 'should populate the party' do
+      expect(subject.party).to be_a(CapsuleCRM::Person)
+    end
+  end
 
   describe 'validations' do
     it { should validate_numericality_of(:id) }
     it { should validate_presence_of(:description) }
     it { should validate_presence_of(:due_date) }
     it { should validate_presence_of(:due_date_time) }
-  end
-
-  describe '.find' do
-    before do
-      stub_request(:get, /\/api\/task\/2$/).
-        to_return(body: File.read('spec/support/task.json'))
-    end
-
-    subject { CapsuleCRM::Task.find(2) }
-
-    it { should be_a(CapsuleCRM::Task) }
-    it { subject.due_date.should_not be_blank }
-    it { subject.category.should eql('Meeting') }
-    it { subject.description.should eql('Meet with customer') }
-    it { subject.detail.should eql('Meeting at Coffee shop') }
-    it { subject.owner.should be_a(CapsuleCRM::User) }
-    it { subject.party.should be_a(CapsuleCRM::Person) }
   end
 
   # Not really sure what to test here. CapsuleCRM API doesn't actually tell you
