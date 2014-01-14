@@ -24,50 +24,33 @@ module CapsuleCRM
       config.collection_root = :history
     end
 
+    queryable_config do |config|
+      config.plural = :history
+    end
+
     attribute :id, Integer
     attribute :type, String
     attribute :entry_date, DateTime
     attribute :subject, String
     attribute :note, String
 
-    has_many :attachments,  class_name: 'CapsuleCRM::Attachment'
-    has_many :participants, class_name: 'CapsuleCRM::Participant'
+    has_many :attachments
+    has_many :participants
 
-    belongs_to :creator,      class_name: 'CapsuleCRM::Person',
-      serializable_key: :creator
-    belongs_to :party,        class_name: 'CapsuleCRM::Party', serialize: false
-    belongs_to :kase,         class_name: 'CapsuleCRM::Case',
-      foreign_key: :case_id, serialize: false
-    belongs_to :opportunity,  class_name: 'CapsuleCRM::Opportunity',
-      serialize: false
+    belongs_to :creator,      serializable_key: :creator,
+      class_name: 'CapsuleCRM::Person'
+    belongs_to :party,        serialize: false
+    belongs_to :case,         serialize: false
+    belongs_to :opportunity,  serialize: false
 
     validates :id, numericality: { allow_blank: true }
     validates :note, presence: true
-    validates :party, :kase, :opportunity,
+    validates :party, :case, :opportunity,
       presence: { if: :belongs_to_required? }
-
-    def self._for_party(party_id)
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get("/api/party/#{party_id}/history")
-      )
-    end
 
     class << self
       alias :_for_organization :_for_party
       alias :_for_person :_for_party
-    end
-
-    def self._for_case(case_id)
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get("/api/kase/#{case_id}/history")
-      )
-    end
-
-    def self._for_opportunity(opportunity_id)
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.
-          get("/api/opportunity/#{opportunity_id}/history")
-      )
     end
 
     # Public: Set the creator of this history item
@@ -93,23 +76,23 @@ module CapsuleCRM
 
     def belongs_to_api_name
       {
-        person: 'party', organization: 'party', case: 'kase',
+        person: 'party', organization: 'party', case: 'case',
         opportunity: 'opportunity'
       }.stringify_keys[belongs_to_name]
     end
 
     def belongs_to_id
-      (party || kase || opportunity).try(:id)
+      (party || self.case || opportunity).try(:id)
     end
 
     private
 
     def belongs_to_required?
-      party.blank? && kase.blank? && opportunity.blank?
+      party.blank? && self.case.blank? && opportunity.blank?
     end
 
     def belongs_to_name
-      (party || kase || opportunity).class.to_s.demodulize.downcase
+      (party || self.case || opportunity).class.to_s.demodulize.downcase
     end
   end
 end

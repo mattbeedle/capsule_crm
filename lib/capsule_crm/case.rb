@@ -45,10 +45,12 @@ module CapsuleCRM
     validates :name, presence: true
     validates :party, presence: true
 
-    belongs_to :party, class_name: 'CapsuleCRM::Party'
-    belongs_to :track, class_name: 'CapsuleCRM::Track'
+    belongs_to :party
+    belongs_to :track
 
-    has_many :tasks, class_name: 'CapsuleCRM::Task', source: :case
+    has_many :tasks
+    has_many :histories
+    has_many :custom_fields, embedded: true
 
     def self._for_track(track)
       raise NotImplementedError.new("There is no way to find cases by trackId in the Capsule API right now")

@@ -22,13 +22,13 @@ describe CapsuleCRM::History do
 
     it { should validate_numericality_of(:id) }
     it { should validate_presence_of(:note) }
-    it { should validate_presence_of(:kase) }
+    it { should validate_presence_of(:case) }
     it { should validate_presence_of(:party) }
     it { should validate_presence_of(:opportunity) }
 
     context 'when it belongs to a case' do
       before do
-        subject.kase = double('CapsuleCRM::Case', id: Random.rand(1..10))
+        subject.case = double('CapsuleCRM::Case', id: Random.rand(1..10))
       end
 
       it { should_not validate_presence_of(:party) }
@@ -40,7 +40,7 @@ describe CapsuleCRM::History do
         subject.party = double('CapsuleCRM::Party', id: Random.rand(1..10))
       end
 
-      it { should_not validate_presence_of(:kase) }
+      it { should_not validate_presence_of(:case) }
       it { should_not validate_presence_of(:opportunity) }
     end
 
@@ -51,7 +51,7 @@ describe CapsuleCRM::History do
       end
 
       it { should_not validate_presence_of(:party) }
-      it { should_not validate_presence_of(:kase) }
+      it { should_not validate_presence_of(:case) }
     end
   end
 
@@ -178,7 +178,7 @@ describe CapsuleCRM::History do
       end
 
       its(:case_id) { should_not be_blank }
-      its(:kase) { should_not be_blank }
+      its(:case) { should_not be_blank }
     end
 
     context 'when it belongs to an opportunity' do

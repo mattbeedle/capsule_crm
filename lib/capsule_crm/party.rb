@@ -14,8 +14,9 @@ class CapsuleCRM::Party
     config.plural = :party
   end
 
-  has_many :histories, class_name: 'CapsuleCRM::History', source: :party
-  has_many :tasks, class_name: 'CapsuleCRM::Task', source: :party
+  has_many :histories
+  has_many :tasks
+  has_many :custom_fields, embedded: true
 
   private
 

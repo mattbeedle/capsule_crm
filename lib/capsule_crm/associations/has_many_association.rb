@@ -55,10 +55,23 @@ module CapsuleCRM
       end
 
       def source
-        @source ||= options[:source]
+        @source ||= options[:source] || infer_source
+      end
+
+      def target_klass
+        @target_klass ||=
+          (options[:class_name] || infer_target_klass).constantize
       end
 
       private
+
+      def infer_source
+        defined_on.to_s.demodulize.downcase.singularize.to_sym
+      end
+
+      def infer_target_klass
+        "CapsuleCRM::#{association_name.to_s.singularize.camelize}"
+      end
 
       def build_target(parent, collection)
         collection.nil? ? target(parent) : collection_to_array(collection)
@@ -70,10 +83,6 @@ module CapsuleCRM
         else
           collection
         end
-      end
-
-      def target_klass
-        @target_klass ||= options[:class_name].constantize
       end
 
       def target(parent)

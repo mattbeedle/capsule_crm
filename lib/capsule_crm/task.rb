@@ -23,9 +23,9 @@ module CapsuleCRM
     attribute :description, String
     attribute :detail, String
 
-    belongs_to :party, class_name: 'CapsuleCRM::Party'
-    belongs_to :opportunity, class_name: 'CapsuleCRM::Opportunity'
-    belongs_to :case, class_name: 'CapsuleCRM::Case'
+    belongs_to :party
+    belongs_to :opportunity
+    belongs_to :case
     belongs_to :owner, class_name: 'CapsuleCRM::User', serializable_key: :owner
 
     validates :id, numericality: { allow_blank: true }

@@ -15,8 +15,8 @@ module CapsuleCRM
     attribute :description,   String
     attribute :capture_rule,  String
 
-    has_many :opportunities, class_name: 'CapsuleCRM::Opportunity'
-    has_many :cases, class_name: 'CapsuleCRM::Case'
+    has_many :opportunities
+    has_many :cases
 
     validates :id, numericality: { allow_blank: true }
   end

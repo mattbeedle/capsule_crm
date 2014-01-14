@@ -7,11 +7,16 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
+    include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Serializable
 
     serializable_config do |config|
       config.root = 'customField'
       config.collection_root = 'customFields'
+    end
+
+    queryable_config do |config|
+      config.plural = 'customfields'
     end
 
     attribute :id, Integer
@@ -24,14 +29,9 @@ module CapsuleCRM
     validates :id, numericality: { allow_blank: true }
     validates :label, presence: true
 
-    belongs_to :party, class_name: 'CapsuleCRM::Party'
-
-    def self._for_party(party_id)
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.
-          get("/api/party/#{party_id}/customfields")
-      )
-    end
+    belongs_to :party
+    belongs_to :opportunity
+    belongs_to :case
 
     class << self
       alias :_for_organization :_for_party

@@ -47,11 +47,13 @@ module CapsuleCRM
     validates :party, presence: true
     validates :milestone, presence: true
 
-    has_many :tasks, class_name: 'CapsuleCRM::Task', source: :opportunity
+    has_many :tasks
+    has_many :histories
+    has_many :custom_fields, embedded: true
 
-    belongs_to :party,     class_name: 'CapsuleCRM::Party'
-    belongs_to :milestone, class_name: 'CapsuleCRM::Milestone'
-    belongs_to :track,     class_name: 'CapsuleCRM::Track'
+    belongs_to :party
+    belongs_to :milestone
+    belongs_to :track
 
     def milestone=(milestone)
       if milestone.is_a?(String)

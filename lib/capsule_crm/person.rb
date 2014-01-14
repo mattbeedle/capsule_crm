@@ -32,21 +32,11 @@ module CapsuleCRM
     attribute :about
     attribute :organisation_name
 
-    belongs_to :organization, class_name: 'CapsuleCRM::Organization',
-      foreign_key: :organisation_id
-
-    has_many :custom_fields, class_name: 'CapsuleCRM::CustomField',
-      source: :party, embedded: true
+    belongs_to :organization
 
     validates :id, numericality: { allow_blank: true }
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
-
-    def self._for_organization(organization_id)
-      CapsuleCRM::Normalizer.new(self).normalize_collection(
-        CapsuleCRM::Connection.get("/api/party/#{organization_id}/people")
-      )
-    end
 
     # Public: Get all people from Capsule. The list can be restricted
     # and/or paginated with various query parameters sent through the options

@@ -28,7 +28,8 @@ module CapsuleCRM
       def inverse
         @inverse ||=
           target_klass.has_many_associations.find do |name, association|
-          association.source == association_name
+          association.source == association_name &&
+            association.target_klass == defined_on
         end.try(:last) if target_klass.respond_to?(:has_many_associations)
       end
 
@@ -38,7 +39,7 @@ module CapsuleCRM
       #
       # Returns a String foreign key name
       def foreign_key
-        @foreign_key ||= options[:foreign_key] || "#{association_name}_id"
+        @foreign_key ||= options[:foreign_key] || infer_foreign_key
       end
 
       # Public: Find the parent object of the supplied object
@@ -79,8 +80,17 @@ module CapsuleCRM
 
       private
 
+      def infer_foreign_key
+        "#{association_name}_id"
+      end
+
       def target_klass
-        @target_klass ||= options[:class_name].constantize
+        @target_klass ||=
+          (options[:class_name] || infer_target_klass).constantize
+      end
+
+      def infer_target_klass
+        "CapsuleCRM::#{association_name.to_s.camelize}"
       end
     end
   end
