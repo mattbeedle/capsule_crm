@@ -1,4 +1,5 @@
 require_relative 'belongs_to_association'
+require_relative 'belongs_to_finder'
 
 module CapsuleCRM
   module Associations
@@ -41,11 +42,7 @@ module CapsuleCRM
 
           (class << self; self; end).instance_eval do
             define_method "_for_#{association_name}" do |id|
-              if association.inverse# && !association.inverse.embedded
-                CapsuleCRM::Normalizer.new(self).normalize_collection(
-                  CapsuleCRM::Connection.get("/api/#{association.inverse.defined_on.queryable_options.singular}/#{id}/#{self.queryable_options.plural}")
-                )
-              end
+              CapsuleCRM::Associations::BelongsToFinder.new(association).call(id)
             end
           end
 

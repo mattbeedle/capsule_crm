@@ -94,7 +94,19 @@ describe CapsuleCRM::Person do
 
   describe '._for_organization' do
     context 'when there are many people for the organization' do
-      pending
+      before do
+        stub_request(:get, /.*/).
+          to_return(body: File.read('spec/support/all_people.json'))
+      end
+      subject { CapsuleCRM::Person._for_organization(1) }
+
+      it 'should be an array' do
+        expect(subject).to be_a(Array)
+      end
+
+      it 'should contain 2 items' do
+        expect(subject.length).to eql(2)
+      end
     end
 
     context 'when there is 1 person for the organization' do
@@ -108,7 +120,19 @@ describe CapsuleCRM::Person do
     end
 
     context 'when there are no people for the organization' do
-      pending
+      before do
+        stub_request(:get, /.*/).
+          to_return(body: File.read('spec/support/no_parties.json'))
+      end
+      subject { CapsuleCRM::Person._for_organization(1) }
+
+      it 'should be an array' do
+        expect(subject).to be_a(Array)
+      end
+
+      it 'should be empty' do
+        expect(subject).to be_empty
+      end
     end
   end
 

@@ -16,10 +16,6 @@ class SerializableInverse
 end
 
 describe CapsuleCRM::Serializer do
-  describe '#normalize' do
-    pending
-  end
-
   describe '#serialize' do
     let(:options) do
       {}

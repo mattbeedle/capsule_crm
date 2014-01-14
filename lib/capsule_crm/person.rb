@@ -32,7 +32,7 @@ module CapsuleCRM
     attribute :about
     attribute :organisation_name
 
-    belongs_to :organization
+    belongs_to :organization, foreign_key: :organisation_id
 
     validates :id, numericality: { allow_blank: true }
     validates :first_name, presence: { if: :first_name_required? }
