@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.3.0
+
+- Refactored associations to allow classes to reflect on themselves in order to
+  allow serialization to happen in one place
+- Created a serializer to deal with all converting all objects into capsule crm
+  compliant hashes
+- Created CapsuleCRM::Normalizer to deal with converting capsule crm hashes into
+  ActiveModel compliant hashes
+- Extracted querying logic into modules
+- Extracted persistence logic into modules
+- Extracted deleting logic into a module
+- Added CapsuleCRM::Associations::BelongsToFinder to deal with querying the
+  belongs to side of associations
+- Added CapsuleCRM::CustomFieldDefinitions
+
 ## 1.2.0
 
 - Refactor associations. Now all classes know about their associations and
