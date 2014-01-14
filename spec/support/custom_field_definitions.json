@@ -1,0 +1,19 @@
+{
+  "customFieldDefinitions": {
+    "customFieldDefinition": [
+      {
+        "id": "1",
+        "tag": "Staff",
+        "label": "NI Number",
+        "type": "Text",
+        "options": "^[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-DFM]{0,1}$"
+      },
+      {
+        "id": "1",
+        "label": "Lead Source",
+        "type": "List",
+        "options": "website;newsletter"
+      }
+    ]
+  }
+}
