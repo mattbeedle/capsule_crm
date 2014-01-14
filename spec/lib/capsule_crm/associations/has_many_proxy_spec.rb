@@ -98,7 +98,7 @@ describe CapsuleCRM::Associations::HasManyProxy do
         it 'should send a put request to capsule' do
           expect(WebMock).to have_requested(
             :put, "https://1234:@company.capsulecrm.com/api/person/#{parent.id}/children"
-          ).with(body: { childs: [{ child: { name: name } }] })
+          ).with(body: { childs: { child: [{ name: name }] } })
         end
       end
     end

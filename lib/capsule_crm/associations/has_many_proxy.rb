@@ -41,10 +41,14 @@ module CapsuleCRM
       end
 
       def to_capsule_json(root = nil)
-        { root => target.map(&:to_capsule_json) }
+        { root => serializer.serialize_collection(target_klass, target) }
       end
 
       private
+
+      def serializer
+        @serializer ||= ::CapsuleCRM::Serializer
+      end
 
       def save
         json = to_capsule_json(target_klass.serializable_options.collection_root)

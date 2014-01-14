@@ -17,8 +17,12 @@ module CapsuleCRM
     end
 
     def self.serialize_collection(klass, collection)
-      collection = collection.map { |item| item.to_capsule_json }
-      { klass.serializable_options.plural => collection }
+      collection = collection.map do |item|
+        options = klass.serializable_options
+        options.include_root = false
+        ::CapsuleCRM::Serializer.new(options).serialize(item)
+      end
+      { klass.serializable_options.root => collection }
     end
 
     def serialize_with_root
