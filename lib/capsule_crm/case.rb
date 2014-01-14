@@ -52,6 +52,11 @@ module CapsuleCRM
     has_many :histories
     has_many :custom_fields, embedded: true
 
+    class << self
+      alias :_for_organization :_for_party
+      alias :_for_person :_for_party
+    end
+
     def self._for_track(track)
       raise NotImplementedError.new("There is no way to find cases by trackId in the Capsule API right now")
     end

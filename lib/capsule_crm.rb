@@ -59,7 +59,7 @@ module CapsuleCRM
   end
 
   def self.log(message, level = :debug)
-    unless self.configuration.perform_logging == false
+    if self.configuration.perform_logging
       self.configuration.logger.send(level, message)
     end
   end
