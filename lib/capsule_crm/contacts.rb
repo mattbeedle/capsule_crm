@@ -62,8 +62,9 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Email objects
     def emails=(emails)
-      emails = CapsuleCRM::Email.new(emails) if emails.is_a?(Hash)
-      @emails = Array(emails)
+      @emails = [emails].compact.flatten.map do |email|
+        email.is_a?(Hash) ? CapsuleCRM::Email.new(email) : email
+      end
     end
 
     # Public: Gets the emails for this contacts container

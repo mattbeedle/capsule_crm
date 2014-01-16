@@ -1,4 +1,13 @@
 shared_examples 'persistable' do |location, id|
+  before do
+    stub_request(:get, /[0-9]*\/customfields/).
+      to_return(body: File.read('spec/support/no_customfields.json'))
+  end
+
+  it 'should add an after_save class method' do
+    expect(described_class).to respond_to(:after_save)
+  end
+
   describe '.create' do
     subject { described_class.create attributes }
     before do
@@ -15,6 +24,29 @@ shared_examples 'persistable' do |location, id|
 
     it 'should populate the ID from the response' do
       expect(subject.id).to eql(id)
+    end
+
+    described_class.embedded_associations.each do |name, association|
+      context "when the #{described_class} has embedded #{name}" do
+        let(:collection_root) do
+          association.target_klass.serializable_options.collection_root
+        end
+        let(:plural) { association.target_klass.queryable_options.plural }
+        let(:singular) { described_class.queryable_options.singular }
+        before do
+          stub_request(:get, /[0-9]*\/#{plural}/).
+            to_return(body: File.read("spec/support/all_#{plural}.json"))
+          stub_request(:put, /[0-9]*\/#{plural}/).
+            to_return(body: File.read("spec/support/all_#{plural}.json"))
+        end
+        subject { described_class.create attributes }
+
+        it "should save the embedded #{name}" do
+          expect(WebMock).to have_requested(
+            :put, "https://1234:@company.capsulecrm.com/api/#{singular}/#{subject.id}/#{plural}"
+          ).with(subject.send(name).to_capsule_json(root: collection_root))
+        end
+      end
     end
 
     if described_class.attributes.map(&:name).include?(:track_id)

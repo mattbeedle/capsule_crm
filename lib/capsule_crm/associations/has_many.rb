@@ -39,6 +39,22 @@ module CapsuleCRM
             new(association_name, self, options)
           self.associations[association_name] = association
 
+          if options[:embedded]
+            define_method "save_#{association_name}" do
+              unless self.send(association_name).blank?
+                # TODO why can't I chain this?
+                a = self.send(association_name)
+                a.save
+              end
+            end
+
+            class_eval do
+              after_save :"save_#{association_name}" if respond_to?(:after_save)
+              private :"save_#{association_name}"
+            end
+
+          end
+
           define_method association_name do
             instance_variable_get(:"@#{association_name}") ||
               instance_variable_set(:"@#{association_name}", association.proxy(self))

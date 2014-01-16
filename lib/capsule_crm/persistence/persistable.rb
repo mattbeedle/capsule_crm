@@ -6,6 +6,8 @@ module CapsuleCRM
       def self.included(base)
         base.send :include, CapsuleCRM::Persistence::Configuration
         base.extend CapsuleCRM::Persistence::Persistable::ClassMethods
+        base.extend ActiveModel::Callbacks
+        base.send :define_model_callbacks, :save
       end
 
       module ClassMethods
@@ -20,18 +22,14 @@ module CapsuleCRM
 
       def save
         if valid?
-          new_record? ? create_record : update_record
+          run_callbacks(:save) { new_record? ? create_record : update_record }
         else
           false
         end
       end
 
       def save!
-        if valid?
-          new_record? ? create_record : update_record
-        else
-          raise CapsuleCRM::Errors::RecordInvalid.new(self)
-        end
+        save || raise(CapsuleCRM::Errors::RecordInvalid.new(self))
       end
 
       def update_attributes(attributes = {})
