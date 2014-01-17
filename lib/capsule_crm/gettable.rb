@@ -3,8 +3,8 @@ module CapsuleCRM
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def get(path)
-        CapsuleCRM::Connection.get(path)
+      def get(path, options = {})
+        CapsuleCRM::Connection.get(path, options)
       end
     end
   end
