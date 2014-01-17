@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0
+
+- Fix bug with contacts, where contact details were being attached to parties as
+  an array of hashes
+- Added ActiveModel::Callbacks to persistence module so after_save methods may
+  be added
+- Used after_save method to save all embedded associations (custom fields)
+
 ## 1.3.0
 
 - Refactored associations to allow classes to reflect on themselves in order to
