@@ -36,6 +36,11 @@ describe CapsuleCRM::Person do
     end
   end
 
+  it 'should have embedded custom fields association' do
+    expect(described_class.embedded_associations.keys).
+      to include(:custom_fields)
+  end
+
   before do
     stub_request(:get, /\/api\/users$/).
       to_return(body: File.read('spec/support/all_users.json'))

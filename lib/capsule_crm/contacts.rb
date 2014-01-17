@@ -34,8 +34,7 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Address objects
     def addresses=(addresses)
-      addresses = CapsuleCRM::Address.new(addresses) if addresses.is_a?(Hash)
-      @addresses = Array(addresses)
+      set_collection(CapsuleCRM::Address, addresses)
     end
 
     # Public: Gets the addresses for this contacts container
@@ -62,9 +61,9 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Email objects
     def emails=(emails)
-      emails = CapsuleCRM::Email.new(emails) if emails.is_a?(Hash)
-      @emails = Array(emails)
+      set_collection(CapsuleCRM::Email, emails)
     end
+
 
     # Public: Gets the emails for this contacts container
     #
@@ -89,8 +88,7 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Phone objects
     def phones=(phones)
-      phones = CapsuleCRM::Phone.new(phones) if phones.is_a?(Hash)
-      @phones = Array(phones)
+      set_collection(CapsuleCRM::Phone, phones)
     end
 
     # Public: Gets the phones for this contacts container
@@ -118,8 +116,7 @@ module CapsuleCRM
     #
     # Returns an Array of CapsuleCRM::Website objects
     def websites=(websites)
-      websites = CapsuleCRM::Website.new(websites) if websites.is_a?(Hash)
-      @websites = Array(websites)
+      set_collection(CapsuleCRM::Website, websites)
     end
 
     # Public: Gets the websites for this contacts container
@@ -147,6 +144,17 @@ module CapsuleCRM
         phone:    phones.map(&:to_capsule_json),
         website:  websites.map(&:to_capsule_json)
       }.delete_if { |key, value| value.blank? }.stringify_keys
+    end
+
+    private
+
+    def set_collection(klass, collection)
+      objects = [collection].compact.flatten.map do |item|
+        item.is_a?(Hash) ? klass.new(item) : item
+      end
+      instance_variable_set(
+        :"@#{klass.to_s.downcase.demodulize.pluralize}", objects
+      )
     end
   end
 end

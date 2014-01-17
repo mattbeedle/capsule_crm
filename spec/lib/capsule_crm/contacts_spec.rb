@@ -25,6 +25,54 @@ describe CapsuleCRM::Contacts do
     )
   end
 
+  describe '#emails=' do
+    let(:contacts) { CapsuleCRM::Contacts.new }
+    before { contacts.emails = email_attributes }
+    subject { contacts.emails }
+
+    context 'when a hash is supplied' do
+      let(:email_attributes) do
+        { email_address: 'matt@gmail.com', type: 'Work' }
+      end
+
+      it 'should create an email from the attributes' do
+        expect(subject.first).to be_a(CapsuleCRM::Email)
+      end
+
+      it 'should be an array' do
+        expect(subject).to be_a(Array)
+      end
+    end
+
+    context 'when an array is supplied' do
+      context 'when the array contains hashes' do
+        let(:email_attributes) do
+          [{ email_address: Faker::Internet.email, type: 'Work' }]
+        end
+
+        it 'should create an email from the attributes' do
+          expect(subject.first).to be_a(CapsuleCRM::Email)
+        end
+
+        it 'should be an array' do
+          expect(subject).to be_a(Array)
+        end
+      end
+
+      context 'when the array contains emails' do
+        let(:email) do
+          CapsuleCRM::Email.
+            new(email_address: Faker::Internet.email, type: 'Work')
+        end
+        let(:email_attributes) { [email] }
+
+        it 'should set the emails from the supplied array' do
+          expect(subject).to eql(email_attributes)
+        end
+      end
+    end
+  end
+
   describe '#initialize' do
     context 'when addresses supplied' do
       subject { CapsuleCRM::Contacts.new(addresses: [address]) }

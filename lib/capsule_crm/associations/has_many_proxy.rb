@@ -44,12 +44,6 @@ module CapsuleCRM
         { root => serializer.serialize_collection(target_klass, target) }
       end
 
-      private
-
-      def serializer
-        @serializer ||= ::CapsuleCRM::Serializer
-      end
-
       def save
         json = to_capsule_json(target_klass.serializable_options.collection_root)
         path = [
@@ -57,6 +51,12 @@ module CapsuleCRM
           target_klass.queryable_options.plural
         ].join('/')
         ::CapsuleCRM::Connection.put(path, json)
+      end
+
+      private
+
+      def serializer
+        @serializer ||= ::CapsuleCRM::Serializer
       end
 
       def save!

@@ -28,10 +28,17 @@ module CapsuleCRM
         select_associations(:belongs_to)
       end
 
+      # Public: Get all the embedded has many associations defined on the class
+      def embedded_associations
+        has_many_associations.select do |name, association|
+          association.embedded
+        end
+      end
+
       def select_associations(macro)
         associations.select do |name, association|
           association.macro == macro &&
-            [self, self.parent].include?(association.defined_on)
+            [self, self.ancestors].flatten.include?(association.defined_on)
         end
       end
     end

@@ -34,6 +34,8 @@ module CapsuleCRM
 
     belongs_to :organization, foreign_key: :organisation_id
 
+    after_save :save_custom_fields
+
     validates :id, numericality: { allow_blank: true }
     validates :first_name, presence: { if: :first_name_required? }
     validates :last_name, presence: { if: :last_name_required? }
