@@ -24,6 +24,7 @@ module CapsuleCRM
 
     persistable_config do |config|
       config.create = lambda { |org| "organisation" }
+      config.update = lambda { |org| "organisation" }
       config.destroy = lambda { |org| "party/#{org.id}" }
     end
 
@@ -32,6 +33,8 @@ module CapsuleCRM
     attribute :about, String
 
     validates :name, presence: true
+
+    after_save :save_custom_fields
 
     has_many :people
 
