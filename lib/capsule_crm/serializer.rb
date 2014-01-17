@@ -18,7 +18,7 @@ module CapsuleCRM
 
     def self.serialize_collection(klass, collection)
       collection = collection.map do |item|
-        options = klass.serializable_options
+        options = klass.serializable_options.dup
         options.include_root = false
         ::CapsuleCRM::Serializer.new(options).serialize(item)
       end
