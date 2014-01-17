@@ -42,9 +42,6 @@ shared_examples 'persistable' do |location, id|
         subject { described_class.create attributes }
 
         it "should save the embedded #{name}" do
-          p subject
-          p described_class.embedded_associations
-          p subject.custom_fields
           expect(WebMock).to have_requested(
             :put, "https://1234:@company.capsulecrm.com/api/#{singular}/#{subject.id}/#{plural}"
           )
