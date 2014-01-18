@@ -27,6 +27,8 @@ module CapsuleCRM
     belongs_to :opportunity
     belongs_to :case
     belongs_to :owner, class_name: 'CapsuleCRM::User', serializable_key: :owner
+    belongs_to :category, class_name: 'CapsuleCRM::TaskCategory',
+      serializable_key: :category
 
     validates :id, numericality: { allow_blank: true }
     validates :description, presence: true
@@ -71,12 +73,6 @@ module CapsuleCRM
     def reopen
       CapsuleCRM::Connection.post("/api/task/#{id}/reopen")
       self
-    end
-
-    # TODO Change this to an embedded association, like custom fields
-    def self.categories
-      CapsuleCRM::Connection.
-        get('/api/task/categories')['taskCategories']['taskCategory']
     end
 
     def create_url

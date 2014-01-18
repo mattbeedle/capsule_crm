@@ -74,18 +74,6 @@ describe CapsuleCRM::Task do
     it { should be_persisted }
   end
 
-  describe '.categories' do
-    subject { CapsuleCRM::Task.categories }
-    before do
-      stub_request(:get, /\/api\/task\/categories$/).
-        to_return(body: File.read('spec/support/task_categories.json'))
-    end
-
-    it do
-      expect(subject).to eql(%w(Call Email Follow-up Meeting Milestone Send))
-    end
-  end
-
   describe '#to_capsule_json' do
     let(:task) { Fabricate.build(:task) }
 
