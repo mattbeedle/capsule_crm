@@ -19,7 +19,6 @@ module CapsuleCRM
     attribute :id, Integer
     attribute :due_date, Date
     attribute :due_date_time, DateTime
-    attribute :category, String
     attribute :description, String
     attribute :detail, String
 

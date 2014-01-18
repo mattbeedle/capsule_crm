@@ -42,7 +42,8 @@ module CapsuleCRM
 
           (class << self; self; end).instance_eval do
             define_method "_for_#{association_name}" do |id|
-              CapsuleCRM::Associations::BelongsToFinder.new(association).call(id)
+              CapsuleCRM::Associations::BelongsToFinder.new(association).
+                call(id)
             end
           end
 
