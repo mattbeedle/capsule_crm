@@ -304,7 +304,7 @@ CapsuleCRM::Currency.all
 
 ## Supported Rubies
 
-1.9.3, 2.0, 2.1, jruby-19mode
+2.0.x, 2.1.x
 
 ## Versioning
 
