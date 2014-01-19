@@ -50,8 +50,6 @@ describe CapsuleCRM::CustomField do
     end
 
     it 'should have a root element of "customField"' do
-      p described_class.serializable_options
-      p subject
       expect(subject.keys.first).to eql('customField')
     end
   end
