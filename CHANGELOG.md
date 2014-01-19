@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1
+
+- Add ID to email, website, address and phone models to fix bug where they were
+  being duplicated every time a contactable model was saved
+
 ## 1.5.0
 
 - Add TaskCategory
