@@ -1,6 +1,6 @@
 module CapsuleCRM
   class TaskCategory
-    include Virtus
+    include Virtus.model
 
     include ActiveModel::Naming
     include ActiveModel::Conversion

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 class TaggableItem
   include CapsuleCRM::Taggable
-  include Virtus
+  include Virtus.model
 
   attribute :id
 end
@@ -87,7 +87,7 @@ describe CapsuleCRM::Taggable do
 
   describe '#api_singular_name' do
     it 'turns the class name into appropriate api name' do
-      TaggableItem.new.api_singular_name.should == 'taggableitem' 
+      TaggableItem.new.api_singular_name.should == 'taggableitem'
     end
 
     it 'gives the superclass unless Object to work with Organization/Person subclassing of Party' do

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class Parent
-  include Virtus
+  include Virtus.model
   include CapsuleCRM::Associations
   include CapsuleCRM::Querying::Configuration
 
@@ -22,7 +22,7 @@ class Parent
 end
 
 class Child
-  include Virtus
+  include Virtus.model
   include CapsuleCRM::Associations
   include CapsuleCRM::Querying::Configuration
   include CapsuleCRM::Serializable

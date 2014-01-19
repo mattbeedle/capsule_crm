@@ -1,7 +1,7 @@
 module CapsuleCRM
   class Milestone
     include ActiveModel::Validations
-    include Virtus
+    include Virtus.model
 
     include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Querying::FindAll

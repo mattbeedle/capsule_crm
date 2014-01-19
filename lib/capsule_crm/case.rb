@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Case
-    include Virtus
+    include Virtus.model
 
     extend  ActiveModel::Naming
     include ActiveModel::Conversion

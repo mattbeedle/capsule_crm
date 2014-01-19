@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Country
-    include Virtus
+    include Virtus.model
 
     include CapsuleCRM::Serializable
     include CapsuleCRM::Querying::Configuration

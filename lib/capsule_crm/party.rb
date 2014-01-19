@@ -1,5 +1,5 @@
 class CapsuleCRM::Party
-  include Virtus
+  include Virtus.model
 
   include CapsuleCRM::Associations
   include CapsuleCRM::Querying::Findable

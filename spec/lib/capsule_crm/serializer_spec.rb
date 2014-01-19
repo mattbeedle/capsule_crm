@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class SerializableTest
-  include Virtus
+  include Virtus.model
   include CapsuleCRM::Associations
 
   attribute :id, Integer
@@ -11,7 +11,7 @@ class SerializableTest
 end
 
 class SerializableInverse
-  include Virtus
+  include Virtus.model
   include CapsuleCRM::Associations
 end
 

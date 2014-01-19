@@ -1,6 +1,6 @@
 module CapsuleCRM
   class CustomFieldDefinition
-    include Virtus
+    include Virtus.model
     include CapsuleCRM::Serializable
     include CapsuleCRM::Gettable
 

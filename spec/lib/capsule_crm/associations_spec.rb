@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class CapsuleCRM::AssociationsTest
-  include Virtus
+  include Virtus.model
   include CapsuleCRM::Associations
 
   has_many :whatevers, class_name: 'CapsuleCRM::Party'

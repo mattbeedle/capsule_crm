@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class BelongsToTest
-  include Virtus
+  include Virtus.model
   include CapsuleCRM::Associations
 
   belongs_to :person

@@ -1,6 +1,6 @@
 module CapsuleCRM
   class Email
-    include Virtus
+    include Virtus.model
     include CapsuleCRM::Serializable
     extend  ActiveModel::Naming
 

@@ -3,7 +3,7 @@
 
 notification :tmux
 
-guard 'rspec', all_on_start: true, all_after_pass: true, keep_failed: true do
+guard 'rspec', all_on_start: true, all_after_pass: true, failed_mode: :keep do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }
@@ -17,7 +17,5 @@ end
 
 
 guard 'bundler' do
-  watch('Gemfile')
-  # Uncomment next line if Gemfile contain `gemspec' command
-  # watch(/^.+\.gemspec/)
+  watch(/^.+\.gemspec/)
 end
