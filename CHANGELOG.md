@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.0
+
+- Add TaskCategory
+- Upgrade to latest virtus
+
 ## 1.4.0
 
 - Fix bug with contacts, where contact details were being attached to parties as
