@@ -6,10 +6,12 @@ module CapsuleCRM
 
     serializable_config do |config|
       config.include_root = false
+      config.exclude_id   = false
     end
 
-    attribute :type
-    attribute :phone_number
+    attribute :id, Integer
+    attribute :type, String
+    attribute :phone_number, String
 
     def initialize(attributes = {})
       CapsuleCRM::HashHelper.underscore_keys!(attributes)

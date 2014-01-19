@@ -35,6 +35,14 @@ describe CapsuleCRM::Serializer do
       end
     end
 
+    context 'when exclude_id is false' do
+      before { options.merge!(exclude_id: false) }
+
+      it 'should include the ID' do
+        expect(subject['serializabletest'].keys).to include('id')
+      end
+    end
+
     context 'when include_root is false' do
       before do
         options.merge!(include_root: false)

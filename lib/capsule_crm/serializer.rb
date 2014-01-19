@@ -73,9 +73,14 @@ module CapsuleCRM
 
     def cleaned_attributes
       attributes.delete_if do |key, value|
-        value.blank? || key.to_s == 'id' || excluded_keys.include?(key) ||
+        value.blank? || (key.to_s == 'id' && exclude_id?) ||
+          excluded_keys.include?(key) ||
           excluded_association_keys.include?(key.to_s)
       end
+    end
+
+    def exclude_id?
+      @exclude_id ||= true unless options[:exclude_id] == false
     end
 
     # TODO OMG, clean this up!

@@ -8,11 +8,13 @@ module CapsuleCRM
 
     serializable_config do |config|
       config.include_root = false
+      config.exclude_id   = false
     end
 
-    attribute :type
-    attribute :web_service
-    attribute :web_address
+    attribute :id, Integer
+    attribute :type, String
+    attribute :web_service, String
+    attribute :web_address, String
 
     validates :web_service, :web_address, presence: true
 
