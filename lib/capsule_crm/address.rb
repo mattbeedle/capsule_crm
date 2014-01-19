@@ -6,13 +6,15 @@ module CapsuleCRM
 
     serializable_config do |config|
       config.include_root = false
+      config.exclude_id   = false
     end
 
-    attribute :type
-    attribute :street
-    attribute :city
-    attribute :state
-    attribute :zip
-    attribute :country
+    attribute :id, Integer
+    attribute :type, String
+    attribute :street, String
+    attribute :city, String
+    attribute :state, String
+    attribute :zip, String
+    attribute :country, String
   end
 end

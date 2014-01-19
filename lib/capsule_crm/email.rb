@@ -6,8 +6,10 @@ module CapsuleCRM
 
     serializable_config do |config|
       config.include_root = false
+      config.exclude_id   = false
     end
 
+    attribute :id, Integer
     attribute :type
     attribute :email_address
 
