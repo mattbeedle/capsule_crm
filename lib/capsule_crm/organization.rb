@@ -24,7 +24,7 @@ module CapsuleCRM
 
     persistable_config do |config|
       config.create = lambda { |org| "organisation" }
-      config.update = lambda { |org| "organisation" }
+      config.update = lambda { |org| "organisation/#{org.id}" }
       config.destroy = lambda { |org| "party/#{org.id}" }
     end
 
