@@ -333,3 +333,5 @@ Many thanks to the following contributers:
 - @srbaker
 - @clod81
 - @danthompson
+- @ryanbooker
+- @ghiculescu

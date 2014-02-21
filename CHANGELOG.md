@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.2
+
+- Fix issue with ruby 1.9.3 where incompatible OpenStruct syntax was being used.
+  Also, update tests to actually use OpenStructs not hashes. (@ryanbooker)
+- Fix the update path for organizations. It was missing the org.id part. (@ghiculescu)
+
 ## 1.5.1
 
 - Add ID to email, website, address and phone models to fix bug where they were
