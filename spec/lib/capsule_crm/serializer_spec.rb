@@ -18,7 +18,7 @@ end
 describe CapsuleCRM::Serializer do
   describe '#serialize' do
     let(:options) do
-      {}
+      OpenStruct.new
     end
     let(:serializer) { described_class.new(options) }
     let(:object) do
@@ -36,7 +36,9 @@ describe CapsuleCRM::Serializer do
     end
 
     context 'when exclude_id is false' do
-      before { options.merge!(exclude_id: false) }
+      before do
+        options.exclude_id = false
+      end
 
       it 'should include the ID' do
         expect(subject['serializabletest'].keys).to include('id')
@@ -45,7 +47,7 @@ describe CapsuleCRM::Serializer do
 
     context 'when include_root is false' do
       before do
-        options.merge!(include_root: false)
+        options.include_root = false
       end
 
       it 'should not include the root' do
@@ -57,7 +59,7 @@ describe CapsuleCRM::Serializer do
 
     context 'when additional methods are supplied' do
       before do
-        options.merge!(additional_methods: [:test])
+        options.additional_methods = [:test]
         object.stub(:test).and_return(test_object)
       end
       let(:test_object) { double(to_capsule_json: { foo: :bar }) }
@@ -69,7 +71,7 @@ describe CapsuleCRM::Serializer do
 
     context 'when excluded keys are supplied' do
       before do
-        options.merge!(excluded_keys: [:description])
+        options.excluded_keys = [:description]
       end
 
       it 'should not include the excluded keys in the output' do
@@ -79,7 +81,7 @@ describe CapsuleCRM::Serializer do
 
     context 'when are root element name is supplied' do
       before do
-        options.merge!(root: 'whatever')
+        options.root = 'whatever'
       end
 
       it 'should use the root option as the root key' do

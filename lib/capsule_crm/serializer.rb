@@ -34,26 +34,26 @@ module CapsuleCRM
     end
 
     def root
-      @root ||= options[:root] ||
+      @root ||= options.root ||
         object.class.to_s.demodulize.downcase.singularize.camelize(:lower)
     end
 
     def collection_root
-      @collection_root ||= options[:collection_root] || root.pluralize
+      @collection_root ||= options.collection_root || root.pluralize
     end
 
     private
 
     def include_root?
-      @include_root ||= true unless options[:include_root] == false
+      @include_root ||= true unless options.include_root == false
     end
 
     def additional_methods
-      @additional_methods ||= options[:additional_methods] || []
+      @additional_methods ||= options.additional_methods || []
     end
 
     def excluded_keys
-      @excluded_keys ||= options[:excluded_keys] || []
+      @excluded_keys ||= options.excluded_keys || []
     end
 
     def build_attributes_hash
@@ -80,7 +80,7 @@ module CapsuleCRM
     end
 
     def exclude_id?
-      @exclude_id ||= true unless options[:exclude_id] == false
+      @exclude_id ||= true unless options.exclude_id == false
     end
 
     # TODO OMG, clean this up!
