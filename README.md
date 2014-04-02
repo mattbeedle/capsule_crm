@@ -177,7 +177,7 @@ person.contacts.emails = [{ email_address: 'test@test.com', type: 'Work' }]
 person.contacts.emails << CapsuleCRM::Email.new(email_address: 'test@test.com')
 
 # person.emails delegates to person.contacts.emails so the above code may be
-shortened to:
+# shortened to:
 
 person.emails =
   [CapsuleCRM::Email.new(email_address: 'test@test.com', type: 'Work')]
