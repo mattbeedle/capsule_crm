@@ -330,11 +330,11 @@ with fix.
 
 Many thanks to the following contributers:
 
-- @srbaker
-- @clod81
-- @danthompson
-- @ryanbooker
-- @ghiculescu
+- [@srbaker](https://github.com/srbaker)
+- [@clod81](https://github.com/clod81)
+- [@danthompson](https://github.com/danthompson)
+- [@ryanbooker](https://github.com/ryanbooker)
+- [@ghiculescu](https://github.com/ghiculescu)
 
 ## Alternatives
 
