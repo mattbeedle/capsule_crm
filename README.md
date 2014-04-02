@@ -157,6 +157,39 @@ history = org.histories.build note: 'some note text'
 history = org.histories.create note: 'some note text'
 ```
 
+### Contacts
+
+People and organizations may both have contacts. Contacts consist of emails,
+phones, websites and addresses.
+
+```ruby
+person.contacts
+# => CapsuleCRM::Contacts
+
+# Assign an array of CapsuleCRM::Email objects
+person.contacts.emails =
+  [CapsuleCRM::Email.new(email_address: 'test@test.com', type: 'Work')]
+
+# Assign an array of email attributes
+person.contacts.emails = [{ email_address: 'test@test.com', type: 'Work' }]
+
+# Add a new email
+person.contacts.emails << CapsuleCRM::Email.new(email_address: 'test@test.com')
+
+# person.emails delegates to person.contacts.emails so the above code may be
+shortened to:
+
+person.emails =
+  [CapsuleCRM::Email.new(email_address: 'test@test.com', type: 'Work')]
+
+# Assign an array of email attributes
+person.emails = [{ email_address: 'test@test.com', type: 'Work' }]
+
+person.emails << CapsuleCRM::Email.new(email_address: 'test@test.com')
+
+# The above syntax is exactly the same for addresses, websites and phones.
+```
+
 ### Tracks
 ```ruby
 # List tracks
