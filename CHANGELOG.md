@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.0
+
+- ResponseError#to_s now return the response message from the server so errors
+  are a little easier to debug.
+
+## 1.5.3
+
+- A has many association will now accept a single object as an argument and
+  coerce that object into an array.
+
 ## 1.5.2
 
 - Fix issue with ruby 1.9.3 where incompatible OpenStruct syntax was being used.
