@@ -32,8 +32,9 @@ module CapsuleCRM
       #
       # parent      - The instance of the class that the has many assocation is
       # defined on
-      # collection  - An optional Array or Hash to use as the target for the
-      # proxy
+      # collection  - An optional Array, Hash or Object to use as the target for
+      # the proxy. An Object will be coerced into an Array, a Hash will be
+      # turned in to an Object and then coerced into an Array.
       #
       # Returns a CapsuleCRM::Associations::HasManyProxy
       def proxy(parent, collection = nil)
