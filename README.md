@@ -335,3 +335,9 @@ Many thanks to the following contributers:
 - @danthompson
 - @ryanbooker
 - @ghiculescu
+
+## Alternatives
+
+- [placebo](https://github.com/adrianpike/placebo)
+- [capsulecrm](https://github.com/ahmedrb/capsulecrm) - most active fork seems
+  to be [here](https://github.com/theodi/capsulecrm)
