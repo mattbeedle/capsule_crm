@@ -49,8 +49,22 @@ describe CapsuleCRM::Associations::HasManyAssociation do
       end
     end
 
-    context 'when a collection is not supplied' do
+    context 'when a collection is supplied' do
       let(:name) { Faker::Lorem.word }
+
+      context 'when the collection is an object' do
+        let(:collection) { CapsuleCRM::SomeClass.new }
+
+        subject { association.proxy(parent, collection) }
+
+        it 'should return an array' do
+          expect(subject).to be_a(Array)
+        end
+
+        it 'should contain the object passed to the collection' do
+          expect(subject).to include(collection)
+        end
+      end
 
       context 'when the collection is a hash' do
         let(:collection) do

@@ -80,8 +80,10 @@ module CapsuleCRM
       def collection_to_array(collection)
         if collection.is_a?(Hash)
           Array(target_klass.new(collection[collection.keys.first]))
-        else
+        elsif collection.is_a?(Array)
           collection
+        else
+          Array(collection)
         end
       end
 
