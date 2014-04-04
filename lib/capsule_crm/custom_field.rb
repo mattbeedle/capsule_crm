@@ -30,9 +30,9 @@ module CapsuleCRM
     validates :id, numericality: { allow_blank: true }
     validates :label, presence: true
 
-    belongs_to :party, serialize: false
+    belongs_to :party,       serialize: false
     belongs_to :opportunity, serialize: false
-    belongs_to :case, serialize: false
+    belongs_to :case,        serialize: false
 
     class << self
       alias :_for_organization :_for_party
@@ -46,6 +46,8 @@ module CapsuleCRM
     def destroy
       self.date, self.tag, self.boolean, self.text = nil, nil, nil, nil
       self.parent.custom_fields.save
+      self.parent.custom_fields.delete_if { |cf| cf.id == id }
+      true
     end
   end
 end

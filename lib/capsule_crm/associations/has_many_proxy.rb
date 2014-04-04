@@ -26,14 +26,14 @@ module CapsuleCRM
         record = build(attributes).tap do |r|
           record_not_saved(r) unless parent.persisted?
         end
-        embedded? ? save : record.save
+        record if (embedded? ? save : record.save)
       end
 
       def create!(attributes = {})
         record = build(attributes).tap do |r|
           record_not_saved(r) unless parent.persisted?
         end
-        embedded? ? save! : record.save!
+        record if (embedded? ? save! : record.save!)
       end
 
       def tap
