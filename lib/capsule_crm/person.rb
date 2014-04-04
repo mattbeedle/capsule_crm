@@ -66,6 +66,18 @@ module CapsuleCRM
         delete_if { |item| !item.is_a?(CapsuleCRM::Person) }
     end
 
+    def self.first
+      raise NotImplementedError.new(
+        [
+          'Unfortunately the capsulecrm.com API returns people and',
+          'organizations in one response. There is no way to query directly',
+          'for people. This means that quite often the first item returned',
+          'will actually be an organization and so CapsuleCRM::Person.first is',
+          'not possible.'
+        ].join(' ')
+      )
+    end
+
     private
 
     # Private: Determines whether the person first name is required. Either the

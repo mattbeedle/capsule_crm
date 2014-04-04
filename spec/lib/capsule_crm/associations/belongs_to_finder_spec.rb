@@ -10,12 +10,13 @@ describe CapsuleCRM::Associations::BelongsToFinder do
       )
     end
     let(:inverse) do
-      double('CapsuleCRM::Associations::HasManyAssociation')
+      double('CapsuleCRM::Associations::HasManyAssociation', embedded: false)
     end
     let(:normalizer) do
       double('CapsuleCRM::Normalizer', normalize_collection: [])
     end
     let(:finder) { described_class.new(association) }
+
     before do
       finder.singular = 'person'
       finder.plural = 'customfields'

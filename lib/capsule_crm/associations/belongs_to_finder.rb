@@ -9,13 +9,17 @@ module CapsuleCRM
       end
 
       def call(id)
-        id ? find(id) : []
+        id ? find_by_parent_id(id) : []
       end
 
       private
 
       def inverse
         @inverse ||= association.inverse
+      end
+
+      def embedded?
+        inverse.embedded
       end
 
       def singular
@@ -26,8 +30,12 @@ module CapsuleCRM
         @plural ||= association.defined_on.queryable_options.plural
       end
 
-      def find(id)
-        normalizer.normalize_collection get(path(id)) if inverse
+      def find_by_parent_id(id)
+        normalizer.normalize_collection(get(path(id))).tap do |collection|
+          collection.each do |item|
+            item.send("#{association.foreign_key}=", id)
+          end if embedded?
+        end
       end
 
       def get(path_string)
