@@ -63,5 +63,17 @@ module CapsuleCRM
       CapsuleCRM::Party.all(options).
         delete_if { |item| !item.is_a?(CapsuleCRM::Organization) }
     end
+
+    def self.first
+      raise NotImplementedError.new(
+        [
+          'Unfortunately the capsulecrm.com API returns people and',
+          'organizations in one response. There is no way to query directly',
+          'for people. This means that quite often the first item returned',
+          'will actually be a person and so CapsuleCRM::Organization.first is',
+          'not possible.'
+        ].join(' ')
+      )
+    end
   end
 end

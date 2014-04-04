@@ -68,6 +68,14 @@ describe CapsuleCRM::Person do
     end
   end
 
+  describe '.first' do
+    subject { described_class }
+
+    it 'should raise a NotImplementedError' do
+      expect { subject.first }.to raise_error(NotImplementedError)
+    end
+  end
+
   describe '#tasks' do
     let(:person) { Fabricate.build(:person, id: 1) }
 

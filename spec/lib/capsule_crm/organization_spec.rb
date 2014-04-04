@@ -48,6 +48,14 @@ describe CapsuleCRM::Organization do
     end
   end
 
+  describe '.first' do
+    subject { described_class }
+
+    it 'should raise a NotImplementedError' do
+      expect { subject.first }.to raise_error(NotImplementedError)
+    end
+  end
+
   describe '#custom_fields' do
     before do
       stub_request(:get, /\/api\/party\/#{organization.id}\/customfields/).

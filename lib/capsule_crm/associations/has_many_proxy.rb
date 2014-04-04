@@ -8,6 +8,7 @@ module CapsuleCRM
         @target_klass   = target_klass
         @source         = source
         @embedded       = embedded
+        self
       end
 
       def method_missing(name, *args, &block)
