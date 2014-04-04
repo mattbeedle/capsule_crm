@@ -10,6 +10,10 @@ module CapsuleCRM
             get("/api/#{queryable_options.plural}", options)
           )
         end
+
+        def first
+          all(limit: 1).first
+        end
       end
     end
   end
