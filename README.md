@@ -10,6 +10,8 @@ Status](https://coveralls.io/repos/mattbeedle/capsule_crm/badge.png?branch=maste
 Status](https://gemnasium.com/mattbeedle/capsule_crm.png)](https://gemnasium.com/mattbeedle/capsule_crm)
 [![Stories in
 Ready](http://badge.waffle.io/mattbeedle/capsule_crm.png)](http://waffle.io/mattbeedle/capsule_crm)
+[![Gitter
+chat](https://badges.gitter.im/mattbeedle/capsule_crm.png)](https://gitter.im/mattbeedle/capsule_crm)
 
 # CapsuleCRM
 
