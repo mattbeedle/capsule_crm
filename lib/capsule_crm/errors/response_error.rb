@@ -8,7 +8,17 @@ module CapsuleCRM
       end
 
       def to_s
-        JSON.parse(response.body)['message']
+        response_message || empty_message
+      end
+
+      private
+
+      def response_message
+        JSON.parse(response.body)['message'] if response
+      end
+
+      def empty_message
+        'capsulecrm.com returned an empty response'
       end
     end
   end
