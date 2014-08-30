@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1
+
+- Fix issue where if capsulecrm.com returned a blank error response the
+  ResponseError would raise an undefined method exception
+
 ## 1.6.0
 
 - ResponseError#to_s now return the response message from the server so errors
