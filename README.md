@@ -38,8 +38,12 @@ can make any requests to it. If you are using rails then you can put this into
 your config/initializers folder.
 ```ruby
 CapsuleCRM.configure do |config|
-  config.api_token = 'API Token here'
-  config.subdomain = 'your capsule crm company subdomain here'
+  config.api_token       = 'API Token here'
+  config.subdomain       = 'your capsule crm company subdomain here'
+
+  # Optional
+  config.logger          = your_logger # default is Logger.new(STDOUT)
+  config.perform_logging = true # default is false
 end
 ```
 
