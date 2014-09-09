@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.0
+
+- Custom fields may now be deleted.
+
 ## 1.7.0
 
 - Inspecting items only displays their attributes now. Much cleaner for working
