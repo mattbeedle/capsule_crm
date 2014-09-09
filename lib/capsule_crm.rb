@@ -12,6 +12,7 @@ require 'capsule_crm/persistence'
 require 'capsule_crm/querying'
 require 'capsule_crm/serializer'
 require 'capsule_crm/serializable'
+require 'capsule_crm/inspector'
 
 require 'capsule_crm/address'
 require 'capsule_crm/attachment'

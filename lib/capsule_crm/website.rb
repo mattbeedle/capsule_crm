@@ -1,10 +1,12 @@
 module CapsuleCRM
   class Website
     include Virtus.model
-    include CapsuleCRM::Serializable
 
     extend  ActiveModel::Naming
     include ActiveModel::Validations
+
+    include CapsuleCRM::Inspector
+    include CapsuleCRM::Serializable
 
     serializable_config do |config|
       config.include_root = false

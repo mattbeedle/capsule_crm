@@ -6,6 +6,7 @@ module CapsuleCRM
     include ActiveModel::Conversion
     include ActiveModel::Validations
 
+    include CapsuleCRM::Inspector
     include CapsuleCRM::Querying::Configuration
     include CapsuleCRM::Querying::FindAll
     include CapsuleCRM::Serializable

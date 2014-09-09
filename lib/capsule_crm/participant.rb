@@ -6,6 +6,8 @@ module CapsuleCRM
     include ActiveModel::Validations
     include ActiveModel::Conversion
 
+    include CapsuleCRM::Inspector
+
     attribute :name,          String
     attribute :email_address,  String
     attribute :role,          String

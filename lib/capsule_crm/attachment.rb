@@ -3,6 +3,7 @@ module CapsuleCRM
     include Virtus.model
 
     include ActiveModel::Validations
+    include CapsuleCRM::Inspector
 
     attribute :id,            Integer
     attribute :filename,      String

@@ -7,6 +7,7 @@ module CapsuleCRM
     include ActiveModel::Validations
 
     include CapsuleCRM::Associations
+    include CapsuleCRM::Inspector
     include CapsuleCRM::Querying::Findable
     include CapsuleCRM::Persistence::Persistable
     include CapsuleCRM::Persistence::Deletable

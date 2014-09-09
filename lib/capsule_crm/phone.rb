@@ -1,8 +1,10 @@
 module CapsuleCRM
   class Phone
     include Virtus.model
-    include CapsuleCRM::Serializable
     extend  ActiveModel::Naming
+
+    include CapsuleCRM::Inspector
+    include CapsuleCRM::Serializable
 
     serializable_config do |config|
       config.include_root = false

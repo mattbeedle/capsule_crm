@@ -2,6 +2,7 @@ class CapsuleCRM::Party
   include Virtus.model
 
   include CapsuleCRM::Associations
+  include CapsuleCRM::Inspector
   include CapsuleCRM::Querying::Findable
   include CapsuleCRM::Serializable
   include CapsuleCRM::Taggable
@@ -18,6 +19,7 @@ class CapsuleCRM::Party
   has_many :tasks
   has_many :custom_fields, embedded: true
   has_many :cases
+
 
   private
 

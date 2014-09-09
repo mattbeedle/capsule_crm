@@ -1,7 +1,10 @@
 module CapsuleCRM
   class Email
     include Virtus.model
+
+    include CapsuleCRM::Inspector
     include CapsuleCRM::Serializable
+
     extend  ActiveModel::Naming
 
     serializable_config do |config|
