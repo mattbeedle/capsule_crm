@@ -27,7 +27,8 @@ describe CapsuleCRM::CustomField do
 
       it { should be_an(Array) }
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::CustomField) }.should be_true
+        subject.all? { |item| item.is_a?(CapsuleCRM::CustomField) }.
+          should be_true
       end
     end
 
@@ -51,6 +52,34 @@ describe CapsuleCRM::CustomField do
 
     it 'should have a root element of "customField"' do
       expect(subject.keys.first).to eql('customField')
+    end
+  end
+
+  describe '#destroy' do
+    let(:custom_field) { Fabricate.build(:custom_field, party: person) }
+    let(:person) { Fabricate.build(:person, id: Random.rand(1..10)) }
+
+    def stub_requests
+      stub_request(
+        :get,
+        "https://1234:@company.capsulecrm.com/api/party/#{person.id}/customfields"
+      ).to_return(body: File.read('spec/support/no_customfields.json'))
+      # note, this test still passes although completely different data is being
+      # returned from this stub. The data returned should overwrite the
+      # association data
+      stub_request(
+        :put, "https://1234:@company.capsulecrm.com/api/party/#{person.id}/customfields"
+      ).to_return(body: File.read('spec/support/put_customfields.json'))
+    end
+
+    before do
+      stub_requests
+      person.custom_fields << custom_field
+      custom_field.destroy
+    end
+
+    it 'should remove the custom field from the parent association' do
+      expect(person.custom_fields).not_to include(custom_field)
     end
   end
 end
