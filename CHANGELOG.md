@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.2
+
+- Fix bug where responses errors always had a blank body
+
 ## 1.6.1
 
 - Fix issue where if capsulecrm.com returned a blank error response the
