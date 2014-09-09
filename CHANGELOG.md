@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.0
+
+- Inspecting items only displays their attributes now. Much cleaner for working
+  on the console
+
 ## 1.6.2
 
 - Fix bug where responses errors always had a blank body
