@@ -5,7 +5,7 @@ module CapsuleCRM
 
       # Public: Initialize a new CapsuleCRM::Associations::HasManyAssociation
       #
-      # association_name  - The Symbox association name
+      # association_name  - The Symbol association name
       # defined_on        - The String name of the class that this association
       # is defined on
       # options           - The Hash of association options

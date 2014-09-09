@@ -8,6 +8,7 @@ module CapsuleCRM
         @target_klass   = target_klass
         @source         = source
         @embedded       = embedded
+        self
       end
 
       def method_missing(name, *args, &block)
@@ -25,14 +26,14 @@ module CapsuleCRM
         record = build(attributes).tap do |r|
           record_not_saved(r) unless parent.persisted?
         end
-        embedded? ? save : record.save
+        record if embedded? ? save : record.save
       end
 
       def create!(attributes = {})
         record = build(attributes).tap do |r|
           record_not_saved(r) unless parent.persisted?
         end
-        embedded? ? save! : record.save!
+        record if embedded? ? save! : record.save!
       end
 
       def tap
