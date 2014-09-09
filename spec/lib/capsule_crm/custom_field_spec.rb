@@ -62,13 +62,21 @@ describe CapsuleCRM::CustomField do
     def stub_requests
       stub_request(
         :get,
-        "https://1234:@company.capsulecrm.com/api/party/#{person.id}/customfields"
+        [
+          'https://1234:@company.capsulecrm.com/api/party/',
+          person.id,
+          '/customfields'
+        ].join
       ).to_return(body: File.read('spec/support/no_customfields.json'))
       # note, this test still passes although completely different data is being
       # returned from this stub. The data returned should overwrite the
       # association data
       stub_request(
-        :put, "https://1234:@company.capsulecrm.com/api/party/#{person.id}/customfields"
+        :put, [
+          'https://1234:@company.capsulecrm.com/api/party/',
+          person.id,
+          '/customfields'
+        ].join
       ).to_return(body: File.read('spec/support/put_customfields.json'))
     end
 

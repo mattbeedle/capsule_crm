@@ -41,8 +41,8 @@ module CapsuleCRM
 
           if options[:embedded]
             define_method "save_#{association_name}" do
-              unless self.send(association_name).empty?
-                self.send(association_name).save
+              unless send(association_name).empty?
+                send(association_name).save
               end
             end
 

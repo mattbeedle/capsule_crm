@@ -45,8 +45,8 @@ module CapsuleCRM
 
     def destroy
       self.date, self.tag, self.boolean, self.text = nil, nil, nil, nil
-      self.parent.custom_fields.save
-      self.parent.custom_fields.delete_if { |cf| cf.id == id }
+      parent.custom_fields.save
+      parent.custom_fields.delete_if { |cf| cf.id == id }
       true
     end
   end
