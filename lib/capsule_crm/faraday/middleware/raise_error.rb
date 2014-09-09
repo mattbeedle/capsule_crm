@@ -6,7 +6,7 @@ module CapsuleCRM
 
         def on_complete(env)
           return if env[:status] < 400
-          raise error_factory.class_for_error_code(env[:status]).new(env)
+          raise error_factory.error_from_env(env)
         end
 
         private

@@ -15,6 +15,10 @@ module CapsuleCRM
         end
       end
 
+      def error_from_env(env)
+        class_for_error_code(env[:status]).new(env)
+      end
+
       def class_name_for_error_name(name)
         name.to_s.titleize.gsub(' ', '')
       end
