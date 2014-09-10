@@ -285,7 +285,7 @@ MethodDefParentheses:
 
 MethodLength:
   Description: 'Avoid methods longer than 10 lines of code.'
-  Enabled: false
+  Enabled: true
 
 MethodName:
   # Valid values are: snake_case, camelCase
