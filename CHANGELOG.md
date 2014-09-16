@@ -3,30 +3,35 @@
 ## 1.9.0
 
 - CapsuleCRM::Errors::RecordInvalid#to_s and #inspect methods are now more
-  descriptive
+  descriptive [#78](https://github.com/mattbeedle/capsule_crm/pull/78)
 
 ## 1.8.0
 
 - Custom fields may now be deleted.
+  [#77](https://github.com/mattbeedle/capsule_crm/pull/77)
 
 ## 1.7.0
 
 - Inspecting items only displays their attributes now. Much cleaner for working
   on the console
+  [https://github.com/mattbeedle/capsule_crm/commit/cde082c1934ff97b6fa2dc9c56a01ca771d73b26](https://github.com/mattbeedle/capsule_crm/commit/cde082c1934ff97b6fa2dc9c56a01ca771d73b26)
 
 ## 1.6.2
 
-- Fix bug where responses errors always had a blank body
+- Fix bug where responses errors always had a blank body.
+  [#76](https://github.com/mattbeedle/capsule_crm/pull/76)
 
 ## 1.6.1
 
 - Fix issue where if capsulecrm.com returned a blank error response the
-  ResponseError would raise an undefined method exception
+  ResponseError would raise an undefined method exception.
+  [#74](https://github.com/mattbeedle/capsule_crm/pull/74)
 
 ## 1.6.0
 
 - ResponseError#to_s now return the response message from the server so errors
   are a little easier to debug.
+  [#69](https://github.com/mattbeedle/capsule_crm/pull/69)
 
 ## 1.5.3
 
