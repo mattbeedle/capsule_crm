@@ -2,6 +2,9 @@
 
 ## 1.9.0
 
+- Raise a CapsuleCRM::Errors::AssociationTypeMismatch when an object of the
+  wrong type is set on a belongs to association.
+  [#79](https://github.com/mattbeedle/capsule_crm/pull/79)
 - CapsuleCRM::Errors::RecordInvalid#to_s and #inspect methods are now more
   descriptive [#78](https://github.com/mattbeedle/capsule_crm/pull/78)
 
