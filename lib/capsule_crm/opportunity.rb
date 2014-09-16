@@ -40,6 +40,7 @@ module CapsuleCRM
     attribute :expected_close_date, DateTime
     attribute :actual_close_date, DateTime
     attribute :probability, Float
+    attribute :owner, String
 
     attr_accessor :milestone, :owner
 
