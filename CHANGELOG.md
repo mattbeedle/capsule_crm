@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.0
+
+- CapsuleCRM::Errors::RecordInvalid#to_s and #inspect methods are now more
+  descriptive
+
 ## 1.8.0
 
 - Custom fields may now be deleted.
