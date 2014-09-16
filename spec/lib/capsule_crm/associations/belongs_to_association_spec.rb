@@ -21,6 +21,38 @@ describe CapsuleCRM::Associations::BelongsToAssociation do
       new(association_name, defined_on, options)
   end
 
+  describe '#check_object!' do
+    context 'when the object is valid' do
+      let(:object) { CapsuleCRM::BelongsToAssociationTest.new }
+
+      it 'should not raise' do
+        expect { association.check_object!(object) }.not_to raise_error
+      end
+    end
+
+    context 'when the object is not valid' do
+      context 'when type checking is turned off' do
+        let(:options) do
+          {
+            class_name: 'CapsuleCRM::BelongsToAssociationTest',
+            enforce_type: false
+          }
+        end
+
+        it 'should not raise' do
+          expect { association.check_object!(double) }.not_to raise_error
+        end
+      end
+
+      context 'when type checking is turned on' do
+        it 'should raise an AssociationMismatch' do
+          expect { association.check_object!(double) }
+            .to raise_error(CapsuleCRM::Errors::AssociationTypeMismatch)
+        end
+      end
+    end
+  end
+
   describe '#macro' do
     subject { association.macro }
 

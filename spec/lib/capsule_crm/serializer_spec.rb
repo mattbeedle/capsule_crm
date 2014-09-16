@@ -92,7 +92,7 @@ describe CapsuleCRM::Serializer do
     context 'when there are belongs to associations' do
       before do
         SerializableTest.send(
-          :belongs_to, :person, class_name: 'SerializableTest'
+          :belongs_to, :person, class_name: 'CapsuleCRM::Person'
         )
         SerializableTest.send(
           :has_many, :things, class_name: 'SerializableTest',
@@ -100,7 +100,7 @@ describe CapsuleCRM::Serializer do
         )
         object.person = person
       end
-      let(:person) { double('CapsuleCRM::Person', id: Random.rand(1..10)) }
+      let(:person) { CapsuleCRM::Person.new(id: Random.rand(1..10)) }
 
       context 'without a serializable key' do
         it 'should include the person id' do

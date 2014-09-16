@@ -28,7 +28,7 @@ module CapsuleCRM
     belongs_to :case
     belongs_to :owner, class_name: 'CapsuleCRM::User', serializable_key: :owner
     belongs_to :category, class_name: 'CapsuleCRM::TaskCategory',
-      serializable_key: :category
+      serializable_key: :category, enforce_type: false
 
     validates :id, numericality: { allow_blank: true }
     validates :description, presence: true

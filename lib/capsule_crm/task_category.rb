@@ -26,7 +26,7 @@ module CapsuleCRM
 
     validates :name, presence: true
 
-    has_many :tasks
+    has_many :tasks, source: :category
 
     def id; name; end
   end

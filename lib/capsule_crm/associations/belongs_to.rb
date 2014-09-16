@@ -57,9 +57,10 @@ module CapsuleCRM
           end
 
           define_method "#{association_name}=" do |associated_object|
-            associated_object.tap do
-              instance_variable_set(:"@#{association_name}", associated_object)
-              send "#{association.foreign_key}=", associated_object.try(:id)
+            associated_object.tap do |object|
+              association.check_object! object if object
+              instance_variable_set(:"@#{association_name}", object)
+              send "#{association.foreign_key}=", object.try(:id)
             end
           end
         end
