@@ -75,10 +75,27 @@ module CapsuleCRM
       end
 
       def serialize
-        @serialize ||= options[:serialize]
+        @serialize ||= options[:serialize] == false ? false : true
+      end
+
+      def check_object!(object)
+        association_mismatch!(object) if object_invalid?(object)
       end
 
       private
+
+      def enforce_type?
+        true unless options[:enforce_type] == false
+      end
+
+      def object_invalid?(object)
+        enforce_type? && !object.is_a?(target_klass)
+      end
+
+      def association_mismatch!(object)
+        fail CapsuleCRM::Errors::AssociationTypeMismatch,
+          [object.class, target_klass], caller
+      end
 
       def infer_foreign_key
         "#{association_name}_id"

@@ -28,7 +28,7 @@ describe CapsuleCRM::History do
 
     context 'when it belongs to a case' do
       before do
-        subject.case = double('CapsuleCRM::Case', id: Random.rand(1..10))
+        subject.case = CapsuleCRM::Case.new(id: Random.rand(1..10))
       end
 
       it { should_not validate_presence_of(:party) }
@@ -37,7 +37,7 @@ describe CapsuleCRM::History do
 
     context 'when it belongs to a party' do
       before do
-        subject.party = double('CapsuleCRM::Party', id: Random.rand(1..10))
+        subject.party = CapsuleCRM::Party.new(id: Random.rand(1..10))
       end
 
       it { should_not validate_presence_of(:case) }
@@ -47,7 +47,7 @@ describe CapsuleCRM::History do
     context 'when it belongs to an opportunity' do
       before do
         subject.opportunity =
-          double('CapsuleCRM::Opportunity', id: Random.rand(1..10))
+          CapsuleCRM::Opportunity.new(id: Random.rand(1..10))
       end
 
       it { should_not validate_presence_of(:party) }
