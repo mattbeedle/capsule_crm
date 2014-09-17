@@ -82,6 +82,7 @@ describe CapsuleCRM::Task do
     it { expect(subject.keys).to include('task') }
     it { expect(subject['task']['description']).to eql(task.description) }
     it { expect(subject['task']['dueDate']).to eql(task.due_date.to_s) }
+    it { expect(subject['task']['category']).to eql(task.category) }
 
     context 'when it has an owner' do
       let(:owner) { CapsuleCRM::User.new(username: 'matt.beedle') }
