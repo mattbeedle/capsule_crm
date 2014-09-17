@@ -99,10 +99,16 @@ module CapsuleCRM
         end
         object.class.belongs_to_associations.each do |name, association|
           attrs.merge!(
-            association.serializable_key => object.send(name).try(:id)
+            association.serializable_key => belongs_to_value(object, name)
           ) unless association.serialize == false
         end if object.class.respond_to?(:belongs_to_associations)
       end
+    end
+
+    def belongs_to_value(object, name)
+      value = object.send(name)
+      value = value.id if value.respond_to?(:id)
+      value
     end
   end
 end
