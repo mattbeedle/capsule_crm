@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.1
+
+- Task#category is now persisted correctly
+  [#80](https://github.com/mattbeedle/capsule_crm/pull/80)
+
 ## 1.9.0
 
 - Raise a CapsuleCRM::Errors::AssociationTypeMismatch when an object of the
