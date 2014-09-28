@@ -14,7 +14,7 @@ module CapsuleCRM
     include CapsuleCRM::Serializable
 
     serializable_config do |config|
-      config.excluded_keys = [:track_id]
+      config.excluded_keys = [:track_id, :probability]
     end
 
     queryable_config do |config|
