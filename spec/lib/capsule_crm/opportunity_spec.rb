@@ -157,6 +157,20 @@ describe CapsuleCRM::Opportunity do
     end
   end
 
+  describe '#to_capsule_json' do
+    let(:opportunity) do
+      Fabricate.build(:opportunity, value: 23.0, currency: 'USD')
+    end
+
+    subject {opportunity.to_capsule_json['opportunity']}
+
+    it { should have_key('name') }
+    it { should have_key('milestoneId') }
+    it { should have_key('partyId') }
+    it { should have_key('value') }
+    it { should have_key('currency') }
+  end
+
   describe '.deleted' do
     before do
       stub_request(:get, /.*/).
