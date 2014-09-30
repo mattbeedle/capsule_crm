@@ -159,7 +159,11 @@ describe CapsuleCRM::Opportunity do
 
   describe '#to_capsule_json' do
     let(:opportunity) do
-      Fabricate.build(:opportunity, value: 23.0, currency: 'USD')
+      Fabricate.build(:opportunity,
+        value: 23.0,
+        currency: 'USD',
+        probability: 50.0
+      )
     end
 
     subject {opportunity.to_capsule_json['opportunity']}
@@ -169,6 +173,9 @@ describe CapsuleCRM::Opportunity do
     it { should have_key('partyId') }
     it { should have_key('value') }
     it { should have_key('currency') }
+
+    it { should_not have_key('probability')}
+    it { should_not have_key('trackId')}
   end
 
   describe '.deleted' do
