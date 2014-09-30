@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.9.2
+
+- Fix issue where opportunities would never persist because they were
+  serializing and sending the ```probability``` attribute to capsule which
+  capsule did not want. - Thanks to @whitecl
+  [#82](https://github.com/mattbeedle/capsule_crm/pull/82)
+
 ## 1.9.1
 
 - Task#category is now persisted correctly
