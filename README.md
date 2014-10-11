@@ -374,6 +374,7 @@ Many thanks to the following contributers:
 - [@danthompson](https://github.com/danthompson)
 - [@ryanbooker](https://github.com/ryanbooker)
 - [@ghiculescu](https://github.com/ghiculescu)
+- [@whitecl](https://github.com/@whitecl)
 
 ## Alternatives
 
