@@ -24,7 +24,7 @@ CapsuleCRM provides an ActiveModel compliant interface to the
 
 CapsuleCRM gem is completely free and open source.
 However, if you would like to tip me for the hours I put in, you would of course
-be very welcome send Bitcoins to 1EcMFGtrw97qA3VXnQwM2Me5ruEkapCVio
+be very welcome to send Bitcoins to 1EcMFGtrw97qA3VXnQwM2Me5ruEkapCVio
 
 ## Installation
 
