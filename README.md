@@ -12,10 +12,19 @@ Status](https://gemnasium.com/mattbeedle/capsule_crm.png)](https://gemnasium.com
 Ready](http://badge.waffle.io/mattbeedle/capsule_crm.png)](http://waffle.io/mattbeedle/capsule_crm)
 [![Gitter
 chat](https://badges.gitter.im/mattbeedle/capsule_crm.png)](https://gitter.im/mattbeedle/capsule_crm)
+[![tip for next
+commit](https://tip4commit.com/projects/1022.svg)](https://tip4commit.com/github/mattbeedle/capsule_crm)
 
 # CapsuleCRM
 
-CapsuleCRM provides an ActiveModel compliant interface to the capsulecrm API
+CapsuleCRM provides an ActiveModel compliant interface to the
+[capsulecrm.com](http://capsulecrm.com) API
+
+## Donations
+
+CapsuleCRM gem is completely free and open source.
+However, if you would like to tip me for the hours I put in, you would of course
+be very welcome send Bitcoins to 1EcMFGtrw97qA3VXnQwM2Me5ruEkapCVio
 
 ## Installation
 
@@ -356,7 +365,6 @@ Please use github issues to give feedback. If you have a bug to report then an
 accompanying failing test would be great. Extra points for a full pull request
 with fix.
 
-
 ## Contributing
 
 1. Fork it
@@ -381,3 +389,13 @@ Many thanks to the following contributers:
 - [placebo](https://github.com/adrianpike/placebo)
 - [capsulecrm](https://github.com/ahmedrb/capsulecrm) - most active fork seems
   to be [here](https://github.com/theodi/capsulecrm)
+
+## License
+
+Copyright (c) 2013-2014 Matthew Beedle
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
