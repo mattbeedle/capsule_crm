@@ -207,6 +207,9 @@ person.emails << CapsuleCRM::Email.new(email_address: 'test@test.com')
 
 ### Tracks
 ```ruby
+# Find a track 
+Track = CapsuleCRM::Track.find(ID)
+
 # List tracks
 tracks = CapsuleCRM::Track.all
 ```
