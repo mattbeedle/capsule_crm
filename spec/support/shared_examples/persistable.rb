@@ -227,7 +227,7 @@ shared_examples 'persistable' do |location, id|
           expect(WebMock).to have_requested(
             :put,
             "https://1234:@company.capsulecrm.com#{subject.build_update_path}"
-          ).with(subject.to_capsule_json)
+          ).with(body: subject.to_capsule_json)
         end
       end
 
