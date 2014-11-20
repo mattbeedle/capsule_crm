@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.3
+
+- Fix issue where opportunities could not be saved if they had an associated
+  track. Track.find method was missing. - Thanks to @jonathansimmons
+  [#84](https://github.com/mattbeedle/capsule_crm/pull/84)
+
 ## 1.9.2
 
 - Fix issue where opportunities would never persist because they were
