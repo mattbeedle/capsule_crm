@@ -20,12 +20,6 @@ commit](https://tip4commit.com/projects/1022.svg)](https://tip4commit.com/github
 CapsuleCRM provides an ActiveModel compliant interface to the
 [capsulecrm.com](http://capsulecrm.com) API
 
-## Donations
-
-CapsuleCRM gem is completely free and open source.
-However, if you would like to tip me for the hours I put in, you would of course
-be very welcome to send Bitcoins to 1EcMFGtrw97qA3VXnQwM2Me5ruEkapCVio
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -207,7 +201,7 @@ person.emails << CapsuleCRM::Email.new(email_address: 'test@test.com')
 
 ### Tracks
 ```ruby
-# Find a track 
+# Find a track
 Track = CapsuleCRM::Track.find(ID)
 
 # List tracks
@@ -392,6 +386,12 @@ Many thanks to the following contributers:
 - [placebo](https://github.com/adrianpike/placebo)
 - [capsulecrm](https://github.com/ahmedrb/capsulecrm) - most active fork seems
   to be [here](https://github.com/theodi/capsulecrm)
+
+## Donations
+
+CapsuleCRM gem is completely free and open source.
+However, if you would like to tip me for the hours I put in, you would of course
+be very welcome to send Bitcoins to 1EcMFGtrw97qA3VXnQwM2Me5ruEkapCVio
 
 ## License
 
