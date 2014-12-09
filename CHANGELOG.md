@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.0
+
+- Add ```#opportunities``` method to ```party```, ```person```
+  and ```organization```. - Thanks to @chrisradford
+  [#86](https://github.com/mattbeedle/capsule_crm/pull/86)
+
 ## 1.9.3
 
 - Fix issue where opportunities could not be saved if they had an associated
