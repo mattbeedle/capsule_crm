@@ -19,7 +19,7 @@ class CapsuleCRM::Party
   has_many :tasks
   has_many :custom_fields, embedded: true
   has_many :cases
-
+  has_many :opportunities
 
   private
 
