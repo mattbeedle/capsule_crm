@@ -86,5 +86,10 @@ module CapsuleCRM
         CapsuleCRM::Connection.get('/api/opportunity/deleted', since: since)
       )
     end
+
+    class << self
+      alias :_for_organization :_for_party
+      alias :_for_person :_for_party
+    end
   end
 end
