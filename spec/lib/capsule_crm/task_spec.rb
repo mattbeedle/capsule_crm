@@ -38,6 +38,28 @@ describe CapsuleCRM::Task do
     end
   end
 
+  describe '#completed?' do
+    context 'when completed_on is set' do
+      subject do
+        Fabricate.build(:task, id: Random.rand(10), completed_on: Time.now)
+      end
+
+      it 'should be true' do
+        expect(subject.completed?).to be_true
+      end
+    end
+
+    context 'when completed_on is blank' do
+      subject do
+        Fabricate.build(:task, id: Random.rand(10), completed_on: nil)
+      end
+
+      it 'should be false' do
+        expect(subject.completed?).to be_false
+      end
+    end
+  end
+
   describe 'validations' do
     it { should validate_numericality_of(:id) }
     it { should validate_presence_of(:description) }

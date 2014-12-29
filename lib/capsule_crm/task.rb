@@ -22,6 +22,7 @@ module CapsuleCRM
     attribute :due_date_time, DateTime
     attribute :description, String
     attribute :detail, String
+    attribute :completed_on, DateTime
 
     belongs_to :party
     belongs_to :opportunity
@@ -68,6 +69,10 @@ module CapsuleCRM
     def complete
       CapsuleCRM::Connection.post("/api/task/#{id}/complete")
       self
+    end
+
+    def completed?
+      !!completed_on
     end
 
     def reopen
