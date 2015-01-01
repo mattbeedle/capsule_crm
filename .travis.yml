@@ -9,4 +9,6 @@ before_install:
   - gem install rake
 script:
   - bundle exec rspec spec/
+env:
+  - CODECLIMATE_REPO_TOKEN=68e8f8d2a064fe34ade1c684a1e4c68838fd3c6305d5e48139ff2b85b0ba4991
 bundler_args: --binstubs=./bundler_stubs

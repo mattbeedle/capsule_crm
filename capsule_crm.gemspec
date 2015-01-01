@@ -25,6 +25,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency('faraday_middleware')
   gem.add_runtime_dependency('virtus', '~> 1.0.0')
 
+  gem.add_development_dependency('codeclimate-test-reporter')
   gem.add_development_dependency('coveralls')
   gem.add_development_dependency('cucumber')
   gem.add_development_dependency('fabrication')
