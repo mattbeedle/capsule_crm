@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.1
+
+- #reload now also reloads the contacts information. More information
+  [here](https://github.com/mattbeedle/capsule_crm/issues/89#issuecomment-71309322)
+
 ## 1.10.0
 
 - Add ```#opportunities``` method to ```party```, ```person```
