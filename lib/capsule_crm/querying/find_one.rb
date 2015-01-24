@@ -13,7 +13,7 @@ module CapsuleCRM
       def reload
         self.class.find(id).tap do |latest|
           self.attributes = latest.attributes
-          self.contacts = latest.contacts
+          self.contacts = latest.contacts if respond_to?(:contacts)
         end
         associations.keys.each do |association_name|
           instance_variable_set(:"@#{association_name}", nil)
