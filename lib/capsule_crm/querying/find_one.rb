@@ -11,7 +11,10 @@ module CapsuleCRM
       end
 
       def reload
-        self.attributes = self.class.find(id).attributes
+        self.class.find(id).tap do |latest|
+          self.attributes = latest.attributes
+          self.contacts = latest.contacts
+        end
         associations.keys.each do |association_name|
           instance_variable_set(:"@#{association_name}", nil)
         end
