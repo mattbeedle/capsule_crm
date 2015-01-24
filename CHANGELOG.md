@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.2
+
+- Stop serializing the result of CapsuleCRM::Serializer#serialize. It causes
+  the serialized version of an object to become stale.
+  [#90](https://github.com/mattbeedle/capsule_crm/pull/90)
+
 ## 1.10.1
 
 - #reload now also reloads the contacts information. More information
