@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.3
+
+- Fix regression introduced in 1.10.1 where any records that do not respond
+  to #contacts could not be reloaded.
+
 ## 1.10.2
 
 - Stop serializing the result of CapsuleCRM::Serializer#serialize. It causes
