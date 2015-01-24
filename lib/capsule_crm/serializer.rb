@@ -8,12 +8,7 @@ module CapsuleCRM
 
     def serialize(object)
       @object = object
-      @serialized ||=
-        if include_root?
-          serialize_with_root
-        else
-          serialize_without_root
-        end
+      include_root? ? serialize_with_root : serialize_without_root
     end
 
     def self.serialize_collection(klass, collection)
