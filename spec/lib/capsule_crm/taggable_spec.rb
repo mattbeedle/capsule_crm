@@ -34,6 +34,19 @@ describe CapsuleCRM::Taggable do
     it { subject.first.name.should eql('Customer') }
 
     it { subject.last.name.should eql('VIP') }
+
+    context 'when taggable item has one tag' do
+      before do
+        stub_request(:get, /\/api\/taggableitem\/2\/tag$/).
+          to_return(body: File.read('spec/support/one_tag.json'))
+      end
+
+      let(:taggable_item) { TaggableItem.new(id: 2) }
+
+      subject { taggable_item.tags }
+
+      it { should be_a(Array) }
+    end
   end
 
   describe '#add_tag' do
