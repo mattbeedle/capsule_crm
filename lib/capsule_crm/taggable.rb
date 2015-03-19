@@ -3,9 +3,11 @@ module CapsuleCRM
     extend ActiveSupport::Concern
 
     def tags
-      CapsuleCRM::Connection.get(
+      tags = CapsuleCRM::Connection.get(
         "/api/#{api_singular_name}/#{id}/tag"
-      )['tags']['tag'].map { |item| CapsuleCRM::Tag.new(item) }
+      )['tags']['tag']
+      tags = [tags] if tags.is_a? Hash
+      tags.map { |item| CapsuleCRM::Tag.new(item) }
     end
 
     def add_tag(tag_name)
