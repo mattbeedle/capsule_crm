@@ -81,7 +81,7 @@ describe CapsuleCRM::Contacts do
 
       it do
         subject.addresses.
-          all? { |address| address.is_a?(CapsuleCRM::Address) }.should be_true
+          all? { |address| address.is_a?(CapsuleCRM::Address) }.should eql(true)
       end
     end
 
@@ -92,7 +92,7 @@ describe CapsuleCRM::Contacts do
 
       it do
         subject.emails.
-          all? { |email| email.is_a?(CapsuleCRM::Email) }.should be_true
+          all? { |email| email.is_a?(CapsuleCRM::Email) }.should eql(true)
       end
     end
 
@@ -103,7 +103,7 @@ describe CapsuleCRM::Contacts do
 
       it do
         subject.phones.
-          all? { |phone| phone.is_a?(CapsuleCRM::Phone) }.should be_true
+          all? { |phone| phone.is_a?(CapsuleCRM::Phone) }.should eql(true)
       end
     end
 
@@ -114,7 +114,7 @@ describe CapsuleCRM::Contacts do
 
       it do
         subject.websites.
-          all? { |website| website.is_a?(CapsuleCRM::Website) }.should be_true
+          all? { |website| website.is_a?(CapsuleCRM::Website) }.should eql(true)
       end
     end
   end

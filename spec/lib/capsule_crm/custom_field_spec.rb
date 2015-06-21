@@ -28,7 +28,7 @@ describe CapsuleCRM::CustomField do
       it { should be_an(Array) }
       it do
         subject.all? { |item| item.is_a?(CapsuleCRM::CustomField) }.
-          should be_true
+          should eql(true)
       end
     end
 

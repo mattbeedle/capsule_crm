@@ -155,13 +155,13 @@ describe CapsuleCRM::Person do
     subject { person.send(:first_name_required?) }
 
     context 'when there is no last name' do
-      it { should be_true }
+      it { should eql(true) }
     end
 
     context 'when there is a last name' do
       before { person.last_name = 'Beedle' }
 
-      it { should be_false }
+      it { should eql(false) }
     end
   end
 
@@ -171,13 +171,13 @@ describe CapsuleCRM::Person do
     subject { person.send(:last_name_required?) }
 
     context 'when there is no first name' do
-      it { should be_true }
+      it { should eql(true) }
     end
 
     context 'when there is a first name' do
       before { person.first_name = 'Matt' }
 
-      it { should be_false }
+      it { should eql(false) }
     end
   end
 
