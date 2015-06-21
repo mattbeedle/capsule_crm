@@ -69,7 +69,7 @@ describe CapsuleCRM::History do
       it { should be_a(Array) }
 
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should be_true
+        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should eql(true)
       end
     end
 
@@ -97,7 +97,7 @@ describe CapsuleCRM::History do
       it { should be_a(Array) }
 
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should be_true
+        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should eql(true)
       end
     end
 
@@ -125,7 +125,7 @@ describe CapsuleCRM::History do
       it { should be_a(Array) }
 
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should be_true
+        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should eql(true)
       end
     end
 
@@ -150,25 +150,63 @@ describe CapsuleCRM::History do
     end
     subject { CapsuleCRM::History.find(100) }
 
-    its(:type) { should eql('Note') }
-    its(:creator) { should be_a(CapsuleCRM::User) }
-    its(:entry_date) { should_not be_blank }
-    its(:subject) { should_not be_blank }
-    its(:note) { should_not be_blank }
-    its(:attachments) { should be_a(Array) }
-    it { expect(first_attachment).to be_a(CapsuleCRM::Attachment) }
-    it { expect(first_attachment.filename).to eql('latin.doc') }
-    its(:participants) { should be_a(Array) }
-    it { expect(first_participant).to be_a(CapsuleCRM::Participant) }
-    it { expect(first_participant.name).to eql('Matt Beedle') }
+    it 'type is note' do
+      expect(subject.type).to eql('Note')
+    end
+
+    it 'creator is a CapsuleCRM::User' do
+      expect(subject.creator).to be_a(CapsuleCRM::User)
+    end
+
+    it 'entry date is not blank' do
+      expect(subject.entry_date).not_to be_blank
+    end
+
+    it 'subject is not blank' do
+      expect(subject.subject).not_to be_blank
+    end
+
+    it 'note is not blank' do
+      expect(subject.note).not_to be_blank
+    end
+
+    it 'attachments is an array' do
+      expect(subject.attachments).to be_a(Array)
+    end
+
+    it 'attachments array contains CapsuleCRM::Attachment objects' do
+      expect(first_attachment).to be_a(CapsuleCRM::Attachment)
+    end
+
+    it 'has the correct attachment filename' do
+      expect(first_attachment.filename).to eql('latin.doc')
+    end
+
+    it 'has an array of participants' do
+      expect(subject.participants).to be_a(Array)
+    end
+
+    it 'has CapsuleCRM::Participant objects inside the participants array' do
+      expect(first_participant).to be_a(CapsuleCRM::Participant)
+    end
+
+    it 'has the correct participant names' do
+      expect(first_participant.name).to eql('Matt Beedle')
+    end
 
     context 'when it belongs to a party' do
       before do
         stub_request(:get, /\/api\/party\/1$/).
           to_return(body: File.read('spec/support/person.json'))
       end
-      its(:party_id) { should_not be_blank }
-      its(:party) { should_not be_blank }
+
+      it 'has a party_id' do
+        expect(subject.party_id).not_to be_blank
+      end
+
+      it 'has a party' do
+        expect(subject.party).not_to be_blank
+      end
     end
 
     context 'when it belongs to a case' do
@@ -177,8 +215,13 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/case.json'))
       end
 
-      its(:case_id) { should_not be_blank }
-      its(:case) { should_not be_blank }
+      it 'has a case_id' do
+        expect(subject.case_id).not_to be_blank
+      end
+
+      it 'has a case' do
+        expect(subject.case).not_to be_blank
+      end
     end
 
     context 'when it belongs to an opportunity' do
@@ -187,8 +230,13 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/opportunity.json'))
       end
 
-      its(:opportunity_id) { should_not be_blank }
-      its(:opportunity) { should_not be_blank }
+      it 'has an opportunity_id' do
+        expect(subject.opportunity_id).not_to be_blank
+      end
+
+      it 'has an opportunity' do
+        expect(subject.opportunity).not_to be_blank
+      end
     end
   end
 
@@ -205,13 +253,17 @@ describe CapsuleCRM::History do
       context 'when the user exists' do
         before { history.creator = 'a.user' }
 
-        its(:creator) { should be_a(CapsuleCRM::User) }
+        it 'has a creator' do
+          expect(subject.creator).to be_a(CapsuleCRM::User)
+        end
       end
 
       context 'when the user does not exist' do
         before { history.creator = 'asdfadsfdsaf' }
 
-        its(:creator) { should be_blank }
+        it 'has no creator' do
+          expect(subject.creator).to be_blank
+        end
       end
     end
 
@@ -219,7 +271,9 @@ describe CapsuleCRM::History do
       let(:user) { CapsuleCRM::User.new }
       before { history.creator = user }
 
-      its(:creator) { should eql(user) }
+      it 'has a creator' do
+        expect(subject.creator).to eql(user)
+      end
     end
   end
 
@@ -241,13 +295,21 @@ describe CapsuleCRM::History do
     let(:participants_json) { subject[:historyItem]['participants'] }
     subject { history.to_capsule_json }
 
-    it { expect(subject.keys.first).to eql('historyItem') }
-    it do
+    it 'has historyItem as the first key' do
+      expect(subject.keys.first).to eql('historyItem')
+    end
+
+    it 'has the correct history item entry date' do
       expect(subject['historyItem']['entryDate']).
         to eql(history.entry_date.strftime("%Y-%m-%dT%H:%M:%SZ"))
     end
-    it { expect(subject['historyItem']['creator']).to eql(creator.username) }
-    it { expect(subject['historyItem']['note']).to eql(history.note) }
-    it { expect(subject['historyItem']).to have_key('note') }
+
+    it 'has the correct history item creator' do
+      expect(subject['historyItem']['creator']).to eql(creator.username)
+    end
+
+    it 'has the correct history item note' do
+      expect(subject['historyItem']['note']).to eql(history.note)
+    end
   end
 end

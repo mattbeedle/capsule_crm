@@ -2,10 +2,10 @@ require 'spec_helper'
 
 describe CapsuleCRM::Normalizer do
   describe '#normalize' do
-    pending
+    skip
   end
 
   describe '#normalize_collection' do
-    pending
+    skip
   end
 end

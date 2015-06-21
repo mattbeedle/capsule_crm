@@ -28,7 +28,7 @@ describe CapsuleCRM::Taggable do
     it { subject.length.should eql(2) }
 
     it do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Tag) }.should be_true
+      subject.all? { |item| item.is_a?(CapsuleCRM::Tag) }.should eql(true)
     end
 
     it { subject.first.name.should eql('Customer') }
@@ -61,7 +61,7 @@ describe CapsuleCRM::Taggable do
 
       subject { taggable_item.add_tag 'A Test Tag' }
 
-      it { subject.should be_true }
+      it { subject.should eql(true) }
     end
 
     context 'when the taggable item has no id' do
@@ -86,7 +86,7 @@ describe CapsuleCRM::Taggable do
           to_return(headers: { 'Location' => loc })
       end
 
-      it { subject.should be_true }
+      it { subject.should eql(true) }
     end
 
     context 'when the taggable item has no id' do

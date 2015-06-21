@@ -5,7 +5,7 @@ class CapsuleCRM::SomeClass
 
   attribute :name
 
-  def self._for_mock(mock_id)
+  def self._for_double(mock_id)
     ['test']
   end
 end

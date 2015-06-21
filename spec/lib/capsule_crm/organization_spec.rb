@@ -87,7 +87,7 @@ describe CapsuleCRM::Organization do
     it { should be_a(Array) }
 
     it do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Person) }.should be_true
+      subject.all? { |item| item.is_a?(CapsuleCRM::Person) }.should eql(true)
     end
   end
 
