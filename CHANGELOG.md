@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.10.4
+
+- Use UTC when serializing times.
+    [#97](https://github.com/mattbeedle/capsule_crm/pull/97)
+- Upgraded to RSpec ~> 2.99.0 and fixed deprecations in preparation for RSpec
+  3 upgrade
+
 ## 1.10.3
 
 - Fix regression introduced in 1.10.1 where any records that do not respond
