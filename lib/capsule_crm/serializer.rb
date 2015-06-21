@@ -84,7 +84,7 @@ module CapsuleCRM
         attrs.each do |key, value|
           attrs[key] = value.to_s(:db) if value.is_a?(Date)
           if value.is_a?(DateTime)
-            attrs[key] = value.strftime("%Y-%m-%dT%H:%M:%SZ")
+            attrs[key] = value.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
           end
         end
         additional_methods.each do |method|

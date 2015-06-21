@@ -8,6 +8,7 @@ class SerializableTest
   attribute :name
   attribute :description
   attribute :something, Date
+  attribute :a_timestamp, DateTime
 end
 
 class SerializableInverse
@@ -128,6 +129,17 @@ describe CapsuleCRM::Serializer do
       it 'should format the dates in :db format' do
         expect(subject['serializabletest']['something']).
           to eql(Date.today.to_s(:db))
+      end
+    end
+
+    context 'when there are datetimes' do
+      let(:time) { Time.now }
+
+      before { object.a_timestamp = time }
+
+      it 'uses the UTC time' do
+        expect(subject['serializabletest']['aTimestamp'])
+          .to eql(time.utc.strftime('%Y-%m-%dT%H:%M:%SZ'))
       end
     end
   end
