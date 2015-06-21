@@ -301,7 +301,7 @@ describe CapsuleCRM::History do
 
     it 'has the correct history item entry date' do
       expect(subject['historyItem']['entryDate']).
-        to eql(history.entry_date.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        to eql(history.entry_date.utc.strftime('%Y-%m-%dT%H:%M:%SZ'))
     end
 
     it 'has the correct history item creator' do
