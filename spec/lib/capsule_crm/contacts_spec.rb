@@ -77,44 +77,48 @@ describe CapsuleCRM::Contacts do
     context 'when addresses supplied' do
       subject { CapsuleCRM::Contacts.new(addresses: [address]) }
 
-      it { subject.addresses.should_not be_blank }
+      it { expect(subject.addresses).not_to be_blank }
 
       it do
-        subject.addresses.
-          all? { |address| address.is_a?(CapsuleCRM::Address) }.should eql(true)
+        result = subject.addresses.
+          all? { |address| address.is_a?(CapsuleCRM::Address) }
+        expect(result).to eql(true)
       end
     end
 
     context 'when emails supplied' do
       subject { CapsuleCRM::Contacts.new(emails: [email]) }
 
-      it { subject.emails.should_not be_blank }
+      it { expect(subject.emails).not_to be_blank }
 
       it do
-        subject.emails.
-          all? { |email| email.is_a?(CapsuleCRM::Email) }.should eql(true)
+        result = subject.emails.
+          all? { |email| email.is_a?(CapsuleCRM::Email) }
+        expect(result).to eql(true)
       end
     end
 
     context 'when phone numbers are supplied' do
       subject { CapsuleCRM::Contacts.new(phones: [phone]) }
 
-      it { subject.phones.should_not be_blank }
+      it { expect(subject.phones).not_to be_blank }
 
       it do
-        subject.phones.
-          all? { |phone| phone.is_a?(CapsuleCRM::Phone) }.should eql(true)
+        result = subject.phones.
+          all? { |phone| phone.is_a?(CapsuleCRM::Phone) }
+        expect(result).to eql(true)
       end
     end
 
     context 'when websites are supplied' do
       subject { CapsuleCRM::Contacts.new(websites: [website]) }
 
-      it { subject.websites.should_not be_blank }
+      it { expect(subject.websites).not_to be_blank }
 
       it do
-        subject.websites.
-          all? { |website| website.is_a?(CapsuleCRM::Website) }.should eql(true)
+        result = subject.websites.
+          all? { |website| website.is_a?(CapsuleCRM::Website) }
+        expect(result).to eql(true)
       end
     end
   end

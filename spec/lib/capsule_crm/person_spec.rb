@@ -204,16 +204,16 @@ describe CapsuleCRM::Person do
     let(:address_json) { subject['contacts']['address'].first }
     subject { person.to_capsule_json['person'] }
 
-    it { should have_key('firstName') }
-    it { should have_key('lastName') }
-    it { should have_key('organisationName') }
-    it { should have_key('contacts') }
-    it { address_json.should have_key('street') }
-    it { address_json.should have_key('city') }
-    it { address_json.should have_key('state') }
-    it { address_json.should have_key('zip') }
-    it { address_json.should have_key('country') }
-    it { email_json.should have_key('type') }
-    it { email_json.should have_key('emailAddress') }
+    it { is_expected.to have_key('firstName') }
+    it { is_expected.to have_key('lastName') }
+    it { is_expected.to have_key('organisationName') }
+    it { is_expected.to have_key('contacts') }
+    it { expect(address_json).to have_key('street') }
+    it { expect(address_json).to have_key('city') }
+    it { expect(address_json).to have_key('state') }
+    it { expect(address_json).to have_key('zip') }
+    it { expect(address_json).to have_key('country') }
+    it { expect(email_json).to have_key('type') }
+    it { expect(email_json).to have_key('emailAddress') }
   end
 end

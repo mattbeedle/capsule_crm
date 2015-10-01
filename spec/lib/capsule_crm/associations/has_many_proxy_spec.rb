@@ -67,19 +67,19 @@ describe CapsuleCRM::Associations::HasManyProxy do
     before { parent.children.build(name: 'a test name') }
 
     it 'should build a child object' do
-      parent.children.first.should be_a(Child)
+      expect(parent.children.first).to be_a(Child)
     end
 
     it 'should set the child object attributes' do
-      parent.children.first.name.should eql('a test name')
+      expect(parent.children.first.name).to eql('a test name')
     end
 
     it 'should add an object to the target' do
-      parent.children.length.should eql(1)
+      expect(parent.children.length).to eql(1)
     end
 
     it 'should add the target to the parent' do
-      parent.children.length.should eql(1)
+      expect(parent.children.length).to eql(1)
     end
   end
 

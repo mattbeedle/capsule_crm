@@ -20,19 +20,19 @@ describe CapsuleCRM::History do
   describe 'validations' do
     subject { described_class.new }
 
-    it { should validate_numericality_of(:id) }
-    it { should validate_presence_of(:note) }
-    it { should validate_presence_of(:case) }
-    it { should validate_presence_of(:party) }
-    it { should validate_presence_of(:opportunity) }
+    it { is_expected.to validate_numericality_of(:id) }
+    it { is_expected.to validate_presence_of(:note) }
+    it { is_expected.to validate_presence_of(:case) }
+    it { is_expected.to validate_presence_of(:party) }
+    it { is_expected.to validate_presence_of(:opportunity) }
 
     context 'when it belongs to a case' do
       before do
         subject.case = CapsuleCRM::Case.new(id: Random.rand(1..10))
       end
 
-      it { should_not validate_presence_of(:party) }
-      it { should_not validate_presence_of(:opportunity) }
+      it { is_expected.not_to validate_presence_of(:party) }
+      it { is_expected.not_to validate_presence_of(:opportunity) }
     end
 
     context 'when it belongs to a party' do
@@ -40,8 +40,8 @@ describe CapsuleCRM::History do
         subject.party = CapsuleCRM::Party.new(id: Random.rand(1..10))
       end
 
-      it { should_not validate_presence_of(:case) }
-      it { should_not validate_presence_of(:opportunity) }
+      it { is_expected.not_to validate_presence_of(:case) }
+      it { is_expected.not_to validate_presence_of(:opportunity) }
     end
 
     context 'when it belongs to an opportunity' do
@@ -50,8 +50,8 @@ describe CapsuleCRM::History do
           CapsuleCRM::Opportunity.new(id: Random.rand(1..10))
       end
 
-      it { should_not validate_presence_of(:party) }
-      it { should_not validate_presence_of(:case) }
+      it { is_expected.not_to validate_presence_of(:party) }
+      it { is_expected.not_to validate_presence_of(:case) }
     end
   end
 
@@ -66,10 +66,11 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/all_history.json'))
       end
 
-      it { should be_a(Array) }
+      it { is_expected.to be_a(Array) }
 
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should eql(true)
+        result = subject.all? { |item| item.is_a?(CapsuleCRM::History) }
+        expect(result).to eql(true)
       end
     end
 
@@ -79,7 +80,7 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/no_history.json'))
       end
 
-      it { should be_blank }
+      it { is_expected.to be_blank }
     end
   end
 
@@ -94,10 +95,11 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/all_history.json'))
       end
 
-      it { should be_a(Array) }
+      it { is_expected.to be_a(Array) }
 
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should eql(true)
+        result = subject.all? { |item| item.is_a?(CapsuleCRM::History) }
+        expect(result).to eql(true)
       end
     end
 
@@ -107,7 +109,7 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/no_history.json'))
       end
 
-      it { should be_blank }
+      it { is_expected.to be_blank }
     end
   end
 
@@ -122,10 +124,11 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/all_history.json'))
       end
 
-      it { should be_a(Array) }
+      it { is_expected.to be_a(Array) }
 
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::History) }.should eql(true)
+        result = subject.all? { |item| item.is_a?(CapsuleCRM::History) }
+        expect(result).to eql(true)
       end
     end
 
@@ -135,7 +138,7 @@ describe CapsuleCRM::History do
           to_return(body: File.read('spec/support/no_history.json'))
       end
 
-      it { should be_blank }
+      it { is_expected.to be_blank }
     end
   end
 
