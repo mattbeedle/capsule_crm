@@ -37,10 +37,10 @@ describe CapsuleCRM::Opportunity do
   describe 'validations' do
     subject { described_class.new }
 
-    it { should validate_numericality_of(:id) }
-    it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:milestone) }
-    it { should validate_presence_of(:party) }
+    it { is_expected.to validate_numericality_of(:id) }
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:milestone) }
+    it { is_expected.to validate_presence_of(:party) }
   end
 
   describe '._for_track' do
@@ -62,18 +62,18 @@ describe CapsuleCRM::Opportunity do
 
     subject { opportunity.tasks }
 
-    it { should be_a(Array) }
+    it { is_expected.to be_a(Array) }
 
-    it { subject.length.should eql(1) }
+    it { expect(subject.length).to eql(1) }
   end
 
   describe '#milestone=' do
     context 'when it receives a milestone name' do
       subject { CapsuleCRM::Opportunity.new(milestone: 'Bid') }
 
-      it { subject.milestone.should be_a(CapsuleCRM::Milestone) }
+      it { expect(subject.milestone).to be_a(CapsuleCRM::Milestone) }
 
-      it { subject.milestone_id.should_not be_blank }
+      it { expect(subject.milestone_id).not_to be_blank }
     end
 
     context 'when it receives a milestone object' do
@@ -81,9 +81,9 @@ describe CapsuleCRM::Opportunity do
 
       subject { CapsuleCRM::Opportunity.new(milestone: milestone) }
 
-      it { subject.milestone.should be_a(CapsuleCRM::Milestone) }
+      it { expect(subject.milestone).to be_a(CapsuleCRM::Milestone) }
 
-      it { subject.milestone_id.should_not be_blank }
+      it { expect(subject.milestone_id).not_to be_blank }
     end
   end
 
@@ -95,11 +95,11 @@ describe CapsuleCRM::Opportunity do
     before { opportunity.party= person }
 
     it 'should set the party_id' do
-      opportunity.party_id.should eql(2)
+      expect(opportunity.party_id).to eql(2)
     end
 
     it 'should set the party' do
-      opportunity.party.should eql(person)
+      expect(opportunity.party).to eql(person)
     end
   end
 
@@ -114,13 +114,13 @@ describe CapsuleCRM::Opportunity do
       context 'when the party is a person' do
         before { opportunity.party = person }
 
-        it { opportunity.party.should eql(person) }
+        it { expect(opportunity.party).to eql(person) }
       end
 
       context 'when the party is an organization' do
         before { opportunity.party = organization }
 
-        it { opportunity.party.should eql(organization) }
+        it { expect(opportunity.party).to eql(organization) }
       end
     end
 
@@ -133,10 +133,10 @@ describe CapsuleCRM::Opportunity do
         end
 
         it 'should return the party' do
-          opportunity.party.should be_a(CapsuleCRM::Person)
+          expect(opportunity.party).to be_a(CapsuleCRM::Person)
         end
 
-        it { opportunity.party.id.should eql(opportunity.party_id) }
+        it { expect(opportunity.party.id).to eql(opportunity.party_id) }
       end
 
       context 'when the party is an opportunity' do
@@ -146,14 +146,14 @@ describe CapsuleCRM::Opportunity do
           opportunity.party_id = organization.id
         end
 
-        it { opportunity.party.should be_a(CapsuleCRM::Organization) }
+        it { expect(opportunity.party).to be_a(CapsuleCRM::Organization) }
 
-        it { opportunity.party.id.should eql(opportunity.party_id) }
+        it { expect(opportunity.party.id).to eql(opportunity.party_id) }
       end
     end
 
     context 'when the party_id is nil' do
-      it { opportunity.party.should be_nil }
+      it { expect(opportunity.party).to be_nil }
     end
   end
 
@@ -168,14 +168,14 @@ describe CapsuleCRM::Opportunity do
 
     subject {opportunity.to_capsule_json['opportunity']}
 
-    it { should have_key('name') }
-    it { should have_key('milestoneId') }
-    it { should have_key('partyId') }
-    it { should have_key('value') }
-    it { should have_key('currency') }
+    it { is_expected.to have_key('name') }
+    it { is_expected.to have_key('milestoneId') }
+    it { is_expected.to have_key('partyId') }
+    it { is_expected.to have_key('value') }
+    it { is_expected.to have_key('currency') }
 
-    it { should_not have_key('probability')}
-    it { should_not have_key('trackId')}
+    it { is_expected.not_to have_key('probability')}
+    it { is_expected.not_to have_key('trackId')}
   end
 
   describe '.deleted' do
@@ -186,8 +186,8 @@ describe CapsuleCRM::Opportunity do
 
     subject { CapsuleCRM::Opportunity.deleted(1.week.ago) }
 
-    it { should be_a(Array) }
+    it { is_expected.to be_a(Array) }
 
-    it { subject.length.should eql(2) }
+    it { expect(subject.length).to eql(2) }
   end
 end

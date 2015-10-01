@@ -23,17 +23,18 @@ describe CapsuleCRM::Taggable do
 
     subject { taggable_item.tags }
 
-    it { should be_a(Array) }
+    it { is_expected.to be_a(Array) }
 
-    it { subject.length.should eql(2) }
+    it { expect(subject.length).to eql(2) }
 
     it do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Tag) }.should eql(true)
+      result = subject.all? { |item| item.is_a?(CapsuleCRM::Tag) }
+      expect(result).to eql(true)
     end
 
-    it { subject.first.name.should eql('Customer') }
+    it { expect(subject.first.name).to eql('Customer') }
 
-    it { subject.last.name.should eql('VIP') }
+    it { expect(subject.last.name).to eql('VIP') }
 
     context 'when taggable item has one tag' do
       before do
@@ -45,7 +46,7 @@ describe CapsuleCRM::Taggable do
 
       subject { taggable_item.tags }
 
-      it { should be_a(Array) }
+      it { is_expected.to be_a(Array) }
     end
   end
 
@@ -61,7 +62,7 @@ describe CapsuleCRM::Taggable do
 
       subject { taggable_item.add_tag 'A Test Tag' }
 
-      it { subject.should eql(true) }
+      it { expect(subject).to eql(true) }
     end
 
     context 'when the taggable item has no id' do
@@ -69,7 +70,7 @@ describe CapsuleCRM::Taggable do
 
       subject { taggable_item.add_tag 'A Test Tag' }
 
-      it { subject.should be_nil }
+      it { expect(subject).to be_nil }
     end
   end
 
@@ -86,7 +87,7 @@ describe CapsuleCRM::Taggable do
           to_return(headers: { 'Location' => loc })
       end
 
-      it { subject.should eql(true) }
+      it { expect(subject).to eql(true) }
     end
 
     context 'when the taggable item has no id' do
@@ -94,17 +95,18 @@ describe CapsuleCRM::Taggable do
 
       subject { taggable_item.remove_tag 'A Test Tag' }
 
-      it { subject.should be_nil }
+      it { expect(subject).to be_nil }
     end
   end
 
   describe '#api_singular_name' do
     it 'turns the class name into appropriate api name' do
-      TaggableItem.new.api_singular_name.should == 'taggableitem'
+      expect(TaggableItem.new.api_singular_name).to eql('taggableitem')
     end
 
     it 'gives the superclass unless Object to work with Organization/Person subclassing of Party' do
-      SubclassedTaggableItem.new.api_singular_name.should == 'taggableitem'
+      expect(SubclassedTaggableItem.new.api_singular_name)
+        .to eql('taggableitem')
     end
   end
 end

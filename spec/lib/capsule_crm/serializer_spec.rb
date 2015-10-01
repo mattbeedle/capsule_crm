@@ -61,7 +61,7 @@ describe CapsuleCRM::Serializer do
     context 'when additional methods are supplied' do
       before do
         options.additional_methods = [:test]
-        object.stub(:test).and_return(test_object)
+        allow(object).to receive(:test) { test_object }
       end
       let(:test_object) { double(to_capsule_json: { foo: :bar }) }
 

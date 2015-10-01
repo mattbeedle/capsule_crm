@@ -12,7 +12,7 @@ describe CapsuleCRM::Connection do
       end
 
       it 'should make sure that the lastmodified is formatted in YYYYMMDDTHHMMSS' do
-        WebMock.should have_requested(
+        expect(WebMock).to have_requested(
           :get, 'https://1234:@company.capsulecrm.com/api/v1/foo'
         ).with(query: { lastmodified: "20131001T133156" })
       end

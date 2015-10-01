@@ -84,10 +84,11 @@ describe CapsuleCRM::Organization do
       ).to_return(body: File.read('spec/support/all_people.json'))
     end
 
-    it { should be_a(Array) }
+    it { is_expected.to be_a(Array) }
 
     it do
-      subject.all? { |item| item.is_a?(CapsuleCRM::Person) }.should eql(true)
+      result = subject.all? { |item| item.is_a?(CapsuleCRM::Person) }
+      expect(result).to eql(true)
     end
   end
 
@@ -101,7 +102,7 @@ describe CapsuleCRM::Organization do
 
     subject { organization.tasks }
 
-    it { should be_a(Array) }
+    it { is_expected.to be_a(Array) }
   end
 
 
@@ -128,14 +129,14 @@ describe CapsuleCRM::Organization do
     let(:address_json) { subject['contacts']['address'].first }
     subject { organization.to_capsule_json['organisation'] }
 
-    it { should have_key('name') }
-    it { should have_key('contacts') }
-    it { address_json.should have_key('street') }
-    it { address_json.should have_key('city') }
-    it { address_json.should have_key('state') }
-    it { address_json.should have_key('zip') }
-    it { address_json.should have_key('country') }
-    it { email_json.should have_key('type') }
-    it { email_json.should have_key('emailAddress') }
+    it { is_expected.to have_key('name') }
+    it { is_expected.to have_key('contacts') }
+    it { expect(address_json).to have_key('street') }
+    it { expect(address_json).to have_key('city') }
+    it { expect(address_json).to have_key('state') }
+    it { expect(address_json).to have_key('zip') }
+    it { expect(address_json).to have_key('country') }
+    it { expect(email_json).to have_key('type') }
+    it { expect(email_json).to have_key('emailAddress') }
   end
 end

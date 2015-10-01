@@ -48,11 +48,11 @@ describe CapsuleCRM::Case do
 
     subject { kase.tasks }
 
-    it { should be_an(Array) }
+    it { is_expected.to be_an(Array) }
 
-    it { subject.length.should eql(1) }
+    it { expect(subject.length).to eql(1) }
 
-    it { subject.first.detail.should eql('Go and get drunk') }
+    it { expect(subject.first.detail).to eql('Go and get drunk') }
   end
 
   describe '#to_capsule_json' do

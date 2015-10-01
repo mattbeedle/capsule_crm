@@ -11,8 +11,8 @@ describe CapsuleCRM::CustomField do
   end
 
   describe 'validations' do
-    it { should validate_numericality_of(:id) }
-    it { should validate_presence_of(:label) }
+    it { is_expected.to validate_numericality_of(:id) }
+    it { is_expected.to validate_presence_of(:label) }
   end
 
   describe '._for_party' do
@@ -25,10 +25,10 @@ describe CapsuleCRM::CustomField do
           to_return(body: File.read('spec/support/all_customfields.json'))
       end
 
-      it { should be_an(Array) }
+      it { is_expected.to be_an(Array) }
       it do
-        subject.all? { |item| item.is_a?(CapsuleCRM::CustomField) }.
-          should eql(true)
+        result = subject.all? { |item| item.is_a?(CapsuleCRM::CustomField) }
+        expect(result).to eql(true)
       end
     end
 
@@ -38,7 +38,7 @@ describe CapsuleCRM::CustomField do
           to_return(body: File.read('spec/support/no_customfields.json'))
       end
 
-      it { should be_blank }
+      it { is_expected.to be_blank }
     end
   end
 
